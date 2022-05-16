@@ -18,6 +18,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "aac",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "aac",
 					LongName:   "raw ADTS AAC (Advanced Audio Coding)",
@@ -40,6 +41,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "aiff",
 			rep: &Report{
+				Duration: 105.772948,
 				Format: Format{
 					Name:       "aiff",
 					LongName:   "Audio IFF",
@@ -62,6 +64,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "flac",
 			rep: &Report{
+				Duration: 105.772948,
 				Format: Format{
 					Name:       "flac",
 					LongName:   "raw FLAC",
@@ -84,6 +87,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "m4a",
 			rep: &Report{
+				Duration: 105.797,
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
@@ -128,6 +132,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mp3",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
@@ -150,6 +155,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "ogg",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "ogg",
 					LongName:   "Ogg",
@@ -171,6 +177,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "wav",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "wav",
 					LongName:   "WAV / WAVE (Waveform Audio)",
@@ -183,6 +190,7 @@ func TestAnalyze(t *testing.T) {
 						CodecLongName: "PCM signed 16-bit little-endian",
 						CodecType:     "audio",
 						BitRate:       1411200,
+						Duration:      0,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -192,6 +200,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "wma",
 			rep: &Report{
+				Duration: 105.789,
 				Format: Format{
 					Name:       "asf",
 					LongName:   "ASF (Advanced / Active Streaming Format)",
@@ -215,6 +224,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "hevc",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "hevc",
 					LongName:   "raw HEVC video",
@@ -227,6 +237,7 @@ func TestAnalyze(t *testing.T) {
 						CodecLongName: "H.265 / HEVC (High Efficiency Video Coding)",
 						CodecType:     "video",
 						BitRate:       0,
+						Duration:      0,
 						Width:         1280,
 						Height:        720,
 					},
@@ -236,6 +247,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "avi",
 			rep: &Report{
+				Duration: 28.236542,
 				Format: Format{
 					Name:       "avi",
 					LongName:   "AVI (Audio Video Interleaved)",
@@ -258,6 +270,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mov",
 			rep: &Report{
+				Duration: 28.237,
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
@@ -280,6 +293,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mp4",
 			rep: &Report{
+				Duration: 28.237,
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
@@ -302,6 +316,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mpeg",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "mpeg",
 					LongName:   "MPEG-PS (MPEG-2 Program Stream)",
@@ -324,6 +339,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mpg",
 			rep: &Report{
+				Duration: 0,
 				Format: Format{
 					Name:       "mpegvideo",
 					LongName:   "raw MPEG video",
@@ -346,6 +362,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "webm",
 			rep: &Report{
+				Duration: 28.237,
 				Format: Format{
 					Name:       "matroska,webm",
 					LongName:   "Matroska / WebM",
@@ -368,6 +385,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "wmv",
 			rep: &Report{
+				Duration: 28.237,
 				Format: Format{
 					Name:       "asf",
 					LongName:   "ASF (Advanced / Active Streaming Format)",

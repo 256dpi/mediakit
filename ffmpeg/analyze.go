@@ -5,14 +5,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"os/exec"
 	"strings"
 )
 
 // Report is a ffprobe report.
 type Report struct {
-	Format  Format   `json:"format"`
-	Streams []Stream `json:"streams"`
+	Duration float64
+	Format   Format   `json:"format"`
+	Streams  []Stream `json:"streams"`
 }
 
 // Format is ffprobe format.
@@ -90,6 +92,12 @@ func Analyze(r io.Reader) (*Report, error) {
 	err = json.Unmarshal(stdout.Bytes(), &report)
 	if err != nil {
 		return nil, err
+	}
+
+	// find duration
+	report.Duration = report.Format.Duration
+	for _, stream := range report.Streams {
+		report.Duration = math.Max(report.Duration, stream.Duration)
 	}
 
 	return &report, nil
