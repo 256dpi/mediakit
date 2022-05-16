@@ -9,18 +9,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFFMPEG(t *testing.T) {
+func TestTranscode(t *testing.T) {
 	sample := loadSample("hevc")
 	defer sample.Close()
 
 	var out bytes.Buffer
-	err := FFMPEG(sample, &out, FFMPEGOptions{
+	err := Transcode(sample, &out, TranscodeOptions{
 		Format:   "webm",
 		Duration: 1,
 	})
 	assert.NoError(t, err)
 
-	report, err := FFProbe(&out)
+	report, err := Analyze(&out)
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
 		Format: Format{
@@ -42,8 +42,8 @@ func TestFFMPEG(t *testing.T) {
 	}, report)
 }
 
-func TestFFMpegError(t *testing.T) {
-	err := FFMPEG(strings.NewReader("foo"), io.Discard, FFMPEGOptions{})
+func TestTranscodeError(t *testing.T) {
+	err := Transcode(strings.NewReader("foo"), io.Discard, TranscodeOptions{})
 	assert.Error(t, err)
 	assert.Equal(t, "pipe:: invalid data found when processing input", err.Error())
 }

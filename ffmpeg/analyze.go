@@ -45,9 +45,9 @@ type Stream struct {
 
 // TODO: Use ffmpeg to decode duration if missing?
 
-// FFProbe will run the ffprobe utility on the specified input and return the
+// Analyze will run the ffprobe utility on the specified input and return the
 // parsed report.
-func FFProbe(r io.Reader) (*Report, error) {
+func Analyze(r io.Reader) (*Report, error) {
 	// prepare args
 	args := []string{
 		"-print_format", "json",

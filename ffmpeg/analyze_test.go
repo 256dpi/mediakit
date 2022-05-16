@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFFProbe(t *testing.T) {
+func TestAnalyze(t *testing.T) {
 	for _, item := range []struct {
 		ext string
 		rep *Report
@@ -392,21 +392,21 @@ func TestFFProbe(t *testing.T) {
 			sample := loadSample(item.ext)
 			defer sample.Close()
 
-			report, err := FFProbe(sample)
+			report, err := Analyze(sample)
 			assert.NoError(t, err)
 			assert.Equal(t, item.rep, report)
 		})
 	}
 }
 
-func TestFFProbeError(t *testing.T) {
-	report, err := FFProbe(strings.NewReader("foo"))
+func TestAnalyzeError(t *testing.T) {
+	report, err := Analyze(strings.NewReader("foo"))
 	assert.Error(t, err)
 	assert.Nil(t, report)
 	assert.Equal(t, "invalid data found when processing input", err.Error())
 }
 
-func BenchmarkFFProbe(b *testing.B) {
+func BenchmarkAnalyze(b *testing.B) {
 	sample := loadSample("mp3")
 	defer sample.Close()
 
@@ -421,7 +421,7 @@ func BenchmarkFFProbe(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		reader.Reset(buf.Bytes())
 
-		_, err := FFProbe(reader)
+		_, err := Analyze(reader)
 		if err != nil {
 			panic(err)
 		}

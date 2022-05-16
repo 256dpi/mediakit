@@ -14,15 +14,15 @@ import (
 // TODO: Support segmented encoding:
 //  https://video.stackexchange.com/questions/32297/resuming-a-partially-completed-encode-with-ffmpeg
 
-// FFMPEGOptions define transcoding options.
-type FFMPEGOptions struct {
+// TranscodeOptions define transcoding options.
+type TranscodeOptions struct {
 	Format   string
 	Duration int
 }
 
-// FFMPEG will run the ffmpeg utility to convert the specified input to the
+// Transcode will run the ffmpeg utility to transcode the specified input to the
 // configured output.
-func FFMPEG(r io.Reader, w io.Writer, opts FFMPEGOptions) error {
+func Transcode(r io.Reader, w io.Writer, opts TranscodeOptions) error {
 	// prepare args
 	args := []string{
 		"-i", "pipe:",
