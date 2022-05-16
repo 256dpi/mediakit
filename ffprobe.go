@@ -30,7 +30,8 @@ type Stream struct {
 	CodecType     string `json:"codec_type"`
 
 	// generic
-	BitRate int `json:"bit_rate,string"`
+	BitRate  int     `json:"bit_rate,string"`
+	Duration float64 `json:"duration,string"`
 
 	// audio
 	SampleRate int `json:"sample_rate,string"`
@@ -67,26 +68,26 @@ func FFProbe(r io.Reader) (*Report, error) {
 	// run command
 	err := cmd.Run()
 	if err != nil {
-		// parse failure
-		var info struct {
+		// decode report
+		var report struct {
 			Error struct {
 				String string `json:"string"`
 			} `json:"error"`
 		}
-		err = json.Unmarshal(stdout.Bytes(), &info)
-		if err != nil || info.Error.String == "" {
+		err = json.Unmarshal(stdout.Bytes(), &report)
+		if err != nil || report.Error.String == "" {
 			return nil, fmt.Errorf("unkown error")
 		}
 
-		return nil, fmt.Errorf(strings.ToLower(info.Error.String))
+		return nil, fmt.Errorf(strings.ToLower(report.Error.String))
 	}
 
-	// decode output
-	var info Report
-	err = json.Unmarshal(stdout.Bytes(), &info)
+	// decode report
+	var report Report
+	err = json.Unmarshal(stdout.Bytes(), &report)
 	if err != nil {
 		return nil, err
 	}
 
-	return &info, nil
+	return &report, nil
 }

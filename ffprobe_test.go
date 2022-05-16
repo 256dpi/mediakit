@@ -12,13 +12,13 @@ import (
 
 func TestFFProbe(t *testing.T) {
 	for _, item := range []struct {
-		ext  string
-		info *Report
+		ext string
+		rep *Report
 	}{
 		// audio
 		{
 			ext: "aac",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "aac",
 					LongName:   "raw ADTS AAC (Advanced Audio Coding)",
@@ -30,6 +30,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "AAC (Advanced Audio Coding)",
 						CodecType:     "audio",
 						BitRate:       145531,
+						Duration:      0,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -38,7 +39,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "aiff",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "aiff",
 					LongName:   "Audio IFF",
@@ -50,6 +51,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "PCM signed 16-bit big-endian",
 						CodecType:     "audio",
 						BitRate:       1411200,
+						Duration:      105.772948,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -58,7 +60,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "flac",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "flac",
 					LongName:   "raw FLAC",
@@ -70,6 +72,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "FLAC (Free Lossless Audio Codec)",
 						CodecType:     "audio",
 						BitRate:       0,
+						Duration:      105.772948,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -78,7 +81,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "m4a",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
@@ -90,6 +93,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "AAC (Advanced Audio Coding)",
 						CodecType:     "audio",
 						BitRate:       130554,
+						Duration:      105.772993,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -98,7 +102,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "mp2",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
@@ -110,6 +114,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "MP2 (MPEG audio layer 2)",
 						CodecType:     "audio",
 						BitRate:       384000,
+						Duration:      0,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -118,7 +123,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "mp3",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
@@ -130,6 +135,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "MP3 (MPEG audio layer 3)",
 						CodecType:     "audio",
 						BitRate:       128000,
+						Duration:      0,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -138,7 +144,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "ogg",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "ogg",
 					LongName:   "Ogg",
@@ -149,6 +155,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "Vorbis",
 						CodecType:     "audio",
 						BitRate:       112000,
+						Duration:      0,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -157,7 +164,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "wav",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "wav",
 					LongName:   "WAV / WAVE (Waveform Audio)",
@@ -177,7 +184,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "wma",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "asf",
 					LongName:   "ASF (Advanced / Active Streaming Format)",
@@ -189,6 +196,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "Windows Media Audio 2",
 						CodecType:     "audio",
 						BitRate:       128000,
+						Duration:      105.789,
 						SampleRate:    44100,
 						Channels:      2,
 					},
@@ -198,7 +206,7 @@ func TestFFProbe(t *testing.T) {
 		// video
 		{
 			ext: "hevc",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "hevc",
 					LongName:   "raw HEVC video",
@@ -218,7 +226,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "avi",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "avi",
 					LongName:   "AVI (Audio Video Interleaved)",
@@ -230,6 +238,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "MPEG-4 part 2",
 						CodecType:     "video",
 						BitRate:       0,
+						Duration:      28.236542,
 						Width:         1280,
 						Height:        720,
 					},
@@ -238,7 +247,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "mov",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
@@ -250,6 +259,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
 						CodecType:     "video",
 						BitRate:       4937429,
+						Duration:      28.236542,
 						Width:         1280,
 						Height:        720,
 					},
@@ -258,7 +268,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "mp4",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
@@ -270,6 +280,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
 						CodecType:     "video",
 						BitRate:       4937429,
+						Duration:      28.236542,
 						Width:         1280,
 						Height:        720,
 					},
@@ -278,7 +289,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "mpeg",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mpeg",
 					LongName:   "MPEG-PS (MPEG-2 Program Stream)",
@@ -290,6 +301,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "MPEG-1 video",
 						CodecType:     "video",
 						BitRate:       104857200,
+						Duration:      0,
 						Width:         1280,
 						Height:        720,
 					},
@@ -298,7 +310,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "mpg",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "mpegvideo",
 					LongName:   "raw MPEG video",
@@ -310,6 +322,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "MPEG-2 video",
 						CodecType:     "video",
 						BitRate:       0,
+						Duration:      0,
 						Width:         1280,
 						Height:        720,
 					},
@@ -318,7 +331,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "webm",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "matroska,webm",
 					LongName:   "Matroska / WebM",
@@ -330,6 +343,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "Google VP9",
 						CodecType:     "video",
 						BitRate:       0,
+						Duration:      0,
 						Width:         1280,
 						Height:        720,
 					},
@@ -338,7 +352,7 @@ func TestFFProbe(t *testing.T) {
 		},
 		{
 			ext: "wmv",
-			info: &Report{
+			rep: &Report{
 				Format: Format{
 					Name:       "asf",
 					LongName:   "ASF (Advanced / Active Streaming Format)",
@@ -350,6 +364,7 @@ func TestFFProbe(t *testing.T) {
 						CodecLongName: "MPEG-4 part 2 Microsoft variant version 3",
 						CodecType:     "video",
 						BitRate:       0,
+						Duration:      28.237,
 						Width:         1280,
 						Height:        720,
 					},
@@ -361,17 +376,17 @@ func TestFFProbe(t *testing.T) {
 			sample := loadSample(item.ext)
 			defer sample.Close()
 
-			info, err := FFProbe(sample)
+			report, err := FFProbe(sample)
 			assert.NoError(t, err)
-			assert.Equal(t, item.info, info)
+			assert.Equal(t, item.rep, report)
 		})
 	}
 }
 
 func TestFFProbeError(t *testing.T) {
-	info, err := FFProbe(strings.NewReader("foo"))
+	report, err := FFProbe(strings.NewReader("foo"))
 	assert.Error(t, err)
-	assert.Nil(t, info)
+	assert.Nil(t, report)
 	assert.Equal(t, "invalid data found when processing input", err.Error())
 }
 
