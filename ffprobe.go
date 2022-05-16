@@ -43,6 +43,8 @@ type Stream struct {
 	Height int `json:"height"`
 }
 
+// TODO: Use ffmpeg to decode duration if missing?
+
 // FFProbe will run the ffprobe utility on the specified input and return the
 // parsed report.
 func FFProbe(r io.Reader) (*Report, error) {
