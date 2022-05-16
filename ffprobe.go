@@ -20,6 +20,7 @@ type Format struct {
 	Name       string  `json:"format_name"`
 	LongName   string  `json:"format_long_name"`
 	ProbeScore float64 `json:"probe_score"`
+	Duration   float64 `json:"duration,string"`
 }
 
 // Stream is a ffprobe stream.

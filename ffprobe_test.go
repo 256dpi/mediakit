@@ -23,6 +23,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "aac",
 					LongName:   "raw ADTS AAC (Advanced Audio Coding)",
 					ProbeScore: 51,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -44,6 +45,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "aiff",
 					LongName:   "Audio IFF",
 					ProbeScore: 100,
+					Duration:   105.772948,
 				},
 				Streams: []Stream{
 					{
@@ -65,6 +67,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "flac",
 					LongName:   "raw FLAC",
 					ProbeScore: 100,
+					Duration:   105.772948,
 				},
 				Streams: []Stream{
 					{
@@ -86,6 +89,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
 					ProbeScore: 100,
+					Duration:   105.797,
 				},
 				Streams: []Stream{
 					{
@@ -107,6 +111,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
 					ProbeScore: 51,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -128,6 +133,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
 					ProbeScore: 51,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -149,6 +155,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "ogg",
 					LongName:   "Ogg",
 					ProbeScore: 100,
+					Duration:   0,
 				}, Streams: []Stream{
 					{
 						CodecName:     "vorbis",
@@ -169,6 +176,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "wav",
 					LongName:   "WAV / WAVE (Waveform Audio)",
 					ProbeScore: 99,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -189,6 +197,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "asf",
 					LongName:   "ASF (Advanced / Active Streaming Format)",
 					ProbeScore: 100,
+					Duration:   105.789,
 				},
 				Streams: []Stream{
 					{
@@ -211,6 +220,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "hevc",
 					LongName:   "raw HEVC video",
 					ProbeScore: 51,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -231,6 +241,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "avi",
 					LongName:   "AVI (Audio Video Interleaved)",
 					ProbeScore: 100,
+					Duration:   28.236542,
 				},
 				Streams: []Stream{
 					{
@@ -252,6 +263,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
 					ProbeScore: 100,
+					Duration:   28.237,
 				},
 				Streams: []Stream{
 					{
@@ -273,6 +285,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 					LongName:   "QuickTime / MOV",
 					ProbeScore: 100,
+					Duration:   28.237,
 				},
 				Streams: []Stream{
 					{
@@ -294,6 +307,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mpeg",
 					LongName:   "MPEG-PS (MPEG-2 Program Stream)",
 					ProbeScore: 26,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -315,6 +329,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "mpegvideo",
 					LongName:   "raw MPEG video",
 					ProbeScore: 51,
+					Duration:   0,
 				},
 				Streams: []Stream{
 					{
@@ -336,6 +351,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "matroska,webm",
 					LongName:   "Matroska / WebM",
 					ProbeScore: 100,
+					Duration:   28.237,
 				},
 				Streams: []Stream{
 					{
@@ -357,6 +373,7 @@ func TestFFProbe(t *testing.T) {
 					Name:       "asf",
 					LongName:   "ASF (Advanced / Active Streaming Format)",
 					ProbeScore: 100,
+					Duration:   28.237,
 				},
 				Streams: []Stream{
 					{
