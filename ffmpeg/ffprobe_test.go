@@ -1,9 +1,8 @@
-package mediakit
+package ffmpeg
 
 import (
 	"bytes"
 	"io"
-	"os"
 	"strings"
 	"testing"
 
@@ -427,13 +426,4 @@ func BenchmarkFFProbe(b *testing.B) {
 			panic(err)
 		}
 	}
-}
-
-func loadSample(ext string) io.ReadCloser {
-	f, err := os.Open("./samples/sample." + ext)
-	if err != nil {
-		panic(err)
-	}
-
-	return f
 }

@@ -1,4 +1,4 @@
-package mediakit
+package ffmpeg
 
 import (
 	"bufio"
