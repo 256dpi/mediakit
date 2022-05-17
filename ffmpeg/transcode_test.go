@@ -9,33 +9,79 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTranscode(t *testing.T) {
-	sample := loadSample("hevc")
+func TestTranscodeAudio(t *testing.T) {
+	sample := loadSample("wav")
 	defer sample.Close()
 
 	var out bytes.Buffer
 	err := Transcode(sample, &out, TranscodeOptions{
-		Format:   "webm",
+		Preset: AudioMP3VBRStandard,
+	})
+	assert.NoError(t, err)
+
+	r := bytes.NewReader(out.Bytes())
+	report, err := Analyze(r, AnalyzeOptions{
+		Reset: func() error {
+			_, err := r.Seek(0, io.SeekStart)
+			return err
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, &Report{
+		Duration: 105.82,
+		Format: Format{
+			Name:       "mp3",
+			LongName:   "MP2/3 (MPEG audio layer 2/3)",
+			ProbeScore: 51,
+			Duration:   0,
+		}, Streams: []Stream{
+			{
+				CodecName:     "mp3",
+				CodecLongName: "MP3 (MPEG audio layer 3)",
+				CodecType:     "audio",
+				BitRate:       163993,
+				Duration:      0,
+				SampleRate:    44100,
+				Channels:      2,
+			},
+		},
+	}, report)
+}
+
+func TestTranscodeVideo(t *testing.T) {
+	sample := loadSample("mpeg")
+	defer sample.Close()
+
+	var out bytes.Buffer
+	err := Transcode(sample, &out, TranscodeOptions{
+		Preset:   VideoMP4H264Fast,
 		Duration: 1,
 	})
 	assert.NoError(t, err)
 
-	report, err := Analyze(&out, AnalyzeOptions{})
+	r := bytes.NewReader(out.Bytes())
+	report, err := Analyze(r, AnalyzeOptions{
+		Reset: func() error {
+			_, err := r.Seek(0, io.SeekStart)
+			return err
+		},
+	})
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
 		Duration: 1,
 		Format: Format{
-			Name:       "matroska,webm",
-			LongName:   "Matroska / WebM",
+			Name:       "mov,mp4,m4a,3gp,3g2,mj2",
+			LongName:   "QuickTime / MOV",
 			ProbeScore: 100,
 			Duration:   1,
-		}, Streams: []Stream{
+		},
+		Streams: []Stream{
 			{
-				CodecName:     "vp9",
-				CodecLongName: "Google VP9",
+				CodecName:     "h264",
+				CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
 				CodecType:     "video",
-				BitRate:       0,
-				Duration:      0,
+				BitRate:       6068568,
+				Duration:      1,
 				Width:         1280,
 				Height:        720,
 			},
@@ -44,7 +90,9 @@ func TestTranscode(t *testing.T) {
 }
 
 func TestTranscodeError(t *testing.T) {
-	err := Transcode(strings.NewReader("foo"), io.Discard, TranscodeOptions{})
+	err := Transcode(strings.NewReader("foo"), io.Discard, TranscodeOptions{
+		Preset: AudioMP3VBRStandard,
+	})
 	assert.Error(t, err)
 	assert.Equal(t, "pipe:: invalid data found when processing input", err.Error())
 }
