@@ -9,8 +9,8 @@ func init() {
 	WarningsLogger = log.Default()
 }
 
-func loadSample(ext string) *os.File {
-	f, err := os.Open("../samples/" + ext)
+func loadSample(name string) *os.File {
+	f, err := os.Open("../samples/" + name)
 	if err != nil {
 		panic(err)
 	}
