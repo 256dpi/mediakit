@@ -49,12 +49,11 @@ func (p Preset) Args() []string {
 		return []string{
 			"-f", "mp4",
 			"-codec:v", "libx264",
-			"-preset", "fast",
+			"-preset:v", "fast",
 			"-movflags", "+faststart",
-			"-filter:v", "fps=30",
 			"-movflags", "frag_keyframe",
-			"-codec:a", "libfdk_aac",
-			"-vbr", "4", // 64-72 kbit/s/ch
+			"-codec:a", "aac",
+			"-q:a", "4", // 64-72 kbit/s/ch
 			"-ac", "2", // stereo
 		}
 	default:
@@ -79,6 +78,9 @@ type ConvertOptions struct {
 	// Apply scaling, set one component to -1 to keep aspect ratio.
 	// https://trac.ffmpeg.org/wiki/Scaling
 	Width, Height int
+
+	// Force frames per second.
+	FPS int
 
 	// Receive progress updates.
 	Progress func(Progress)
@@ -111,8 +113,16 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	if opts.Duration != 0 {
 		args = append(args, "-t", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
 	}
-	if opts.Width != 0 || opts.Height != 0 {
-		args = append(args, "-vf", fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
+
+	// handle filters
+	if opts.Width != 0 || opts.Height != 0 || opts.FPS != 0 {
+		args = append(args, "-filter:v")
+		if opts.FPS != 0 {
+			args = append(args, fmt.Sprintf("fps=%d", opts.FPS))
+		}
+		if opts.Width != 0 || opts.Height != 0 {
+			args = append(args, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
+		}
 	}
 
 	// finish args
