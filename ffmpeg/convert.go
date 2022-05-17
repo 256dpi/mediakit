@@ -15,6 +15,7 @@ import (
 //  https://video.stackexchange.com/questions/32297/resuming-a-partially-completed-encode-with-ffmpeg
 
 // Preset represents a conversion preset.
+// https://handbrake.fr/docs/en/1.5.0/technical/official-presets.html
 type Preset string
 
 // The available presets.
@@ -63,8 +64,15 @@ func (p Preset) Args() []string {
 
 // ConvertOptions defines conversion options.
 type ConvertOptions struct {
-	Preset   Preset
+	// Select the desired preset.
+	Preset Preset
+
+	// Limit duration of the output.
 	Duration float64
+
+	// Apply scaling, set one component to -1 to keep aspect ratio.
+	// https://trac.ffmpeg.org/wiki/Scaling
+	Width, Height int
 }
 
 // Convert will run the ffmpeg utility to convert the specified input to the
@@ -89,6 +97,9 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	// handle options
 	if opts.Duration != 0 {
 		args = append(args, "-t", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
+	}
+	if opts.Width != 0 || opts.Height != 0 {
+		args = append(args, "-vf", fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
 	}
 
 	// finish args

@@ -56,6 +56,8 @@ func TestConvertVideo(t *testing.T) {
 	err := Convert(sample, &out, ConvertOptions{
 		Preset:   VideoMP4H264AACFast,
 		Duration: 1,
+		Width:    1024,
+		Height:   -1,
 	})
 	assert.NoError(t, err)
 
@@ -68,22 +70,22 @@ func TestConvertVideo(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
-		Duration: 1,
+		Duration: 1.001,
 		Format: Format{
 			Name:       "mov,mp4,m4a,3gp,3g2,mj2",
 			LongName:   "QuickTime / MOV",
 			ProbeScore: 100,
-			Duration:   1,
+			Duration:   1.001,
 		},
 		Streams: []Stream{
 			{
 				CodecName:     "h264",
 				CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
 				CodecType:     "video",
-				BitRate:       6068568,
-				Duration:      1,
-				Width:         1280,
-				Height:        720,
+				BitRate:       3887608,
+				Duration:      1.001,
+				Width:         1024,
+				Height:        576,
 			},
 		},
 	}, report)
