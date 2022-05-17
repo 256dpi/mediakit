@@ -16,18 +16,18 @@ import (
 
 // Preset represents a conversion preset.
 // https://handbrake.fr/docs/en/1.5.0/technical/official-presets.html
-type Preset string
+type Preset int
 
 // The available presets.
 const (
 	// AudioMP3VBRStandard is a standard MP3 variable encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/MP3
-	AudioMP3VBRStandard = "audio-mp3-vbr-2"
+	AudioMP3VBRStandard = iota
 
 	// VideoMP4H264AACFast is a fast MP4 H.264/AAC encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/H.264
 	// https://trac.ffmpeg.org/wiki/Encode/AAC
-	VideoMP4H264AACFast = "video-mp4-h264-fast"
+	VideoMP4H264AACFast
 )
 
 // Valid returns whether the preset is valid.
