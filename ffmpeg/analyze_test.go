@@ -411,9 +411,11 @@ func TestAnalyze(t *testing.T) {
 			sample := loadSample(item.ext)
 			defer sample.Close()
 
-			report, err := Analyze(sample, func() error {
-				_, err := sample.Seek(0, io.SeekStart)
-				return err
+			report, err := Analyze(sample, AnalyzeOptions{
+				Reset: func() error {
+					_, err := sample.Seek(0, io.SeekStart)
+					return err
+				},
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, item.rep, report)
@@ -422,7 +424,7 @@ func TestAnalyze(t *testing.T) {
 }
 
 func TestAnalyzeError(t *testing.T) {
-	report, err := Analyze(strings.NewReader("foo"), nil)
+	report, err := Analyze(strings.NewReader("foo"), AnalyzeOptions{})
 	assert.Error(t, err)
 	assert.Nil(t, report)
 	assert.Equal(t, "invalid data found when processing input", err.Error())
@@ -443,7 +445,7 @@ func BenchmarkAnalyze(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		reader.Reset(buf.Bytes())
 
-		_, err := Analyze(reader, nil)
+		_, err := Analyze(reader, AnalyzeOptions{})
 		if err != nil {
 			panic(err)
 		}

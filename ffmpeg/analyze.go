@@ -46,9 +46,16 @@ type Stream struct {
 	Height int `json:"height"`
 }
 
-// Analyze will run the ffprobe utility on the specified input and return the
-// parsed report.
-func Analyze(r io.Reader, reset func() error) (*Report, error) {
+// AnalyzeOptions additional options for Analyze.
+type AnalyzeOptions struct {
+	// If set a reader may be rewound and decoded again to get the duration
+	// of files with missing metadata (raw files).
+	Reset func() error
+}
+
+// Analyze will run the ffprobe and ffmpeg utilities on the specified input and
+// return the parsed report.
+func Analyze(r io.Reader, opts AnalyzeOptions) (*Report, error) {
 	// prepare args
 	args := []string{
 		"-print_format", "json",
@@ -103,9 +110,9 @@ func Analyze(r io.Reader, reset func() error) (*Report, error) {
 	//  to estimate the progress of the operation.
 
 	// decode full file to get duration if still missing
-	if report.Duration == 0 && reset != nil {
+	if report.Duration == 0 && opts.Reset != nil {
 		// reset reader
-		err = reset()
+		err = opts.Reset()
 		if err != nil {
 			return nil, err
 		}
