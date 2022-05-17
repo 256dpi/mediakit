@@ -36,11 +36,11 @@ const (
 
 // Valid returns whether the preset is valid.
 func (p Preset) Valid() bool {
-	return len(p.Args()) != 0
+	return len(p.Args(false)) != 0
 }
 
 // Args returns the ffmpeg args for the preset.
-func (p Preset) Args() []string {
+func (p Preset) Args(isFile bool) []string {
 	switch p {
 	case AudioMP3VBRStandard:
 		return []string{
@@ -50,16 +50,19 @@ func (p Preset) Args() []string {
 			"-ac", "2", // stereo
 		}
 	case VideoMP4H264AACFast:
-		return []string{
+		args := []string{
 			"-f", "mp4",
 			"-codec:v", "libx264",
 			"-preset:v", "fast",
 			"-movflags", "+faststart",
-			"-movflags", "frag_keyframe",
 			"-codec:a", "aac",
 			"-q:a", "4", // 64-72 kbit/s/ch
 			"-ac", "2", // stereo
 		}
+		if !isFile {
+			args = append(args, "-movflags", "frag_keyframe")
+		}
+		return args
 	default:
 		return nil
 	}
@@ -91,7 +94,10 @@ type ConvertOptions struct {
 }
 
 // Convert will run the ffmpeg utility to convert the specified input to the
-// configured output.
+// configured output. If the input or output is an *os.File and has a name it
+// will be mapped via the filesystem. Otherwise, pipes are created to connect
+// the input or output. Using files is recommended to allow ffmpeg to seek
+// within the files.
 func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	// check input and output
 	rFile, _ := r.(*os.File)
@@ -124,7 +130,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// apply preset
-	args = append(args, opts.Preset.Args()...)
+	args = append(args, opts.Preset.Args(wIsFile)...)
 
 	// handle options
 	if opts.Duration != 0 {

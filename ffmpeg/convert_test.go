@@ -105,15 +105,8 @@ func TestConvert(t *testing.T) {
 						Channels:      2,
 					},
 					{
-						CodecName:     "",
-						CodecLongName: "",
-						CodecType:     "data",
-						BitRate:       0,
-						Duration:      1,
-						SampleRate:    0,
-						Channels:      0,
-						Width:         0,
-						Height:        0,
+						CodecType: "data",
+						Duration:  1,
 					},
 				},
 			},
@@ -213,7 +206,7 @@ func TestConvert(t *testing.T) {
 }
 
 func TestConvertPipe(t *testing.T) {
-	sample := loadSample("sample.wav")
+	sample := loadSample("combined_hevc-aac.mp4")
 	defer sample.Close()
 
 	buf, err := io.ReadAll(sample)
@@ -222,7 +215,7 @@ func TestConvertPipe(t *testing.T) {
 	var out bytes.Buffer
 	r := bytes.NewReader(buf)
 	err = Convert(r, &out, ConvertOptions{
-		Preset: AudioMP3VBRStandard,
+		Preset: VideoMP4H264AACFast,
 	})
 	assert.NoError(t, err)
 }
