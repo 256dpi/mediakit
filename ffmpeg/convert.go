@@ -32,6 +32,12 @@ const (
 	// https://trac.ffmpeg.org/wiki/Encode/H.264
 	// https://trac.ffmpeg.org/wiki/Encode/AAC
 	VideoMP4H264AACFast
+
+	// ImageJPEG is a basic JPEG encoding preset.
+	ImageJPEG
+
+	// ImagePNG is a basic PNG encoding preset.
+	ImagePNG
 )
 
 // Valid returns whether the preset is valid.
@@ -63,6 +69,19 @@ func (p Preset) Args(isFile bool) []string {
 			args = append(args, "-movflags", "frag_keyframe")
 		}
 		return args
+	case ImageJPEG:
+		return []string{
+			"-f", "image2",
+			"-frames:v", "1",
+			"-codec:v", "mjpeg",
+			"-q:v", "3",
+		}
+	case ImagePNG:
+		return []string{
+			"-f", "image2",
+			"-frames:v", "1",
+			"-codec:v", "png",
+		}
 	default:
 		return nil
 	}
@@ -78,6 +97,9 @@ type Progress struct {
 type ConvertOptions struct {
 	// Select the desired preset.
 	Preset Preset
+
+	// Set the start of the output.
+	Start float64
 
 	// Limit duration of the output.
 	Duration float64
@@ -133,6 +155,9 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	args = append(args, opts.Preset.Args(wIsFile)...)
 
 	// handle options
+	if opts.Start != 0 {
+		args = append(args, "-ss", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
+	}
 	if opts.Duration != 0 {
 		args = append(args, "-t", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
 	}
