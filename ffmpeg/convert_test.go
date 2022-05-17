@@ -66,6 +66,7 @@ func TestConvert(t *testing.T) {
 						Duration:      1.001,
 						Width:         1024,
 						Height:        576,
+						FrameRate:     23.976023976023978,
 					},
 				},
 			},
@@ -94,6 +95,7 @@ func TestConvert(t *testing.T) {
 						Duration:      1,
 						Width:         1280,
 						Height:        720,
+						FrameRate:     25,
 					},
 					{
 						CodecName:     "aac",
@@ -134,6 +136,7 @@ func TestConvert(t *testing.T) {
 						Duration:      1,
 						Width:         1280,
 						Height:        720,
+						FrameRate:     25,
 					},
 					{
 						CodecName:     "aac",
@@ -170,6 +173,7 @@ func TestConvert(t *testing.T) {
 						Duration:      1,
 						Width:         1280,
 						Height:        720,
+						FrameRate:     25,
 					},
 					{
 						CodecName:     "aac",

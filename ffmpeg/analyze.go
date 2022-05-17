@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -43,8 +44,41 @@ type Stream struct {
 	Channels   int `json:"channels"`
 
 	// video
-	Width  int `json:"width"`
-	Height int `json:"height"`
+	Width     int       `json:"width"`
+	Height    int       `json:"height"`
+	FrameRate FrameRate `json:"r_frame_rate"`
+}
+
+// FrameRate is a video frame rate.
+type FrameRate float64
+
+// UnmarshalJSON implements the json.Unmarshaler interface.
+func (r *FrameRate) UnmarshalJSON(bytes []byte) error {
+	str := strings.Trim(string(bytes), `"`)
+	parts := strings.Split(str, "/")
+	if len(parts) == 0 || len(parts) > 2 {
+		return nil
+	} else if len(parts) == 1 {
+		f, err := strconv.ParseFloat(parts[0], 64)
+		if err != nil {
+			return err
+		}
+		*r = FrameRate(f)
+	} else {
+		f1, err := strconv.ParseFloat(parts[0], 64)
+		if err != nil {
+			return err
+		}
+		f2, err := strconv.ParseFloat(parts[1], 64)
+		if err != nil {
+			return err
+		}
+		f := f1 / f2
+		if !math.IsNaN(f) {
+			*r = FrameRate(f)
+		}
+	}
+	return nil
 }
 
 // AnalyzeOptions additional options for Analyze.
