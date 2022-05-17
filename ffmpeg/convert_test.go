@@ -54,7 +54,7 @@ func TestConvertVideo(t *testing.T) {
 
 	var out bytes.Buffer
 	err := Convert(sample, &out, ConvertOptions{
-		Preset:   VideoMP4H264Fast,
+		Preset:   VideoMP4H264AACFast,
 		Duration: 1,
 	})
 	assert.NoError(t, err)

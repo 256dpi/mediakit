@@ -23,9 +23,10 @@ const (
 	// https://trac.ffmpeg.org/wiki/Encode/MP3
 	AudioMP3VBRStandard = "audio-mp3-vbr-2"
 
-	// VideoMP4H264Fast is a fast MP4 H.264 encoding preset.
+	// VideoMP4H264AACFast is a fast MP4 H.264/AAC encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/H.264
-	VideoMP4H264Fast = "video-mp4-h264-fast"
+	// https://trac.ffmpeg.org/wiki/Encode/AAC
+	VideoMP4H264AACFast = "video-mp4-h264-fast"
 )
 
 // Valid returns whether the preset is valid.
@@ -43,14 +44,17 @@ func (p Preset) Args() []string {
 			"-q:a", "2", // 170-210 kbit/s
 			"-ac", "2", // stereo
 		}
-	case VideoMP4H264Fast:
+	case VideoMP4H264AACFast:
 		return []string{
 			"-f", "mp4",
-			"-codec", "libx264",
+			"-codec:v", "libx264",
 			"-preset", "fast",
 			"-movflags", "+faststart",
 			"-filter:v", "fps=30",
 			"-movflags", "frag_keyframe",
+			"-codec:a", "libfdk_aac",
+			"-vbr", "4", // 64-72 kbit/s/ch
+			"-ac", "2", // stereo
 		}
 	default:
 		return nil
