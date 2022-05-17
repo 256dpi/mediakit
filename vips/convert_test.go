@@ -12,15 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestThumbnail(t *testing.T) {
+func TestConvert(t *testing.T) {
 	for i, item := range []struct {
 		sample string
-		opts   ThumbnailOptions
+		opts   ConvertOptions
 		size   image.Point
 	}{
 		{
 			sample: "sample.png",
-			opts: ThumbnailOptions{
+			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  256,
 			},
@@ -28,7 +28,7 @@ func TestThumbnail(t *testing.T) {
 		},
 		{
 			sample: "sample.jpg",
-			opts: ThumbnailOptions{
+			opts: ConvertOptions{
 				Preset: PNGWeb,
 				Width:  512,
 				Height: 256,
@@ -37,7 +37,7 @@ func TestThumbnail(t *testing.T) {
 		},
 		{
 			sample: "sample.gif",
-			opts: ThumbnailOptions{
+			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  256,
 				Height: 256,
@@ -47,7 +47,7 @@ func TestThumbnail(t *testing.T) {
 		},
 		{
 			sample: "sample.png",
-			opts: ThumbnailOptions{
+			opts: ConvertOptions{
 				Preset:      JPGWeb,
 				Width:       256,
 				KeepProfile: true,
@@ -60,7 +60,7 @@ func TestThumbnail(t *testing.T) {
 			sample := loadSample(item.sample)
 
 			var buf bytes.Buffer
-			err := Thumbnail(sample, &buf, item.opts)
+			err := Convert(sample, &buf, item.opts)
 			assert.NoError(t, err)
 
 			if item.opts.Preset == JPGWeb {
@@ -76,9 +76,9 @@ func TestThumbnail(t *testing.T) {
 	}
 }
 
-func TestThumbnailError(t *testing.T) {
+func TestConvertError(t *testing.T) {
 	var buf bytes.Buffer
-	err := Thumbnail(strings.NewReader("foo"), &buf, ThumbnailOptions{})
+	err := Convert(strings.NewReader("foo"), &buf, ConvertOptions{})
 	assert.Error(t, err)
 	assert.Equal(t, "vipsforeignload: source is not in a known format", err.Error())
 }

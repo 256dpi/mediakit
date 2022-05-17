@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// Preset represents a thumbnail preset.
+// Preset represents a conversion preset.
 type Preset int
 
 // The available preset.
@@ -42,8 +42,8 @@ func (p Preset) Arg() string {
 	}
 }
 
-// ThumbnailOptions defines thumbnail options.
-type ThumbnailOptions struct {
+// ConvertOptions defines conversion options.
+type ConvertOptions struct {
 	// Select the desired preset.
 	Preset Preset
 
@@ -63,9 +63,9 @@ type ThumbnailOptions struct {
 	NoRotate bool
 }
 
-// Thumbnail will run the vips utility to convert the specified input to the
+// Convert will run the vips utility to convert the specified input to the
 // configured output.
-func Thumbnail(r io.Reader, w io.Writer, opts ThumbnailOptions) error {
+func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	// check preset
 	if !opts.Preset.Valid() {
 		return fmt.Errorf("invalid preset")
