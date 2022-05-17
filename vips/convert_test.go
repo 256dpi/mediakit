@@ -2,9 +2,6 @@ package vips
 
 import (
 	"bytes"
-	"image"
-	"image/jpeg"
-	"image/png"
 	"strconv"
 	"strings"
 	"testing"
@@ -16,7 +13,7 @@ func TestConvert(t *testing.T) {
 	for i, item := range []struct {
 		sample string
 		opts   ConvertOptions
-		size   image.Point
+		report Report
 	}{
 		{
 			sample: "sample.png",
@@ -24,7 +21,13 @@ func TestConvert(t *testing.T) {
 				Preset: JPGWeb,
 				Width:  256,
 			},
-			size: image.Pt(256, 171),
+			report: Report{
+				Width:  256,
+				Height: 171,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "jpeg",
+			},
 		},
 		{
 			sample: "sample.jpg",
@@ -33,7 +36,13 @@ func TestConvert(t *testing.T) {
 				Width:  512,
 				Height: 256,
 			},
-			size: image.Pt(384, 256),
+			report: Report{
+				Width:  384,
+				Height: 256,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "png",
+			},
 		},
 		{
 			sample: "sample.gif",
@@ -43,7 +52,13 @@ func TestConvert(t *testing.T) {
 				Height: 256,
 				Crop:   true,
 			},
-			size: image.Pt(256, 256),
+			report: Report{
+				Width:  256,
+				Height: 256,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "jpeg",
+			},
 		},
 		{
 			sample: "sample.png",
@@ -53,32 +68,35 @@ func TestConvert(t *testing.T) {
 				KeepProfile: true,
 				NoRotate:    true,
 			},
-			size: image.Pt(256, 171),
+			report: Report{
+				Width:  256,
+				Height: 171,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "jpeg",
+			},
 		},
 	} {
 		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
 			sample := loadSample(item.sample)
+			defer sample.Close()
 
 			var buf bytes.Buffer
 			err := Convert(sample, &buf, item.opts)
 			assert.NoError(t, err)
 
-			if item.opts.Preset == JPGWeb {
-				img, err := jpeg.Decode(&buf)
-				assert.NoError(t, err)
-				assert.Equal(t, item.size, img.Bounds().Size())
-			} else if item.opts.Preset == PNGWeb {
-				img, err := png.Decode(&buf)
-				assert.NoError(t, err)
-				assert.Equal(t, item.size, img.Bounds().Size())
-			}
+			report, err := Analyze(&buf)
+			assert.NoError(t, err)
+			assert.Equal(t, &item.report, report)
 		})
 	}
 }
 
 func TestConvertError(t *testing.T) {
 	var buf bytes.Buffer
-	err := Convert(strings.NewReader("foo"), &buf, ConvertOptions{})
+	err := Convert(strings.NewReader("foo"), &buf, ConvertOptions{
+		Width: 1,
+	})
 	assert.Error(t, err)
 	assert.Equal(t, "vipsforeignload: source is not in a known format", err.Error())
 }
