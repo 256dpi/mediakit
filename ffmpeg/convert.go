@@ -86,8 +86,8 @@ type ConvertOptions struct {
 	// https://trac.ffmpeg.org/wiki/Scaling
 	Width, Height int
 
-	// Force frames per second.
-	FPS int
+	// Force a frame rate.
+	FrameRate int
 
 	// Receive progress updates.
 	Progress func(Progress)
@@ -138,10 +138,10 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// handle filters
-	if opts.Width != 0 || opts.Height != 0 || opts.FPS != 0 {
+	if opts.Width != 0 || opts.Height != 0 || opts.FrameRate != 0 {
 		args = append(args, "-filter:v")
-		if opts.FPS != 0 {
-			args = append(args, fmt.Sprintf("fps=%d", opts.FPS))
+		if opts.FrameRate != 0 {
+			args = append(args, fmt.Sprintf("fps=%d", opts.FrameRate))
 		}
 		if opts.Width != 0 || opts.Height != 0 {
 			args = append(args, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
