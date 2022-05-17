@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -54,22 +55,36 @@ type AnalyzeOptions struct {
 }
 
 // Analyze will run the ffprobe and ffmpeg utilities on the specified input and
-// return the parsed report.
+// return the parsed report. If the input is an *os.File and has a name it will
+// be mapped via the filesystem. Otherwise, a pipe is created to connect the
+// input. Using a file is recommended to allow ffprobe to seek within the file.
 func Analyze(r io.Reader, opts AnalyzeOptions) (*Report, error) {
+	// check input
+	file, _ := r.(*os.File)
+	isFile := file != nil && file.Name() != ""
+
 	// prepare args
 	args := []string{
 		"-print_format", "json",
 		"-show_format",
 		"-show_streams",
 		"-show_error",
-		"-",
+	}
+
+	// add input
+	if isFile {
+		args = append(args, file.Name())
+	} else {
+		args = append(args, "pipe:")
 	}
 
 	// prepare command
 	cmd := exec.Command("ffprobe", args...)
 
 	// set input
-	cmd.Stdin = r
+	if !isFile {
+		cmd.Stdin = r
+	}
 
 	// set outputs
 	var stdout, stderr bytes.Buffer

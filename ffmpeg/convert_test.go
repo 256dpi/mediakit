@@ -72,7 +72,7 @@ func TestConvert(t *testing.T) {
 		},
 		// combined
 		{
-			sample: "combined_avc-aac.mp4",
+			sample: "combined_avc-aac.mov",
 			options: ConvertOptions{
 				Preset:   VideoMP4H264AACFast,
 				Duration: 1,
