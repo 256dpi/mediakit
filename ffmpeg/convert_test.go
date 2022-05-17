@@ -90,7 +90,7 @@ func TestConvert(t *testing.T) {
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
 						CodecType:     "video",
-						BitRate:       397600,
+						BitRate:       394504,
 						Duration:      1,
 						Width:         1280,
 						Height:        720,
@@ -99,10 +99,21 @@ func TestConvert(t *testing.T) {
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
 						CodecType:     "audio",
-						BitRate:       24807,
+						BitRate:       25104,
 						Duration:      1.08,
 						SampleRate:    48000,
 						Channels:      2,
+					},
+					{
+						CodecName:     "",
+						CodecLongName: "",
+						CodecType:     "data",
+						BitRate:       0,
+						Duration:      1,
+						SampleRate:    0,
+						Channels:      0,
+						Width:         0,
+						Height:        0,
 					},
 				},
 			},
@@ -199,6 +210,21 @@ func TestConvert(t *testing.T) {
 			assert.Equal(t, &item.report, report)
 		})
 	}
+}
+
+func TestConvertPipe(t *testing.T) {
+	sample := loadSample("sample.wav")
+	defer sample.Close()
+
+	buf, err := io.ReadAll(sample)
+	assert.NoError(t, err)
+
+	var out bytes.Buffer
+	r := bytes.NewReader(buf)
+	err = Convert(r, &out, ConvertOptions{
+		Preset: AudioMP3VBRStandard,
+	})
+	assert.NoError(t, err)
 }
 
 func TestConvertProgress(t *testing.T) {

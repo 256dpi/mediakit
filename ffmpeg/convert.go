@@ -93,6 +93,12 @@ type ConvertOptions struct {
 // Convert will run the ffmpeg utility to convert the specified input to the
 // configured output.
 func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
+	// check input and output
+	rFile, _ := r.(*os.File)
+	wFile, _ := w.(*os.File)
+	rIsFile := rFile != nil && rFile.Name() != ""
+	wIsFile := wFile != nil && wFile.Name() != ""
+
 	// check preset
 	if !opts.Preset.Valid() {
 		return fmt.Errorf("invalid preset")
@@ -100,10 +106,16 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 
 	// prepare args
 	args := []string{
-		"-i", "pipe:",
 		"-nostats",
 		"-hide_banner",
 		"-loglevel", "repeat+warning",
+	}
+
+	// add input
+	if rIsFile {
+		args = append(args, "-i", rFile.Name())
+	} else {
+		args = append(args, "-i", "pipe:")
 	}
 
 	// enable progress
@@ -131,17 +143,25 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// finish args
-	args = append(args, "pipe:")
+	if wIsFile {
+		args = append(args, wFile.Name())
+	} else {
+		args = append(args, "pipe:")
+	}
 
 	// prepare command
 	cmd := exec.Command("ffmpeg", args...)
 
 	// set input
-	cmd.Stdin = r
+	if !rIsFile {
+		cmd.Stdin = r
+	}
 
 	// set outputs
 	var stderr bytes.Buffer
-	cmd.Stdout = w
+	if !wIsFile {
+		cmd.Stdout = w
+	}
 	cmd.Stderr = &stderr
 
 	// handle progress
