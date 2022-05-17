@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"bytes"
 	"io"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func TestConvert(t *testing.T) {
-	for _, item := range []struct {
+	for i, item := range []struct {
 		sample  string
 		options ConvertOptions
 		report  Report
@@ -268,7 +269,7 @@ func TestConvert(t *testing.T) {
 			},
 		},
 	} {
-		t.Run(item.sample, func(t *testing.T) {
+		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
 			sample := loadSample(item.sample)
 			defer sample.Close()
 

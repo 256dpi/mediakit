@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/jpeg"
 	"image/png"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -12,7 +13,7 @@ import (
 )
 
 func TestThumbnail(t *testing.T) {
-	for _, item := range []struct {
+	for i, item := range []struct {
 		sample string
 		opts   ThumbnailOptions
 		size   image.Point
@@ -42,7 +43,7 @@ func TestThumbnail(t *testing.T) {
 			size: image.Pt(128, 86),
 		},
 	} {
-		t.Run(item.sample, func(t *testing.T) {
+		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
 			sample := loadSample(item.sample)
 
 			var buf bytes.Buffer
