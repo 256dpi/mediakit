@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -13,6 +14,9 @@ import (
 
 // TODO: Support segmented encoding:
 //  https://video.stackexchange.com/questions/32297/resuming-a-partially-completed-encode-with-ffmpeg
+
+// WarningsLogger is the logger used to print warnings.
+var WarningsLogger *log.Logger
 
 // Preset represents a conversion preset.
 // https://handbrake.fr/docs/en/1.5.0/technical/official-presets.html
@@ -99,6 +103,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		"-i", "pipe:",
 		"-nostats",
 		"-hide_banner",
+		"-loglevel", "repeat+warning",
 	}
 
 	// enable progress
@@ -183,6 +188,14 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 			return fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
 		}
 		return err
+	}
+
+	// print warnings
+	if WarningsLogger != nil {
+		scanner := bufio.NewScanner(&stderr)
+		for scanner.Scan() {
+			WarningsLogger.Print(scanner.Text())
+		}
 	}
 
 	return nil
