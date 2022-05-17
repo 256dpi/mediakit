@@ -14,10 +14,23 @@ func TestConvertAudio(t *testing.T) {
 	defer sample.Close()
 
 	var out bytes.Buffer
+	var progress []Progress
 	err := Convert(sample, &out, ConvertOptions{
 		Preset: AudioMP3VBRStandard,
+		Progress: func(p Progress) {
+			progress = append(progress, p)
+		},
 	})
 	assert.NoError(t, err)
+	assert.Len(t, progress, 3)
+	assert.Equal(t, Progress{
+		Duration: 0,
+		Size:     45,
+	}, progress[0])
+	assert.Equal(t, Progress{
+		Duration: 105.796984,
+		Size:     2026196,
+	}, progress[2])
 
 	r := bytes.NewReader(out.Bytes())
 	report, err := Analyze(r, AnalyzeOptions{
@@ -53,13 +66,26 @@ func TestConvertVideo(t *testing.T) {
 	defer sample.Close()
 
 	var out bytes.Buffer
+	var progress []Progress
 	err := Convert(sample, &out, ConvertOptions{
 		Preset:   VideoMP4H264AACFast,
 		Duration: 1,
 		Width:    1024,
 		Height:   -1,
+		Progress: func(p Progress) {
+			progress = append(progress, p)
+		},
 	})
 	assert.NoError(t, err)
+	assert.Len(t, progress, 2)
+	assert.Equal(t, Progress{
+		Duration: 0,
+		Size:     36,
+	}, progress[0])
+	assert.Equal(t, Progress{
+		Duration: 0.875917,
+		Size:     487616,
+	}, progress[1])
 
 	r := bytes.NewReader(out.Bytes())
 	report, err := Analyze(r, AnalyzeOptions{

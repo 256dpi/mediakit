@@ -62,6 +62,12 @@ func (p Preset) Args() []string {
 	}
 }
 
+// Progress is emitted during conversion.
+type Progress struct {
+	Duration float64
+	Size     int64
+}
+
 // ConvertOptions defines conversion options.
 type ConvertOptions struct {
 	// Select the desired preset.
@@ -73,6 +79,9 @@ type ConvertOptions struct {
 	// Apply scaling, set one component to -1 to keep aspect ratio.
 	// https://trac.ffmpeg.org/wiki/Scaling
 	Width, Height int
+
+	// Receive progress updates.
+	Progress func(Progress)
 }
 
 // Convert will run the ffmpeg utility to convert the specified input to the
@@ -88,7 +97,11 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		"-i", "pipe:",
 		"-nostats",
 		"-hide_banner",
-		"-progress", "pipe:3",
+	}
+
+	// enable progress
+	if opts.Progress != nil {
+		args = append(args, "-progress", "pipe:4")
 	}
 
 	// apply preset
@@ -103,7 +116,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// finish args
-	args = append(args, "pipe:4")
+	args = append(args, "pipe:3")
 
 	// prepare output pipe
 	or, ow, err := os.Pipe()
@@ -112,12 +125,6 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 	defer or.Close()
 	defer ow.Close()
-
-	// prepare progress pipe
-	pr, pw, err := os.Pipe()
-	if err != nil {
-		return err
-	}
 
 	// prepare command
 	cmd := exec.Command("ffmpeg", args...)
@@ -131,15 +138,44 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	cmd.Stderr = &stderr
 
 	// set output
-	cmd.ExtraFiles = append(cmd.ExtraFiles, pw, ow)
+	cmd.ExtraFiles = append(cmd.ExtraFiles, ow)
 
 	// handle progress
-	go func() {
-		scanner := bufio.NewScanner(pr)
-		for scanner.Scan() {
-			println(scanner.Text())
+	if opts.Progress != nil {
+		// prepare progress pipe
+		pr, pw, err := os.Pipe()
+		if err != nil {
+			return err
 		}
-	}()
+
+		// set output
+		cmd.ExtraFiles = append(cmd.ExtraFiles, pw)
+
+		go func() {
+			// prepare variables
+			var progress Progress
+
+			// scan output
+			scanner := bufio.NewScanner(pr)
+			for scanner.Scan() {
+				line := scanner.Text()
+				if strings.HasPrefix(line, "out_time=") {
+					// parse duration
+					durStr := strings.TrimPrefix(line, "out_time=")
+					duration, _ := parseDuration(durStr)
+					progress.Duration = duration.Seconds()
+				} else if strings.HasPrefix(line, "total_size=") {
+					// parse size
+					sizeStr := strings.TrimPrefix(line, "total_size=")
+					progress.Size, _ = strconv.ParseInt(sizeStr, 10, 64)
+				} else if strings.HasPrefix(line, "progress=") {
+					// emit and clear progress
+					opts.Progress(progress)
+					progress = Progress{}
+				}
+			}
+		}()
+	}
 
 	// copy output
 	go func() {
