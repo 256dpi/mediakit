@@ -11,13 +11,13 @@ import (
 
 func TestAnalyze(t *testing.T) {
 	for _, item := range []struct {
-		ext string
-		rep *Report
+		sample string
+		report Report
 	}{
 		// audio
 		{
-			ext: "aac",
-			rep: &Report{
+			sample: "sample.aac",
+			report: Report{
 				Duration: 105.81,
 				Format: Format{
 					Name:       "aac",
@@ -39,8 +39,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "aiff",
-			rep: &Report{
+			sample: "sample.aiff",
+			report: Report{
 				Duration: 105.772948,
 				Format: Format{
 					Name:       "aiff",
@@ -62,8 +62,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "flac",
-			rep: &Report{
+			sample: "sample.flac",
+			report: Report{
 				Duration: 105.772948,
 				Format: Format{
 					Name:       "flac",
@@ -85,8 +85,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "m4a",
-			rep: &Report{
+			sample: "sample.m4a",
+			report: Report{
 				Duration: 105.797,
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
@@ -108,8 +108,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "mp2",
-			rep: &Report{
+			sample: "sample.mp2",
+			report: Report{
 				Duration: 105.79,
 				Format: Format{
 					Name:       "mp3",
@@ -131,8 +131,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "mp3",
-			rep: &Report{
+			sample: "sample.mp3",
+			report: Report{
 				Duration: 105.79,
 				Format: Format{
 					Name:       "mp3",
@@ -154,8 +154,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "ogg",
-			rep: &Report{
+			sample: "sample.ogg",
+			report: Report{
 				Duration: 105.77,
 				Format: Format{
 					Name:       "ogg",
@@ -176,8 +176,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "wav",
-			rep: &Report{
+			sample: "sample.wav",
+			report: Report{
 				Duration: 105.77,
 				Format: Format{
 					Name:       "wav",
@@ -199,8 +199,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "wma",
-			rep: &Report{
+			sample: "sample.wma",
+			report: Report{
 				Duration: 105.789,
 				Format: Format{
 					Name:       "asf",
@@ -223,8 +223,8 @@ func TestAnalyze(t *testing.T) {
 		},
 		// video
 		{
-			ext: "hevc",
-			rep: &Report{
+			sample: "sample.hevc",
+			report: Report{
 				Duration: 28.23,
 				Format: Format{
 					Name:       "hevc",
@@ -246,8 +246,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "avi",
-			rep: &Report{
+			sample: "sample.avi",
+			report: Report{
 				Duration: 28.236542,
 				Format: Format{
 					Name:       "avi",
@@ -269,8 +269,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "mov",
-			rep: &Report{
+			sample: "sample.mov",
+			report: Report{
 				Duration: 28.237,
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
@@ -292,8 +292,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "mp4",
-			rep: &Report{
+			sample: "sample.mp4",
+			report: Report{
 				Duration: 28.237,
 				Format: Format{
 					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
@@ -315,8 +315,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "mpeg",
-			rep: &Report{
+			sample: "sample.mpeg",
+			report: Report{
 				Duration: 28.23,
 				Format: Format{
 					Name:       "mpeg",
@@ -338,8 +338,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "mpg",
-			rep: &Report{
+			sample: "sample.mpg",
+			report: Report{
 				Duration: 28.27,
 				Format: Format{
 					Name:       "mpegvideo",
@@ -361,8 +361,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "webm",
-			rep: &Report{
+			sample: "sample.webm",
+			report: Report{
 				Duration: 28.237,
 				Format: Format{
 					Name:       "matroska,webm",
@@ -384,8 +384,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			ext: "wmv",
-			rep: &Report{
+			sample: "sample.wmv",
+			report: Report{
 				Duration: 28.237,
 				Format: Format{
 					Name:       "asf",
@@ -407,8 +407,8 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 	} {
-		t.Run(item.ext, func(t *testing.T) {
-			sample := loadSample("sample." + item.ext)
+		t.Run(item.sample, func(t *testing.T) {
+			sample := loadSample(item.sample)
 			defer sample.Close()
 
 			report, err := Analyze(sample, AnalyzeOptions{
@@ -418,7 +418,7 @@ func TestAnalyze(t *testing.T) {
 				},
 			})
 			assert.NoError(t, err)
-			assert.Equal(t, item.rep, report)
+			assert.Equal(t, &item.report, report)
 		})
 	}
 }
