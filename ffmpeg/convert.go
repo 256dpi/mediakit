@@ -101,7 +101,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 
 	// enable progress
 	if opts.Progress != nil {
-		args = append(args, "-progress", "pipe:4")
+		args = append(args, "-progress", "pipe:3")
 	}
 
 	// apply preset
@@ -116,15 +116,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// finish args
-	args = append(args, "pipe:3")
-
-	// prepare output pipe
-	or, ow, err := os.Pipe()
-	if err != nil {
-		return err
-	}
-	defer or.Close()
-	defer ow.Close()
+	args = append(args, "pipe:")
 
 	// prepare command
 	cmd := exec.Command("ffmpeg", args...)
@@ -133,12 +125,9 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	cmd.Stdin = r
 
 	// set outputs
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
+	var stderr bytes.Buffer
+	cmd.Stdout = w
 	cmd.Stderr = &stderr
-
-	// set output
-	cmd.ExtraFiles = append(cmd.ExtraFiles, ow)
 
 	// handle progress
 	if opts.Progress != nil {
@@ -177,13 +166,8 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		}()
 	}
 
-	// copy output
-	go func() {
-		_, _ = io.Copy(w, or)
-	}()
-
 	// run command
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		if stderr.Len() > 0 {
 			return fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
