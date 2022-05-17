@@ -25,3 +25,7 @@ samples:
 	wget -nc -O ./samples/sample.mpg https://filesamples.com/samples/video/mpg/sample_1280x720.mpg || true
 	wget -nc -O ./samples/sample.webm https://filesamples.com/samples/video/webm/sample_1280x720.webm || true
 	wget -nc -O ./samples/sample.wmv https://filesamples.com/samples/video/wmv/sample_1280x720.wmv || true
+	# image (https://filesamples.com/categories/image)
+	wget -nc -O ./samples/sample.gif https://filesamples.com/samples/image/gif/sample_1280%C3%97853.gif || true
+	wget -nc -O ./samples/sample.jpg https://filesamples.com/samples/image/jpg/sample_1280%C3%97853.jpg || true
+	wget -nc -O ./samples/sample.png https://filesamples.com/samples/image/png/sample_1280%C3%97853.png || true

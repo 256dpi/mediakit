@@ -71,6 +71,35 @@ func TestConvert(t *testing.T) {
 				},
 			},
 		},
+		{
+			sample: "sample.jpg",
+			options: ConvertOptions{
+				Preset: ImagePNG,
+				Width:  640,
+				Height: -1,
+			},
+			report: Report{
+				Duration: 0.04,
+				Format: Format{
+					Name:       "png_pipe",
+					LongName:   "piped png sequence",
+					ProbeScore: 99,
+					Duration:   0,
+				},
+				Streams: []Stream{
+					{
+						CodecName:     "png",
+						CodecLongName: "PNG (Portable Network Graphics) image",
+						CodecType:     "video",
+						BitRate:       0,
+						Duration:      0,
+						Width:         640,
+						Height:        427,
+						FrameRate:     25,
+					},
+				},
+			},
+		},
 		// combined
 		{
 			sample: "combined_avc-aac.mov",

@@ -527,6 +527,80 @@ func TestAnalyze(t *testing.T) {
 				},
 			},
 		},
+		// image
+		{
+			sample: "sample.gif",
+			report: Report{
+				Duration: 0.1,
+				Format: Format{
+					Name:       "gif",
+					LongName:   "CompuServe Graphics Interchange Format (GIF)",
+					ProbeScore: 100,
+					Duration:   0.1,
+				},
+				Streams: []Stream{
+					{
+						CodecName:     "gif",
+						CodecLongName: "CompuServe GIF (Graphics Interchange Format)",
+						CodecType:     "video",
+						BitRate:       0,
+						Duration:      0.1,
+						Width:         1280,
+						Height:        853,
+						FrameRate:     10,
+					},
+				},
+			},
+		},
+		{
+			sample: "sample.jpg",
+			report: Report{
+				Duration: 0.04,
+				Format: Format{
+					Name:       "image2",
+					LongName:   "image2 sequence",
+					ProbeScore: 50,
+					Duration:   0.04,
+				},
+				Streams: []Stream{
+					{
+						CodecName:     "mjpeg",
+						CodecLongName: "Motion JPEG",
+						CodecType:     "video",
+						BitRate:       0,
+						Duration:      0.04,
+						Width:         1280,
+						Height:        853,
+						FrameRate:     25,
+					},
+				},
+			},
+		},
+		{
+			sample: "sample.png",
+			reset:  true,
+			report: Report{
+				Duration: 0.04,
+				Format: Format{
+					Name:       "png_pipe",
+					LongName:   "piped png sequence",
+					ProbeScore: 99,
+					Duration:   0,
+				},
+				Streams: []Stream{
+					{
+						CodecName:     "png",
+						CodecLongName: "PNG (Portable Network Graphics) image",
+						CodecType:     "video",
+						BitRate:       0,
+						Duration:      0,
+						Width:         1280,
+						Height:        853,
+						FrameRate:     25,
+					},
+				},
+			},
+		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
 			sample := loadSample(item.sample)
