@@ -22,25 +22,38 @@ func TestThumbnail(t *testing.T) {
 			sample: "sample.png",
 			opts: ThumbnailOptions{
 				Preset: JPGWeb,
-				Width:  128,
+				Width:  256,
 			},
-			size: image.Pt(128, 86),
+			size: image.Pt(256, 171),
 		},
 		{
 			sample: "sample.jpg",
 			opts: ThumbnailOptions{
 				Preset: PNGWeb,
-				Width:  128,
+				Width:  512,
+				Height: 256,
 			},
-			size: image.Pt(128, 85),
+			size: image.Pt(384, 256),
 		},
 		{
 			sample: "sample.gif",
 			opts: ThumbnailOptions{
 				Preset: JPGWeb,
-				Width:  128,
+				Width:  256,
+				Height: 256,
+				Crop:   true,
 			},
-			size: image.Pt(128, 86),
+			size: image.Pt(256, 256),
+		},
+		{
+			sample: "sample.png",
+			opts: ThumbnailOptions{
+				Preset:      JPGWeb,
+				Width:       256,
+				KeepProfile: true,
+				NoRotate:    true,
+			},
+			size: image.Pt(256, 171),
 		},
 	} {
 		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
