@@ -408,7 +408,7 @@ func TestAnalyze(t *testing.T) {
 		},
 	} {
 		t.Run(item.ext, func(t *testing.T) {
-			sample := loadSample(item.ext)
+			sample := loadSample("sample." + item.ext)
 			defer sample.Close()
 
 			report, err := Analyze(sample, AnalyzeOptions{
@@ -431,7 +431,7 @@ func TestAnalyzeError(t *testing.T) {
 }
 
 func BenchmarkAnalyze(b *testing.B) {
-	sample := loadSample("mp3")
+	sample := loadSample("sample.mp3")
 	defer sample.Close()
 
 	var buf bytes.Buffer

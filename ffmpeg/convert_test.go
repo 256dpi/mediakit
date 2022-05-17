@@ -10,7 +10,7 @@ import (
 )
 
 func TestConvertAudio(t *testing.T) {
-	sample := loadSample("wav")
+	sample := loadSample("sample.wav")
 	defer sample.Close()
 
 	var out bytes.Buffer
@@ -62,7 +62,7 @@ func TestConvertAudio(t *testing.T) {
 }
 
 func TestConvertVideo(t *testing.T) {
-	sample := loadSample("mpeg")
+	sample := loadSample("sample.mpeg")
 	defer sample.Close()
 
 	var out bytes.Buffer
@@ -112,6 +112,71 @@ func TestConvertVideo(t *testing.T) {
 				Duration:      1.001,
 				Width:         1024,
 				Height:        576,
+			},
+		},
+	}, report)
+}
+
+func TestConvertCombined(t *testing.T) {
+	sample := loadSample("bunny.ts")
+	defer sample.Close()
+
+	var out bytes.Buffer
+	var progress []Progress
+	err := Convert(sample, &out, ConvertOptions{
+		Preset:   VideoMP4H264AACFast,
+		Duration: 1,
+		Width:    1024,
+		Height:   -1,
+		Progress: func(p Progress) {
+			progress = append(progress, p)
+		},
+	})
+	assert.NoError(t, err)
+	assert.Len(t, progress, 2)
+	assert.Equal(t, Progress{
+		Duration: 0.338753,
+		Size:     36,
+	}, progress[0])
+	assert.Equal(t, Progress{
+		Duration: 1.012132,
+		Size:     66293,
+	}, progress[1])
+
+	r := bytes.NewReader(out.Bytes())
+	report, err := Analyze(r, AnalyzeOptions{
+		Reset: func() error {
+			_, err := r.Seek(0, io.SeekStart)
+			return err
+		},
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, &Report{
+		Duration: 1.083333,
+		Format: Format{
+			Name:       "mov,mp4,m4a,3gp,3g2,mj2",
+			LongName:   "QuickTime / MOV",
+			ProbeScore: 100,
+			Duration:   1.083333,
+		},
+		Streams: []Stream{
+			{
+				CodecName:     "h264",
+				CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+				CodecType:     "video",
+				BitRate:       179216,
+				Duration:      1,
+				Width:         1024,
+				Height:        576,
+			},
+			{
+				CodecName:     "aac",
+				CodecLongName: "AAC (Advanced Audio Coding)",
+				CodecType:     "audio",
+				BitRate:       308020,
+				Duration:      1.083333,
+				SampleRate:    44100,
+				Channels:      2,
 			},
 		},
 	}, report)

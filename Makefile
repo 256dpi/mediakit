@@ -25,4 +25,5 @@ samples:
 	wget -nc -O ./samples/sample.mpg https://filesamples.com/samples/video/mpg/sample_1280x720.mpg || true
 	wget -nc -O ./samples/sample.webm https://filesamples.com/samples/video/webm/sample_1280x720.webm || true
 	wget -nc -O ./samples/sample.wmv https://filesamples.com/samples/video/wmv/sample_1280x720.wmv || true
-
+	# combined
+	wget -nc -O ./samples/bunny.ts https://www.elecard.com/storage/video/bbb_360p_c.ts || true

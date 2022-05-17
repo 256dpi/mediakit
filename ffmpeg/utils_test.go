@@ -5,7 +5,7 @@ import (
 )
 
 func loadSample(ext string) *os.File {
-	f, err := os.Open("../samples/sample." + ext)
+	f, err := os.Open("../samples/" + ext)
 	if err != nil {
 		panic(err)
 	}
