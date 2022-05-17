@@ -8,6 +8,7 @@ import (
 	"math"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 // Report is a ffprobe report.
@@ -45,11 +46,9 @@ type Stream struct {
 	Height int `json:"height"`
 }
 
-// TODO: Use ffmpeg to decode duration if missing?
-
 // Analyze will run the ffprobe utility on the specified input and return the
 // parsed report.
-func Analyze(r io.Reader) (*Report, error) {
+func Analyze(r io.Reader, reset func() error) (*Report, error) {
 	// prepare args
 	args := []string{
 		"-print_format", "json",
@@ -100,5 +99,75 @@ func Analyze(r io.Reader) (*Report, error) {
 		report.Duration = math.Max(report.Duration, stream.Duration)
 	}
 
+	// TODO: If file is too big we may just count the read bytes from the source
+	//  to estimate the progress of the operation.
+
+	// decode full file to get duration if still missing
+	if report.Duration == 0 && reset != nil {
+		// reset reader
+		err = reset()
+		if err != nil {
+			return nil, err
+		}
+
+		// prepare command
+		cmd = exec.Command("ffmpeg", "-nostats", "-hide_banner", "-i", "pipe:", "-f", "null", "-")
+
+		// set input
+		cmd.Stdin = r
+
+		// run command
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			if stderr.Len() > 0 {
+				return nil, fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
+			}
+			return nil, err
+		}
+
+		// find duration string
+		var durStr string
+		lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+		for i := len(lines) - 1; i >= 0; i-- {
+			if strings.Contains(lines[i], " time=") {
+				parts := strings.Split(lines[i], " ")
+				for _, part := range parts {
+					if strings.HasPrefix(part, "time=") {
+						durStr = part[5:]
+						break
+					}
+				}
+				if durStr != "" {
+					break
+				}
+			}
+		}
+
+		// parse duration
+		duration, err := parseDuration(durStr)
+		if err != nil {
+			return nil, err
+		}
+
+		// set duration
+		report.Duration = duration.Seconds()
+	}
+
 	return &report, nil
+}
+
+func parseDuration(str string) (time.Duration, error) {
+	// parse string
+	ts, err := time.Parse("15:04:05.999999999", str)
+	if err != nil {
+		return 0, err
+	}
+
+	// add year
+	ts = ts.AddDate(1970, 0, 0)
+
+	// get duration
+	dur := time.Duration(ts.UnixNano())
+
+	return dur, nil
 }

@@ -18,7 +18,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "aac",
 			rep: &Report{
-				Duration: 0,
+				Duration: 105.81,
 				Format: Format{
 					Name:       "aac",
 					LongName:   "raw ADTS AAC (Advanced Audio Coding)",
@@ -110,6 +110,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mp2",
 			rep: &Report{
+				Duration: 105.79,
 				Format: Format{
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
@@ -132,7 +133,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mp3",
 			rep: &Report{
-				Duration: 0,
+				Duration: 105.79,
 				Format: Format{
 					Name:       "mp3",
 					LongName:   "MP2/3 (MPEG audio layer 2/3)",
@@ -155,7 +156,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "ogg",
 			rep: &Report{
-				Duration: 0,
+				Duration: 105.77,
 				Format: Format{
 					Name:       "ogg",
 					LongName:   "Ogg",
@@ -177,7 +178,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "wav",
 			rep: &Report{
-				Duration: 0,
+				Duration: 105.77,
 				Format: Format{
 					Name:       "wav",
 					LongName:   "WAV / WAVE (Waveform Audio)",
@@ -224,7 +225,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "hevc",
 			rep: &Report{
-				Duration: 0,
+				Duration: 28.23,
 				Format: Format{
 					Name:       "hevc",
 					LongName:   "raw HEVC video",
@@ -316,7 +317,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mpeg",
 			rep: &Report{
-				Duration: 0,
+				Duration: 28.23,
 				Format: Format{
 					Name:       "mpeg",
 					LongName:   "MPEG-PS (MPEG-2 Program Stream)",
@@ -339,7 +340,7 @@ func TestAnalyze(t *testing.T) {
 		{
 			ext: "mpg",
 			rep: &Report{
-				Duration: 0,
+				Duration: 28.27,
 				Format: Format{
 					Name:       "mpegvideo",
 					LongName:   "raw MPEG video",
@@ -410,7 +411,10 @@ func TestAnalyze(t *testing.T) {
 			sample := loadSample(item.ext)
 			defer sample.Close()
 
-			report, err := Analyze(sample)
+			report, err := Analyze(sample, func() error {
+				_, err := sample.Seek(0, io.SeekStart)
+				return err
+			})
 			assert.NoError(t, err)
 			assert.Equal(t, item.rep, report)
 		})
@@ -418,7 +422,7 @@ func TestAnalyze(t *testing.T) {
 }
 
 func TestAnalyzeError(t *testing.T) {
-	report, err := Analyze(strings.NewReader("foo"))
+	report, err := Analyze(strings.NewReader("foo"), nil)
 	assert.Error(t, err)
 	assert.Nil(t, report)
 	assert.Equal(t, "invalid data found when processing input", err.Error())
@@ -439,7 +443,7 @@ func BenchmarkAnalyze(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		reader.Reset(buf.Bytes())
 
-		_, err := Analyze(reader)
+		_, err := Analyze(reader, nil)
 		if err != nil {
 			panic(err)
 		}

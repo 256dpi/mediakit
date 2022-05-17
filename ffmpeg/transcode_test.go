@@ -20,7 +20,7 @@ func TestTranscode(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	report, err := Analyze(&out)
+	report, err := Analyze(&out, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
 		Format: Format{

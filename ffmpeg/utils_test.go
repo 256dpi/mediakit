@@ -1,11 +1,10 @@
 package ffmpeg
 
 import (
-	"io"
 	"os"
 )
 
-func loadSample(ext string) io.ReadCloser {
+func loadSample(ext string) *os.File {
 	f, err := os.Open("../samples/sample." + ext)
 	if err != nil {
 		panic(err)
