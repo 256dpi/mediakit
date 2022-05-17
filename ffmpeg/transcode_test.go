@@ -23,6 +23,7 @@ func TestTranscode(t *testing.T) {
 	report, err := Analyze(&out, AnalyzeOptions{})
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
+		Duration: 1,
 		Format: Format{
 			Name:       "matroska,webm",
 			LongName:   "Matroska / WebM",

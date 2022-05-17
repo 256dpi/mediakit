@@ -17,7 +17,7 @@ import (
 // TranscodeOptions define transcoding options.
 type TranscodeOptions struct {
 	Format   string
-	Duration int
+	Duration float64
 }
 
 // Transcode will run the ffmpeg utility to transcode the specified input to the
@@ -36,7 +36,7 @@ func Transcode(r io.Reader, w io.Writer, opts TranscodeOptions) error {
 		args = append(args, "-f", opts.Format)
 	}
 	if opts.Duration != 0 {
-		args = append(args, "-t", strconv.Itoa(opts.Duration))
+		args = append(args, "-t", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
 	}
 
 	// finish args
