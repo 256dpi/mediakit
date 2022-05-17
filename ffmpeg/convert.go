@@ -14,7 +14,7 @@ import (
 // TODO: Support segmented encoding:
 //  https://video.stackexchange.com/questions/32297/resuming-a-partially-completed-encode-with-ffmpeg
 
-// Preset represents a transcoding preset.
+// Preset represents a conversion preset.
 type Preset string
 
 // The available presets.
@@ -57,15 +57,15 @@ func (p Preset) Args() []string {
 	}
 }
 
-// TranscodeOptions define transcoding options.
-type TranscodeOptions struct {
+// ConvertOptions defines conversion options.
+type ConvertOptions struct {
 	Preset   Preset
 	Duration float64
 }
 
-// Transcode will run the ffmpeg utility to transcode the specified input to the
+// Convert will run the ffmpeg utility to convert the specified input to the
 // configured output.
-func Transcode(r io.Reader, w io.Writer, opts TranscodeOptions) error {
+func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	// check preset
 	if !opts.Preset.Valid() {
 		return fmt.Errorf("invalid preset")

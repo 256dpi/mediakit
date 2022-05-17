@@ -9,12 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTranscodeAudio(t *testing.T) {
+func TestConvertAudio(t *testing.T) {
 	sample := loadSample("wav")
 	defer sample.Close()
 
 	var out bytes.Buffer
-	err := Transcode(sample, &out, TranscodeOptions{
+	err := Convert(sample, &out, ConvertOptions{
 		Preset: AudioMP3VBRStandard,
 	})
 	assert.NoError(t, err)
@@ -48,12 +48,12 @@ func TestTranscodeAudio(t *testing.T) {
 	}, report)
 }
 
-func TestTranscodeVideo(t *testing.T) {
+func TestConvertVideo(t *testing.T) {
 	sample := loadSample("mpeg")
 	defer sample.Close()
 
 	var out bytes.Buffer
-	err := Transcode(sample, &out, TranscodeOptions{
+	err := Convert(sample, &out, ConvertOptions{
 		Preset:   VideoMP4H264Fast,
 		Duration: 1,
 	})
@@ -89,8 +89,8 @@ func TestTranscodeVideo(t *testing.T) {
 	}, report)
 }
 
-func TestTranscodeError(t *testing.T) {
-	err := Transcode(strings.NewReader("foo"), io.Discard, TranscodeOptions{
+func TestConvertError(t *testing.T) {
+	err := Convert(strings.NewReader("foo"), io.Discard, ConvertOptions{
 		Preset: AudioMP3VBRStandard,
 	})
 	assert.Error(t, err)
