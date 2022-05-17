@@ -44,12 +44,23 @@ func (p Preset) Arg() string {
 
 // ThumbnailOptions defines thumbnail options.
 type ThumbnailOptions struct {
-	Preset      Preset
-	Width       int
-	Height      int
-	Crop        bool
+	// Select the desired preset.
+	Preset Preset
+
+	// The mandatory output width.
+	Width int
+
+	// The optional output height.
+	Height int
+
+	// Whether to fill area and crop.
+	Crop bool
+
+	// Whether to keep embedded color profile (no sRGB conversion).
 	KeepProfile bool
-	NoRotate    bool
+
+	// Whether to skip metadata rotation.
+	NoRotate bool
 }
 
 // Thumbnail will run the vips utility to convert the specified input to the
