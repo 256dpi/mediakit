@@ -10,20 +10,66 @@ import (
 )
 
 func TestConvert(t *testing.T) {
+	presetConvertTest := func(t *testing.T, preset Preset, format string) {
+		for _, name := range []string{
+			"sample.gif",
+			"sample.heif",
+			"sample.jpg",
+			"sample.pdf",
+			"sample.png",
+			"sample.tiff",
+			"sample.webp",
+		} {
+			t.Run(name, func(t *testing.T) {
+				sample := loadSample(name)
+				defer sample.Close()
+
+				var buf bytes.Buffer
+				err := Convert(sample, &buf, ConvertOptions{
+					Preset: preset,
+					Width:  256,
+					Height: 256,
+					Crop:   true,
+				})
+				assert.NoError(t, err)
+
+				report, err := Analyze(&buf)
+				assert.NoError(t, err)
+				assert.Equal(t, &Report{
+					Width:  256,
+					Height: 256,
+					Bands:  report.Bands, // may be 3 or 4
+					Color:  "srgb",
+					Format: format,
+				}, report)
+			})
+		}
+	}
+
+	t.Run("JPG", func(t *testing.T) {
+		presetConvertTest(t, JPGWeb, "jpeg")
+	})
+
+	t.Run("PNG", func(t *testing.T) {
+		presetConvertTest(t, PNGWeb, "png")
+	})
+}
+
+func TestConvertOptions(t *testing.T) {
 	for i, item := range []struct {
 		sample string
 		opts   ConvertOptions
 		report Report
 	}{
 		{
-			sample: "sample.png",
+			sample: "sample.jpg",
 			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  256,
 			},
 			report: Report{
 				Width:  256,
-				Height: 171,
+				Height: 170,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
@@ -32,7 +78,7 @@ func TestConvert(t *testing.T) {
 		{
 			sample: "sample.jpg",
 			opts: ConvertOptions{
-				Preset: PNGWeb,
+				Preset: JPGWeb,
 				Width:  512,
 				Height: 256,
 			},
@@ -41,11 +87,11 @@ func TestConvert(t *testing.T) {
 				Height: 256,
 				Bands:  3,
 				Color:  "srgb",
-				Format: "png",
+				Format: "jpeg",
 			},
 		},
 		{
-			sample: "sample.gif",
+			sample: "sample.jpg",
 			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  256,
@@ -61,7 +107,7 @@ func TestConvert(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.png",
+			sample: "sample.jpg",
 			opts: ConvertOptions{
 				Preset:      JPGWeb,
 				Width:       256,
@@ -70,7 +116,7 @@ func TestConvert(t *testing.T) {
 			},
 			report: Report{
 				Width:  256,
-				Height: 171,
+				Height: 170,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",

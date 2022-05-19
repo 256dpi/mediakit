@@ -17,12 +17,12 @@ const (
 	// JPGWeb is a Web optimized preset for JPGs with stripped metadata,
 	// optimized coding, SRGB color space and removed embedded color profiles.
 	// `vips jpegsave`
-	JPGWeb = iota
+	JPGWeb Preset = iota
 
-	// PNGWeb is a Web optimized preset for PNGs with stripped metadata,
-	// optimized coding, SRGB color space and removed embedded color profiles.
+	// PNGWeb is a Web optimized preset for PNGs with stripped metadata, sRGB
+	// color space and removed embedded color profiles.
 	// `vips pngsave`
-	PNGWeb = iota
+	PNGWeb
 )
 
 // Valid returns whether the preset is valid.

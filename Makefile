@@ -29,3 +29,8 @@ samples:
 	wget -nc -O ./samples/sample.gif https://filesamples.com/samples/image/gif/sample_1280%C3%97853.gif || true
 	wget -nc -O ./samples/sample.jpg https://filesamples.com/samples/image/jpg/sample_1280%C3%97853.jpg || true
 	wget -nc -O ./samples/sample.png https://filesamples.com/samples/image/png/sample_1280%C3%97853.png || true
+	wget -nc -O ./samples/sample.tiff https://filesamples.com/samples/image/tiff/sample_1280%C3%97853.tiff || true
+	wget -nc -O ./samples/sample.heif https://filesamples.com/samples/image/heif/sample1.heif || true
+	wget -nc -O ./samples/sample.webp https://filesamples.com/samples/image/webp/sample1.webp || true
+	# other
+	wget -nc -O ./samples/sample.pdf https://filesamples.com/samples/document/pdf/sample1.pdf || true

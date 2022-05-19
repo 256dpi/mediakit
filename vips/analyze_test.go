@@ -23,6 +23,16 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
+			sample: "sample.heif",
+			report: Report{
+				Width:  8736,
+				Height: 5856,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "heif",
+			},
+		},
+		{
 			sample: "sample.jpg",
 			report: Report{
 				Width:  1280,
@@ -33,6 +43,16 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
+			sample: "sample.pdf",
+			report: Report{
+				Width:  0,
+				Height: 792,
+				Bands:  4,
+				Color:  "srgb",
+				Format: "pdf",
+			},
+		},
+		{
 			sample: "sample.png",
 			report: Report{
 				Width:  1280,
@@ -40,6 +60,26 @@ func TestAnalyze(t *testing.T) {
 				Bands:  3,
 				Color:  "srgb",
 				Format: "png",
+			},
+		},
+		{
+			sample: "sample.tiff",
+			report: Report{
+				Width:  1280,
+				Height: 853,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "tiff",
+			},
+		},
+		{
+			sample: "sample.webp",
+			report: Report{
+				Width:  4275,
+				Height: 2451,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "webp",
 			},
 		},
 	} {
