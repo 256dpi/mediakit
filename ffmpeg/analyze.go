@@ -31,9 +31,8 @@ type Format struct {
 // Stream is a ffprobe stream.
 type Stream struct {
 	// codec
-	Type          string `json:"codec_type"`
-	CodecName     string `json:"codec_name"`
-	CodecLongName string `json:"codec_long_name"`
+	Type  string `json:"codec_type"`
+	Codec string `json:"codec_name"`
 
 	// generic
 	BitRate  int     `json:"bit_rate,string"`
