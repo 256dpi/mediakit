@@ -25,10 +25,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 105.82,
 				Format: Format{
-					Name:       "mp3",
-					LongName:   "MP2/3 (MPEG audio layer 2/3)",
-					ProbeScore: 51,
-					Duration:   0,
+					Name:     "mp3",
+					Duration: 0,
 				}, Streams: []Stream{
 					{
 						Type:       "audio",
@@ -52,10 +50,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 1.001,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   1.001,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 1.001,
 				},
 				Streams: []Stream{
 					{
@@ -80,10 +76,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
-					Name:       "png_pipe",
-					LongName:   "piped png sequence",
-					ProbeScore: 99,
-					Duration:   0,
+					Name:     "png_pipe",
+					Duration: 0,
 				},
 				Streams: []Stream{
 					{
@@ -108,10 +102,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 1.08,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   1.08,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 1.08,
 				},
 				Streams: []Stream{
 					{
@@ -147,10 +139,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 1.08,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   1.08,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 1.08,
 				},
 				Streams: []Stream{
 					{
@@ -182,10 +172,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 1.08,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   1.08,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 1.08,
 				},
 				Streams: []Stream{
 					{
@@ -218,10 +206,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
-					Name:       "jpeg_pipe",
-					LongName:   "piped jpeg sequence",
-					ProbeScore: 51,
-					Duration:   0,
+					Name:     "jpeg_pipe",
+					Duration: 0,
 				}, Streams: []Stream{
 					{
 						Type:      "video",
@@ -242,10 +228,8 @@ func TestConvert(t *testing.T) {
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
-					Name:       "png_pipe",
-					LongName:   "piped png sequence",
-					ProbeScore: 99,
-					Duration:   0,
+					Name:     "png_pipe",
+					Duration: 0,
 				}, Streams: []Stream{
 					{
 						Type:      "video",

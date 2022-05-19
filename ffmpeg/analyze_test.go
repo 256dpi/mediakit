@@ -21,10 +21,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 96.662622,
 				Format: Format{
-					Name:       "aac",
-					LongName:   "raw ADTS AAC (Advanced Audio Coding)",
-					ProbeScore: 51,
-					Duration:   96.662622,
+					Name:     "aac",
+					Duration: 96.662622,
 				},
 				Streams: []Stream{
 					{
@@ -43,10 +41,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.772948,
 				Format: Format{
-					Name:       "aiff",
-					LongName:   "Audio IFF",
-					ProbeScore: 100,
-					Duration:   105.772948,
+					Name:     "aiff",
+					Duration: 105.772948,
 				},
 				Streams: []Stream{
 					{
@@ -65,10 +61,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.772948,
 				Format: Format{
-					Name:       "flac",
-					LongName:   "raw FLAC",
-					ProbeScore: 100,
-					Duration:   105.772948,
+					Name:     "flac",
+					Duration: 105.772948,
 				},
 				Streams: []Stream{
 					{
@@ -87,10 +81,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.797,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   105.797,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 105.797,
 				},
 				Streams: []Stream{
 					{
@@ -109,10 +101,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.795917,
 				Format: Format{
-					Name:       "mp3",
-					LongName:   "MP2/3 (MPEG audio layer 2/3)",
-					ProbeScore: 51,
-					Duration:   105.795917,
+					Name:     "mp3",
+					Duration: 105.795917,
 				},
 				Streams: []Stream{
 					{
@@ -131,10 +121,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.822041,
 				Format: Format{
-					Name:       "mp3",
-					LongName:   "MP2/3 (MPEG audio layer 2/3)",
-					ProbeScore: 51,
-					Duration:   105.822041,
+					Name:     "mp3",
+					Duration: 105.822041,
 				},
 				Streams: []Stream{
 					{
@@ -153,10 +141,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.772948,
 				Format: Format{
-					Name:       "ogg",
-					LongName:   "Ogg",
-					ProbeScore: 100,
-					Duration:   105.772948,
+					Name:     "ogg",
+					Duration: 105.772948,
 				}, Streams: []Stream{
 					{
 						Type:       "audio",
@@ -174,10 +160,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.772948,
 				Format: Format{
-					Name:       "wav",
-					LongName:   "WAV / WAVE (Waveform Audio)",
-					ProbeScore: 99,
-					Duration:   105.772948,
+					Name:     "wav",
+					Duration: 105.772948,
 				},
 				Streams: []Stream{
 					{
@@ -196,10 +180,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 105.789,
 				Format: Format{
-					Name:       "asf",
-					LongName:   "ASF (Advanced / Active Streaming Format)",
-					ProbeScore: 100,
-					Duration:   105.789,
+					Name:     "asf",
+					Duration: 105.789,
 				},
 				Streams: []Stream{
 					{
@@ -220,10 +202,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.23,
 				Format: Format{
-					Name:       "hevc",
-					LongName:   "raw HEVC video",
-					ProbeScore: 51,
-					Duration:   0,
+					Name:     "hevc",
+					Duration: 0,
 				},
 				Streams: []Stream{
 					{
@@ -243,10 +223,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.236542,
 				Format: Format{
-					Name:       "avi",
-					LongName:   "AVI (Audio Video Interleaved)",
-					ProbeScore: 100,
-					Duration:   28.236542,
+					Name:     "avi",
+					Duration: 28.236542,
 				},
 				Streams: []Stream{
 					{
@@ -266,10 +244,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.237,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   28.237,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 28.237,
 				},
 				Streams: []Stream{
 					{
@@ -289,10 +265,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.237,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   28.237,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 28.237,
 				},
 				Streams: []Stream{
 					{
@@ -312,10 +286,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.236533,
 				Format: Format{
-					Name:       "mpeg",
-					LongName:   "MPEG-PS (MPEG-2 Program Stream)",
-					ProbeScore: 26,
-					Duration:   28.236533,
+					Name:     "mpeg",
+					Duration: 28.236533,
 				},
 				Streams: []Stream{
 					{
@@ -336,10 +308,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.27,
 				Format: Format{
-					Name:       "mpegvideo",
-					LongName:   "raw MPEG video",
-					ProbeScore: 51,
-					Duration:   0,
+					Name:     "mpegvideo",
+					Duration: 0,
 				},
 				Streams: []Stream{
 					{
@@ -359,10 +329,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.237,
 				Format: Format{
-					Name:       "matroska,webm",
-					LongName:   "Matroska / WebM",
-					ProbeScore: 100,
-					Duration:   28.237,
+					Name:     "matroska,webm",
+					Duration: 28.237,
 				},
 				Streams: []Stream{
 					{
@@ -382,10 +350,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 28.237,
 				Format: Format{
-					Name:       "asf",
-					LongName:   "ASF (Advanced / Active Streaming Format)",
-					ProbeScore: 100,
-					Duration:   28.237,
+					Name:     "asf",
+					Duration: 28.237,
 				},
 				Streams: []Stream{
 					{
@@ -406,10 +372,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 7.2,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   7.2,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 7.2,
 				},
 				Streams: []Stream{
 					{
@@ -447,10 +411,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 7.189333,
 				Format: Format{
-					Name:       "mov,mp4,m4a,3gp,3g2,mj2",
-					LongName:   "QuickTime / MOV",
-					ProbeScore: 100,
-					Duration:   7.189333,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 7.189333,
 				},
 				Streams: []Stream{
 					{
@@ -478,10 +440,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 7.224,
 				Format: Format{
-					Name:       "mpeg",
-					LongName:   "MPEG-PS (MPEG-2 Program Stream)",
-					ProbeScore: 26,
-					Duration:   7.224,
+					Name:     "mpeg",
+					Duration: 7.224,
 				}, Streams: []Stream{
 					{
 						Type:      "video",
@@ -509,10 +469,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 0.1,
 				Format: Format{
-					Name:       "gif",
-					LongName:   "CompuServe Graphics Interchange Format (GIF)",
-					ProbeScore: 100,
-					Duration:   0.1,
+					Name:     "gif",
+					Duration: 0.1,
 				},
 				Streams: []Stream{
 					{
@@ -532,10 +490,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
-					Name:       "image2",
-					LongName:   "image2 sequence",
-					ProbeScore: 50,
-					Duration:   0.04,
+					Name:     "image2",
+					Duration: 0.04,
 				},
 				Streams: []Stream{
 					{
@@ -556,10 +512,8 @@ func TestAnalyze(t *testing.T) {
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
-					Name:       "png_pipe",
-					LongName:   "piped png sequence",
-					ProbeScore: 99,
-					Duration:   0,
+					Name:     "png_pipe",
+					Duration: 0,
 				},
 				Streams: []Stream{
 					{
@@ -614,10 +568,8 @@ func TestAnalyzePipe(t *testing.T) {
 	assert.Equal(t, &Report{
 		Duration: 105.81,
 		Format: Format{
-			Name:       "aac",
-			LongName:   "raw ADTS AAC (Advanced Audio Coding)",
-			ProbeScore: 51,
-			Duration:   0,
+			Name:     "aac",
+			Duration: 0,
 		},
 		Streams: []Stream{
 			{
