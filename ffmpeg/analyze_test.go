@@ -28,9 +28,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       145531,
 						Duration:      96.662622,
 						SampleRate:    44100,
@@ -51,9 +51,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "pcm_s16be",
 						CodecLongName: "PCM signed 16-bit big-endian",
-						CodecType:     "audio",
 						BitRate:       1411200,
 						Duration:      105.772948,
 						SampleRate:    44100,
@@ -74,9 +74,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "flac",
 						CodecLongName: "FLAC (Free Lossless Audio Codec)",
-						CodecType:     "audio",
 						BitRate:       0,
 						Duration:      105.772948,
 						SampleRate:    44100,
@@ -97,9 +97,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       130554,
 						Duration:      105.772993,
 						SampleRate:    44100,
@@ -120,9 +120,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "mp2",
 						CodecLongName: "MP2 (MPEG audio layer 2)",
-						CodecType:     "audio",
 						BitRate:       384000,
 						Duration:      105.795917,
 						SampleRate:    44100,
@@ -143,9 +143,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "mp3",
 						CodecLongName: "MP3 (MPEG audio layer 3)",
-						CodecType:     "audio",
 						BitRate:       128000,
 						Duration:      105.822041,
 						SampleRate:    44100,
@@ -165,9 +165,9 @@ func TestAnalyze(t *testing.T) {
 					Duration:   105.772948,
 				}, Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "vorbis",
 						CodecLongName: "Vorbis",
-						CodecType:     "audio",
 						BitRate:       112000,
 						Duration:      105.772948,
 						SampleRate:    44100,
@@ -188,9 +188,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "pcm_s16le",
 						CodecLongName: "PCM signed 16-bit little-endian",
-						CodecType:     "audio",
 						BitRate:       1411200,
 						Duration:      105.772948,
 						SampleRate:    44100,
@@ -211,9 +211,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "wmav2",
 						CodecLongName: "Windows Media Audio 2",
-						CodecType:     "audio",
 						BitRate:       128000,
 						Duration:      105.789,
 						SampleRate:    44100,
@@ -236,9 +236,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "hevc",
 						CodecLongName: "H.265 / HEVC (High Efficiency Video Coding)",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0,
 						Width:         1280,
@@ -260,9 +260,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "mpeg4",
 						CodecLongName: "MPEG-4 part 2",
-						CodecType:     "video",
 						BitRate:       1244594,
 						Duration:      28.236542,
 						Width:         1280,
@@ -284,9 +284,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       4937429,
 						Duration:      28.236542,
 						Width:         1280,
@@ -308,9 +308,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       4937429,
 						Duration:      28.236542,
 						Width:         1280,
@@ -332,9 +332,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "mpeg1video",
 						CodecLongName: "MPEG-1 video",
-						CodecType:     "video",
 						BitRate:       104857200,
 						Duration:      28.236533,
 						Width:         1280,
@@ -357,9 +357,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "mpeg2video",
 						CodecLongName: "MPEG-2 video",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0,
 						Width:         1280,
@@ -381,9 +381,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "vp9",
 						CodecLongName: "Google VP9",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0,
 						Width:         1280,
@@ -405,9 +405,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "msmpeg4v3",
 						CodecLongName: "MPEG-4 part 2 Microsoft variant version 3",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      28.237,
 						Width:         1280,
@@ -430,18 +430,18 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       10129,
 						Duration:      7.2,
 						SampleRate:    48000,
 						Channels:      2,
 					},
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       2045076,
 						Duration:      7.2,
 						Width:         1280,
@@ -449,9 +449,9 @@ func TestAnalyze(t *testing.T) {
 						FrameRate:     25,
 					},
 					{
+						Type:          "data",
 						CodecName:     "",
 						CodecLongName: "",
-						CodecType:     "data",
 						BitRate:       4,
 						Duration:      7.2,
 						SampleRate:    0,
@@ -474,9 +474,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "hevc",
 						CodecLongName: "H.265 / HEVC (High Efficiency Video Coding)",
-						CodecType:     "video",
 						BitRate:       689106,
 						Duration:      7.16,
 						Width:         1280,
@@ -484,9 +484,9 @@ func TestAnalyze(t *testing.T) {
 						FrameRate:     25,
 					},
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       188238,
 						Duration:      7.16,
 						SampleRate:    48000,
@@ -506,9 +506,9 @@ func TestAnalyze(t *testing.T) {
 					Duration:   7.224,
 				}, Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "mpeg2video",
 						CodecLongName: "MPEG-2 video",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      7.08,
 						Width:         1280,
@@ -516,9 +516,9 @@ func TestAnalyze(t *testing.T) {
 						FrameRate:     25,
 					},
 					{
+						Type:          "audio",
 						CodecName:     "mp2",
 						CodecLongName: "MP2 (MPEG audio layer 2)",
-						CodecType:     "audio",
 						BitRate:       384000,
 						Duration:      7.224,
 						SampleRate:    48000,
@@ -540,9 +540,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "gif",
 						CodecLongName: "CompuServe GIF (Graphics Interchange Format)",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0.1,
 						Width:         1280,
@@ -564,9 +564,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "mjpeg",
 						CodecLongName: "Motion JPEG",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0.04,
 						Width:         1280,
@@ -589,9 +589,9 @@ func TestAnalyze(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "png",
 						CodecLongName: "PNG (Portable Network Graphics) image",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0,
 						Width:         1280,
@@ -648,9 +648,9 @@ func TestAnalyzePipe(t *testing.T) {
 		},
 		Streams: []Stream{
 			{
+				Type:          "audio",
 				CodecName:     "aac",
 				CodecLongName: "AAC (Advanced Audio Coding)",
-				CodecType:     "audio",
 				BitRate:       145531,
 				Duration:      0,
 				SampleRate:    44100,

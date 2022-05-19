@@ -31,9 +31,9 @@ func TestConvert(t *testing.T) {
 					Duration:   0,
 				}, Streams: []Stream{
 					{
+						Type:          "audio",
 						CodecName:     "mp3",
 						CodecLongName: "MP3 (MPEG audio layer 3)",
-						CodecType:     "audio",
 						BitRate:       163993,
 						Duration:      0,
 						SampleRate:    44100,
@@ -60,9 +60,9 @@ func TestConvert(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       3887608,
 						Duration:      1.001,
 						Width:         1024,
@@ -89,9 +89,9 @@ func TestConvert(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "png",
 						CodecLongName: "PNG (Portable Network Graphics) image",
-						CodecType:     "video",
 						BitRate:       0,
 						Duration:      0,
 						Width:         640,
@@ -118,9 +118,9 @@ func TestConvert(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       394504,
 						Duration:      1,
 						Width:         1280,
@@ -128,17 +128,17 @@ func TestConvert(t *testing.T) {
 						FrameRate:     25,
 					},
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       25104,
 						Duration:      1.08,
 						SampleRate:    48000,
 						Channels:      2,
 					},
 					{
-						CodecType: "data",
-						Duration:  1,
+						Type:     "data",
+						Duration: 1,
 					},
 				},
 			},
@@ -159,9 +159,9 @@ func TestConvert(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       387656,
 						Duration:      1,
 						Width:         1280,
@@ -169,9 +169,9 @@ func TestConvert(t *testing.T) {
 						FrameRate:     25,
 					},
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       25259,
 						Duration:      1.08,
 						SampleRate:    48000,
@@ -196,9 +196,9 @@ func TestConvert(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "h264",
 						CodecLongName: "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
-						CodecType:     "video",
 						BitRate:       397792,
 						Duration:      1,
 						Width:         1280,
@@ -206,9 +206,9 @@ func TestConvert(t *testing.T) {
 						FrameRate:     25,
 					},
 					{
+						Type:          "audio",
 						CodecName:     "aac",
 						CodecLongName: "AAC (Advanced Audio Coding)",
-						CodecType:     "audio",
 						BitRate:       35681,
 						Duration:      1.08,
 						SampleRate:    48000,
@@ -233,9 +233,9 @@ func TestConvert(t *testing.T) {
 					Duration:   0,
 				}, Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "mjpeg",
 						CodecLongName: "Motion JPEG",
-						CodecType:     "video",
 						Width:         1280,
 						Height:        720,
 						FrameRate:     25,
@@ -258,9 +258,9 @@ func TestConvert(t *testing.T) {
 					Duration:   0,
 				}, Streams: []Stream{
 					{
+						Type:          "video",
 						CodecName:     "png",
 						CodecLongName: "PNG (Portable Network Graphics) image",
-						CodecType:     "video",
 						Width:         1280,
 						Height:        720,
 						FrameRate:     25,
