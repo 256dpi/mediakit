@@ -3,6 +3,7 @@ package mediakit
 import (
 	"bytes"
 	"io"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,7 +18,7 @@ func TestProcessorConvertImage(t *testing.T) {
 	})
 
 	var buf bytes.Buffer
-	err := p.ConvertImage(input, KeepSize(), func(output io.ReadSeeker) error {
+	err := p.ConvertImage(input, KeepSize(), func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
 		return err
 	})
@@ -38,7 +39,7 @@ func TestProcessorConvertAudio(t *testing.T) {
 	var progress []float64
 	err := p.ConvertAudio(input, func(f float64) {
 		progress = append(progress, f)
-	}, func(output io.ReadSeeker) error {
+	}, func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
 		return err
 	})
@@ -60,7 +61,7 @@ func TestProcessorConvertVideo(t *testing.T) {
 	var progress []float64
 	err := p.ConvertVideo(input, MaxWidth(500), func(f float64) {
 		progress = append(progress, f)
-	}, func(output io.ReadSeeker) error {
+	}, func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
 		return err
 	})
@@ -80,7 +81,7 @@ func TestProcessorExtractImage(t *testing.T) {
 	})
 
 	var buf bytes.Buffer
-	err := p.ExtractImage(input, 0.25, KeepSize(), func(output io.ReadSeeker) error {
+	err := p.ExtractImage(input, 0.25, KeepSize(), func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
 		return err
 	})
