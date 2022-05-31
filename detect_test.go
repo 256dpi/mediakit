@@ -99,8 +99,10 @@ func TestDetect(t *testing.T) {
 			sample := loadSample(item.sample)
 			defer sample.Close()
 
-			buf, err := io.ReadAll(sample)
+			buf := make([]byte, DetectBytes)
+			n, err := io.ReadFull(sample, buf)
 			assert.NoError(t, err)
+			buf = buf[:n]
 
 			contentType := Detect(buf)
 			assert.Equal(t, item.typ, contentType)
