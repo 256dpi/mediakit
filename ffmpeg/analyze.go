@@ -65,12 +65,11 @@ type Stream struct {
 	Codec string `json:"codec_name"`
 
 	// generic
-	BitRate  int     `json:"bit_rate,string"`
 	Duration float64 `json:"duration,string"`
 
 	// audio
-	SampleRate int `json:"sample_rate,string"`
 	Channels   int `json:"channels"`
+	SampleRate int `json:"sample_rate,string"`
 
 	// video
 	Width     int       `json:"width"`

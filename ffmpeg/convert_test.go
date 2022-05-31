@@ -31,10 +31,9 @@ func TestConvert(t *testing.T) {
 					{
 						Type:       "audio",
 						Codec:      "mp3",
-						BitRate:    163993,
 						Duration:   0,
-						SampleRate: 44100,
 						Channels:   2,
+						SampleRate: 44100,
 					},
 				},
 				DidParse: true,
@@ -59,7 +58,6 @@ func TestConvert(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "h264",
-						BitRate:   3455638,
 						Duration:  1.047619,
 						Width:     1022,
 						Height:    576,
@@ -107,7 +105,6 @@ func TestConvert(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "h264",
-						BitRate:   394504,
 						Duration:  1,
 						Width:     1280,
 						Height:    720,
@@ -116,10 +113,9 @@ func TestConvert(t *testing.T) {
 					{
 						Type:       "audio",
 						Codec:      "aac",
-						BitRate:    25104,
 						Duration:   1.08,
-						SampleRate: 48000,
 						Channels:   2,
+						SampleRate: 48000,
 					},
 					{
 						Type:     "data",
@@ -144,7 +140,6 @@ func TestConvert(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "h264",
-						BitRate:   387656,
 						Duration:  1,
 						Width:     1280,
 						Height:    720,
@@ -153,10 +148,9 @@ func TestConvert(t *testing.T) {
 					{
 						Type:       "audio",
 						Codec:      "aac",
-						BitRate:    25259,
 						Duration:   1.08,
-						SampleRate: 48000,
 						Channels:   2,
+						SampleRate: 48000,
 					},
 				},
 			},
@@ -177,7 +171,6 @@ func TestConvert(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "h264",
-						BitRate:   397792,
 						Duration:  1,
 						Width:     1280,
 						Height:    720,
@@ -186,10 +179,9 @@ func TestConvert(t *testing.T) {
 					{
 						Type:       "audio",
 						Codec:      "aac",
-						BitRate:    35681,
 						Duration:   1.08,
-						SampleRate: 48000,
 						Channels:   2,
+						SampleRate: 48000,
 					},
 				},
 			},
