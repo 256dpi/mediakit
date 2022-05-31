@@ -518,7 +518,7 @@ func TestAnalyzePipe(t *testing.T) {
 	report, err := Analyze(bytes.NewReader(buf))
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
-		Duration: 105.81,
+		Duration: osFloat(105.81, 105.79),
 		Format: Format{
 			Name:     "aac",
 			Duration: 0,

@@ -23,7 +23,7 @@ func TestConvert(t *testing.T) {
 				Preset: AudioMP3VBRStandard,
 			},
 			report: Report{
-				Duration: 105.82,
+				Duration: osFloat(105.81, 105.79),
 				Format: Format{
 					Name:     "mp3",
 					Duration: 0,
@@ -279,7 +279,7 @@ func TestConvertProgress(t *testing.T) {
 	}, progress[0])
 	assert.Equal(t, Progress{
 		Duration: 0.875917,
-		Size:     775897,
+		Size:     osInt(775897, 775458),
 	}, progress[1])
 }
 

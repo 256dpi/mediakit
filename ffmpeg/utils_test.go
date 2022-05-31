@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"log"
 	"os"
+	"runtime"
 )
 
 func init() {
@@ -16,4 +17,20 @@ func loadSample(name string) *os.File {
 	}
 
 	return f
+}
+
+var isDarwin = runtime.GOOS == "darwin"
+
+func osInt(macos, linux int64) int64 {
+	if isDarwin {
+		return macos
+	}
+	return linux
+}
+
+func osFloat(macos, linux float64) float64 {
+	if isDarwin {
+		return macos
+	}
+	return linux
 }
