@@ -2,7 +2,6 @@ package mediakit
 
 import (
 	"io"
-	"io/fs"
 	"math"
 	"os"
 	"path/filepath"
@@ -26,9 +25,6 @@ var (
 type Config struct {
 	// The directory to use for temporary files.
 	Directory string
-
-	// The file system to use for temporary files.
-	FS fs.FS
 
 	// The supported formats and codecs.
 	ImageFormats []string
@@ -78,7 +74,7 @@ func NewProcessor(config Config) *Processor {
 }
 
 // ConvertImage will convert an image stream with the specified sizer applied.
-func (p *Processor) ConvertImage(input io.Reader, sizer Sizer, fn func(output io.ReadSeeker) error) error {
+func (p *Processor) ConvertImage(input io.Reader, sizer Sizer, fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
 		return p.ConvertImageFile(input, output, sizer)
 	})
@@ -126,7 +122,7 @@ func (p *Processor) ConvertImageFile(input, output *os.File, sizer Sizer) error 
 }
 
 // ConvertAudio will convert an audio stream.
-func (p *Processor) ConvertAudio(input io.Reader, progress func(float64), fn func(output io.ReadSeeker) error) error {
+func (p *Processor) ConvertAudio(input io.Reader, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
 		return p.ConvertAudioFile(input, output, progress)
 	})
@@ -180,7 +176,7 @@ func (p *Processor) ConvertAudioFile(input, output *os.File, progress func(float
 }
 
 // ConvertVideo will convert a video stream with the specified sizer applied.
-func (p *Processor) ConvertVideo(input io.Reader, sizer Sizer, progress func(float64), fn func(output io.ReadSeeker) error) error {
+func (p *Processor) ConvertVideo(input io.Reader, sizer Sizer, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
 		return p.ConvertVideoFile(input, output, sizer, progress)
 	})
@@ -253,7 +249,7 @@ func (p *Processor) ConvertVideoFile(input, output *os.File, sizer Sizer, progre
 
 // ExtractImage will extract an image stream from a video stream at the provided
 // position with the specified sizer applied.
-func (p *Processor) ExtractImage(input io.Reader, pos float64, sizer Sizer, fn func(output io.ReadSeeker) error) error {
+func (p *Processor) ExtractImage(input io.Reader, pos float64, sizer Sizer, fn func(output *os.File) error) error {
 	return p.buffer(input, true, fn, func(input, temp, output *os.File) error {
 		return p.ExtractImageFile(input, temp, output, pos, sizer)
 	})
@@ -307,7 +303,7 @@ func (p *Processor) ExtractImageFile(input, temp, output *os.File, pos float64, 
 	return nil
 }
 
-func (p *Processor) buffer(input io.Reader, temp bool, output func(io.ReadSeeker) error, fn func(input *os.File, temp *os.File, output *os.File) error) error {
+func (p *Processor) buffer(input io.Reader, temp bool, output func(*os.File) error, fn func(input *os.File, temp *os.File, output *os.File) error) error {
 	// prepare paths
 	id := uuid.New().String()
 	inputPath := filepath.Join(p.config.Directory, id+"-input")

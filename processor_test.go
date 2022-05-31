@@ -3,7 +3,6 @@ package mediakit
 import (
 	"bytes"
 	"io"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,7 +13,6 @@ func TestProcessorConvertImage(t *testing.T) {
 
 	p := NewProcessor(Config{
 		Directory:    t.TempDir(),
-		FS:           os.DirFS("/"),
 		ImageFormats: []string{"png"},
 	})
 
@@ -32,7 +30,6 @@ func TestProcessorConvertAudio(t *testing.T) {
 
 	p := NewProcessor(Config{
 		Directory:    t.TempDir(),
-		FS:           os.DirFS("/"),
 		AudioFormats: []string{"wav"},
 		AudioCodecs:  []string{"pcm_s16le"},
 	})
@@ -55,7 +52,6 @@ func TestProcessorConvertVideo(t *testing.T) {
 
 	p := NewProcessor(Config{
 		Directory:    t.TempDir(),
-		FS:           os.DirFS("/"),
 		VideoFormats: []string{"avi"},
 		VideoCodecs:  []string{"mpeg4"},
 	})
@@ -78,7 +74,6 @@ func TestProcessorExtractImage(t *testing.T) {
 
 	p := NewProcessor(Config{
 		Directory:    t.TempDir(),
-		FS:           os.DirFS("/"),
 		ImageFormats: []string{"png"},
 		VideoFormats: []string{"avi"},
 		VideoCodecs:  []string{"mpeg4"},
