@@ -37,6 +37,7 @@ func TestConvert(t *testing.T) {
 						Channels:   2,
 					},
 				},
+				DidParse: true,
 			},
 		},
 		{
@@ -91,6 +92,7 @@ func TestConvert(t *testing.T) {
 						FrameRate: 25,
 					},
 				},
+				DidParse: true,
 			},
 		},
 		// combined
@@ -218,6 +220,7 @@ func TestConvert(t *testing.T) {
 						FrameRate: 25,
 					},
 				},
+				DidParse: true,
 			},
 		},
 		{
@@ -240,6 +243,7 @@ func TestConvert(t *testing.T) {
 						FrameRate: 25,
 					},
 				},
+				DidParse: true,
 			},
 		},
 	} {
@@ -251,13 +255,7 @@ func TestConvert(t *testing.T) {
 			err := Convert(sample, &out, item.options)
 			assert.NoError(t, err)
 
-			r := bytes.NewReader(out.Bytes())
-			report, err := Analyze(r, AnalyzeOptions{
-				Reset: func() error {
-					_, err := r.Seek(0, io.SeekStart)
-					return err
-				},
-			})
+			report, err := Analyze(bytes.NewReader(out.Bytes()))
 			assert.NoError(t, err)
 			assert.Equal(t, &item.report, report)
 		})

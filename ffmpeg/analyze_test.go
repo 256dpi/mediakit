@@ -12,7 +12,6 @@ import (
 func TestAnalyze(t *testing.T) {
 	for _, item := range []struct {
 		sample string
-		reset  bool
 		report Report
 	}{
 		// audio
@@ -198,7 +197,6 @@ func TestAnalyze(t *testing.T) {
 		// video
 		{
 			sample: "sample.hevc",
-			reset:  true,
 			report: Report{
 				Duration: 28.23,
 				Format: Format{
@@ -216,6 +214,7 @@ func TestAnalyze(t *testing.T) {
 						FrameRate: 23.976023976023978,
 					},
 				},
+				DidParse: true,
 			},
 		},
 		{
@@ -304,7 +303,6 @@ func TestAnalyze(t *testing.T) {
 		},
 		{
 			sample: "sample.mpg",
-			reset:  true,
 			report: Report{
 				Duration: 28.27,
 				Format: Format{
@@ -322,6 +320,7 @@ func TestAnalyze(t *testing.T) {
 						FrameRate: 23.976023976023978,
 					},
 				},
+				DidParse: true,
 			},
 		},
 		{
@@ -508,7 +507,6 @@ func TestAnalyze(t *testing.T) {
 		},
 		{
 			sample: "sample.png",
-			reset:  true,
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
@@ -526,6 +524,7 @@ func TestAnalyze(t *testing.T) {
 						FrameRate: 25,
 					},
 				},
+				DidParse: true,
 			},
 		},
 	} {
@@ -533,17 +532,9 @@ func TestAnalyze(t *testing.T) {
 			sample := loadSample(item.sample)
 			defer sample.Close()
 
-			var reset bool
-			report, err := Analyze(sample, AnalyzeOptions{
-				Reset: func() error {
-					reset = true
-					_, err := sample.Seek(0, io.SeekStart)
-					return err
-				},
-			})
+			report, err := Analyze(sample)
 			assert.NoError(t, err)
 			assert.Equal(t, &item.report, report)
-			assert.Equal(t, item.reset, reset)
 		})
 	}
 }
@@ -555,15 +546,7 @@ func TestAnalyzePipe(t *testing.T) {
 	buf, err := io.ReadAll(sample)
 	assert.NoError(t, err)
 
-	var reset bool
-	r := bytes.NewReader(buf)
-	report, err := Analyze(r, AnalyzeOptions{
-		Reset: func() error {
-			reset = true
-			_, err := r.Seek(0, io.SeekStart)
-			return err
-		},
-	})
+	report, err := Analyze(bytes.NewReader(buf))
 	assert.NoError(t, err)
 	assert.Equal(t, &Report{
 		Duration: 105.81,
@@ -581,12 +564,12 @@ func TestAnalyzePipe(t *testing.T) {
 				Channels:   2,
 			},
 		},
+		DidParse: true,
 	}, report)
-	assert.Equal(t, true, reset)
 }
 
 func TestAnalyzeError(t *testing.T) {
-	report, err := Analyze(strings.NewReader("foo"), AnalyzeOptions{})
+	report, err := Analyze(strings.NewReader("foo"))
 	assert.Error(t, err)
 	assert.Nil(t, report)
 	assert.Equal(t, "invalid data found when processing input", err.Error())
@@ -607,7 +590,7 @@ func BenchmarkAnalyze(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		reader.Reset(buf.Bytes())
 
-		_, err := Analyze(reader, AnalyzeOptions{})
+		_, err := Analyze(reader)
 		if err != nil {
 			panic(err)
 		}

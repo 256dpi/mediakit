@@ -76,6 +76,7 @@ type Report struct {
 	Duration float64
 	Format   Format   `json:"format"`
 	Streams  []Stream `json:"streams"`
+	DidParse bool
 }
 
 // Size returns the maximum stream width and height.
@@ -107,18 +108,11 @@ func (r Report) FrameRate() float64 {
 	return frameRate
 }
 
-// AnalyzeOptions additional options for Analyze.
-type AnalyzeOptions struct {
-	// If set a reader may be rewound and decoded again to get the duration
-	// of files with missing metadata (raw files).
-	Reset func() error
-}
-
 // Analyze will run the ffprobe and ffmpeg utilities on the specified input and
 // return the parsed report. If the input is an *os.File and has a name it will
 // be mapped via the filesystem. Otherwise, a pipe is created to connect the
 // input. Using a file is recommended to allow ffprobe to seek within the file.
-func Analyze(r io.Reader, opts AnalyzeOptions) (*Report, error) {
+func Analyze(r io.Reader) (*Report, error) {
 	// check input
 	file, _ := r.(*os.File)
 	isFile := file != nil && file.Name() != ""
@@ -181,13 +175,16 @@ func Analyze(r io.Reader, opts AnalyzeOptions) (*Report, error) {
 		report.Duration = math.Max(report.Duration, stream.Duration)
 	}
 
-	// TODO: If file is too big we may just count the read bytes from the source
-	//  to estimate the progress of the operation.
+	// get seeker
+	seeker, _ := r.(io.Seeker)
 
 	// decode full file to get duration if still missing
-	if report.Duration == 0 && opts.Reset != nil {
-		// reset reader
-		err = opts.Reset()
+	if report.Duration == 0 && seeker != nil {
+		// set flag
+		report.DidParse = true
+
+		// seek start
+		_, err = seeker.Seek(0, io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
