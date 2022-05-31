@@ -13,37 +13,10 @@ import (
 	"time"
 )
 
-// Report is a ffprobe report.
-type Report struct {
-	Duration float64
-	Format   Format   `json:"format"`
-	Streams  []Stream `json:"streams"`
-}
-
-// Format is ffprobe format.
+// Format is a ffprobe format.
 type Format struct {
 	Name     string  `json:"format_name"`
 	Duration float64 `json:"duration,string"`
-}
-
-// Stream is a ffprobe stream.
-type Stream struct {
-	// codec
-	Type  string `json:"codec_type"`
-	Codec string `json:"codec_name"`
-
-	// generic
-	BitRate  int     `json:"bit_rate,string"`
-	Duration float64 `json:"duration,string"`
-
-	// audio
-	SampleRate int `json:"sample_rate,string"`
-	Channels   int `json:"channels"`
-
-	// video
-	Width     int       `json:"width"`
-	Height    int       `json:"height"`
-	FrameRate FrameRate `json:"r_frame_rate"`
 }
 
 // FrameRate is a video frame rate.
@@ -76,6 +49,62 @@ func (r *FrameRate) UnmarshalJSON(bytes []byte) error {
 		}
 	}
 	return nil
+}
+
+// Stream is a ffprobe stream.
+type Stream struct {
+	// codec
+	Type  string `json:"codec_type"`
+	Codec string `json:"codec_name"`
+
+	// generic
+	BitRate  int     `json:"bit_rate,string"`
+	Duration float64 `json:"duration,string"`
+
+	// audio
+	SampleRate int `json:"sample_rate,string"`
+	Channels   int `json:"channels"`
+
+	// video
+	Width     int       `json:"width"`
+	Height    int       `json:"height"`
+	FrameRate FrameRate `json:"r_frame_rate"`
+}
+
+// Report is a ffprobe report.
+type Report struct {
+	Duration float64
+	Format   Format   `json:"format"`
+	Streams  []Stream `json:"streams"`
+}
+
+// Size returns the maximum stream width and height.
+func (r Report) Size() (int, int) {
+	// get size
+	var width, height int
+	for _, stream := range r.Streams {
+		if stream.Width > 0 && stream.Height > 0 {
+			if stream.Width > width {
+				width = stream.Width
+			}
+			if stream.Height > height {
+				height = stream.Height
+			}
+		}
+	}
+
+	return width, height
+}
+
+// FrameRate returns the maximum stream frame rate.
+func (r Report) FrameRate() float64 {
+	// get frame rate
+	var frameRate float64
+	for _, stream := range r.Streams {
+		frameRate = math.Max(frameRate, float64(stream.FrameRate))
+	}
+
+	return frameRate
 }
 
 // AnalyzeOptions additional options for Analyze.
