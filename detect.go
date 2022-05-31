@@ -14,15 +14,12 @@ const DetectBytes = 3072
 // should detect a faire amount of content types and falls back to
 // "application/octet-stream" if undetected.
 func Detect(buf []byte) string {
-	// use built-in detector first and if not found use mimetype
+	// use built-in detector
 	typ := http.DetectContentType(buf)
+
+	// use mimetype if not found
 	if typ == "application/octet-stream" {
 		typ = mimetype.Detect(buf).String()
-	}
-
-	// return if not found
-	if typ == "application/octet-stream" {
-		return typ
 	}
 
 	return typ

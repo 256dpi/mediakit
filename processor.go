@@ -23,7 +23,7 @@ var (
 
 // Config defines a Processor configuration.
 type Config struct {
-	// The directory to use for temporary files.
+	// The directory to used for temporary files.
 	Directory string
 
 	// The supported formats and codecs.
