@@ -23,7 +23,7 @@ func TestConvert(t *testing.T) {
 				Preset: AudioMP3VBRStandard,
 			},
 			report: Report{
-				Duration: osFloat(105.81, 105.79),
+				Duration: osFloat(105.82, 105.79),
 				Format: Format{
 					Name:     "mp3",
 					Duration: 0,
