@@ -1,0 +1,18 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare
+        run: sudo apt-get install -y ffmpeg vips
+      - name: Install
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18.x
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download
+        run: make samples
+      - name: Test
+        run: go test ./...
