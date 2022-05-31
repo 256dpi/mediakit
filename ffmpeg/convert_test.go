@@ -76,23 +76,18 @@ func TestConvert(t *testing.T) {
 				Height: -1,
 			},
 			report: Report{
-				Duration: 0.04,
 				Format: Format{
-					Name:     "png_pipe",
-					Duration: 0,
+					Name: "png_pipe",
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "png",
-						BitRate:   0,
-						Duration:  0,
 						Width:     640,
 						Height:    427,
 						FrameRate: 25,
 					},
 				},
-				DidParse: true,
 			},
 		},
 		// combined
@@ -207,10 +202,8 @@ func TestConvert(t *testing.T) {
 				Start:  5,
 			},
 			report: Report{
-				Duration: 0.04,
 				Format: Format{
-					Name:     "jpeg_pipe",
-					Duration: 0,
+					Name: "jpeg_pipe",
 				}, Streams: []Stream{
 					{
 						Type:      "video",
@@ -220,7 +213,6 @@ func TestConvert(t *testing.T) {
 						FrameRate: 25,
 					},
 				},
-				DidParse: true,
 			},
 		},
 		{
@@ -230,10 +222,8 @@ func TestConvert(t *testing.T) {
 				Start:  5,
 			},
 			report: Report{
-				Duration: 0.04,
 				Format: Format{
-					Name:     "png_pipe",
-					Duration: 0,
+					Name: "png_pipe",
 				}, Streams: []Stream{
 					{
 						Type:      "video",
@@ -243,7 +233,6 @@ func TestConvert(t *testing.T) {
 						FrameRate: 25,
 					},
 				},
-				DidParse: true,
 			},
 		},
 	} {

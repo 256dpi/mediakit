@@ -496,7 +496,6 @@ func TestAnalyze(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "mjpeg",
-						BitRate:   0,
 						Duration:  0.04,
 						Width:     1280,
 						Height:    853,
@@ -508,23 +507,18 @@ func TestAnalyze(t *testing.T) {
 		{
 			sample: "sample.png",
 			report: Report{
-				Duration: 0.04,
 				Format: Format{
-					Name:     "png_pipe",
-					Duration: 0,
+					Name: "png_pipe",
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "png",
-						BitRate:   0,
-						Duration:  0,
 						Width:     1280,
 						Height:    853,
 						FrameRate: 25,
 					},
 				},
-				DidParse: true,
 			},
 		},
 	} {

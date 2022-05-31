@@ -11,7 +11,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/samber/lo"
 )
+
+var imageCodecs = []string{
+	"png",
+	"mjpeg",
+}
 
 // Format is a ffprobe format.
 type Format struct {
@@ -175,11 +182,14 @@ func Analyze(r io.Reader) (*Report, error) {
 		report.Duration = math.Max(report.Duration, stream.Duration)
 	}
 
+	// determine if image
+	image := len(report.Streams) == 1 && lo.Contains(imageCodecs, report.Streams[0].Codec)
+
 	// get seeker
 	seeker, _ := r.(io.Seeker)
 
 	// decode full file to get duration if still missing
-	if report.Duration == 0 && seeker != nil {
+	if !image && report.Duration == 0 && seeker != nil {
 		// set flag
 		report.DidParse = true
 
