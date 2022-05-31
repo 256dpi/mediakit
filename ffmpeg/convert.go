@@ -137,6 +137,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		"-nostats",
 		"-hide_banner",
 		"-loglevel", "repeat+warning",
+		"-y", // overwrite
 	}
 
 	// add input
