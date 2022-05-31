@@ -17,7 +17,7 @@ const (
 	// JPGWeb is a Web optimized preset for JPGs with stripped metadata,
 	// optimized coding, SRGB color space and removed embedded color profiles.
 	// `vips jpegsave`
-	JPGWeb Preset = iota
+	JPGWeb Preset = iota + 1
 
 	// PNGWeb is a Web optimized preset for PNGs with stripped metadata, sRGB
 	// color space and removed embedded color profiles.

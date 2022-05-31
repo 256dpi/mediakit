@@ -26,7 +26,7 @@ type Preset int
 const (
 	// AudioMP3VBRStandard is a standard MP3 variable encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/MP3
-	AudioMP3VBRStandard = iota
+	AudioMP3VBRStandard = iota + 1
 
 	// VideoMP4H264AACFast is a fast MP4 H.264/AAC encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/H.264

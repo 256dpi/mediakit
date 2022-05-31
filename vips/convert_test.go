@@ -141,7 +141,8 @@ func TestConvertOptions(t *testing.T) {
 func TestConvertError(t *testing.T) {
 	var buf bytes.Buffer
 	err := Convert(strings.NewReader("foo"), &buf, ConvertOptions{
-		Width: 1,
+		Preset: JPGWeb,
+		Width:  1,
 	})
 	assert.Error(t, err)
 	assert.Equal(t, "vipsforeignload: source is not in a known format", err.Error())
