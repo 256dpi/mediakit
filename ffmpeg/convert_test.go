@@ -45,8 +45,8 @@ func TestConvert(t *testing.T) {
 			options: ConvertOptions{
 				Preset:    VideoMP4H264AACFast,
 				Duration:  1.047619,
-				Width:     1024,
-				Height:    -1,
+				Width:     -1,
+				Height:    575,
 				FrameRate: 10.5,
 			},
 			report: Report{
@@ -59,9 +59,9 @@ func TestConvert(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "h264",
-						BitRate:   3455600,
+						BitRate:   3455638,
 						Duration:  1.047619,
-						Width:     1024,
+						Width:     1022,
 						Height:    576,
 						FrameRate: 10.5,
 					},

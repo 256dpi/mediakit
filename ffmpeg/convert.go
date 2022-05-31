@@ -87,6 +87,17 @@ func (p Preset) Args(isFile bool) []string {
 	}
 }
 
+// Filters returns the ffmpeg filters for the preset.
+func (p Preset) Filters() []string {
+	switch p {
+	case VideoMP4H264AACFast:
+		// h264 requires even height
+		return []string{`pad=ceil(iw/2)*2:ceil(ih/2)*2`}
+	default:
+		return nil
+	}
+}
+
 // Progress is emitted during conversion.
 type Progress struct {
 	Duration float64
@@ -152,8 +163,17 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		args = append(args, "-progress", "pipe:3")
 	}
 
+	// prepare filters
+	var filters []string
+
+	// add scale filter
+	if opts.Width != 0 || opts.Height != 0 {
+		filters = append(filters, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
+	}
+
 	// apply preset
 	args = append(args, opts.Preset.Args(wIsFile)...)
+	filters = append(filters, opts.Preset.Filters()...)
 
 	// handle options
 	if opts.Start != 0 {
@@ -166,12 +186,9 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		args = append(args, "-r", strconv.FormatFloat(opts.FrameRate, 'f', -1, 64))
 	}
 
-	// handle filters
-	if opts.Width != 0 || opts.Height != 0 {
-		args = append(args, "-filter:v")
-		if opts.Width != 0 || opts.Height != 0 {
-			args = append(args, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
-		}
+	// add filters
+	if len(filters) > 0 {
+		args = append(args, "-filter:v", strings.Join(filters, ", "))
 	}
 
 	// finish args
