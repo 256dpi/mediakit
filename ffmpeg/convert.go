@@ -109,7 +109,7 @@ type ConvertOptions struct {
 	Width, Height int
 
 	// Force a frame rate.
-	FrameRate int
+	FrameRate float64
 
 	// Receive progress updates.
 	Progress func(Progress)
@@ -161,13 +161,13 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	if opts.Duration != 0 {
 		args = append(args, "-t", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
 	}
+	if opts.FrameRate != 0 {
+		args = append(args, "-r", strconv.FormatFloat(opts.FrameRate, 'f', -1, 64))
+	}
 
 	// handle filters
-	if opts.Width != 0 || opts.Height != 0 || opts.FrameRate != 0 {
+	if opts.Width != 0 || opts.Height != 0 {
 		args = append(args, "-filter:v")
-		if opts.FrameRate != 0 {
-			args = append(args, fmt.Sprintf("fps=%d", opts.FrameRate))
-		}
 		if opts.Width != 0 || opts.Height != 0 {
 			args = append(args, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
 		}

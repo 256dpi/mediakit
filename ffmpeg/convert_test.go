@@ -42,26 +42,27 @@ func TestConvert(t *testing.T) {
 		{
 			sample: "sample.mpeg",
 			options: ConvertOptions{
-				Preset:   VideoMP4H264AACFast,
-				Duration: 1,
-				Width:    1024,
-				Height:   -1,
+				Preset:    VideoMP4H264AACFast,
+				Duration:  1.047619,
+				Width:     1024,
+				Height:    -1,
+				FrameRate: 10.5,
 			},
 			report: Report{
-				Duration: 1.001,
+				Duration: 1.047619,
 				Format: Format{
 					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 1.001,
+					Duration: 1.047619,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "h264",
-						BitRate:   3887608,
-						Duration:  1.001,
+						BitRate:   3455600,
+						Duration:  1.047619,
 						Width:     1024,
 						Height:    576,
-						FrameRate: 23.976023976023978,
+						FrameRate: 10.5,
 					},
 				},
 			},
