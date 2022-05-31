@@ -78,16 +78,16 @@ func NewProcessor(config Config) *Processor {
 }
 
 // ConvertImage will convert an image stream with the specified sizer applied.
-func (p *Processor) ConvertImage(source io.Reader, sink io.Writer, sizer Sizer) error {
-	return p.buffer(source, sink, false, func(source, _, sink *os.File) error {
-		return p.ConvertImageFile(source, sink, sizer)
+func (p *Processor) ConvertImage(input io.Reader, sizer Sizer, fn func(output io.ReadSeeker) error) error {
+	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
+		return p.ConvertImageFile(input, output, sizer)
 	})
 }
 
 // ConvertImageFile will convert an image file with the specified sizer applied.
-func (p *Processor) ConvertImageFile(source, sink *os.File, sizer Sizer) error {
-	// analyze source
-	report, err := vips.Analyze(source)
+func (p *Processor) ConvertImageFile(input, output *os.File, sizer Sizer) error {
+	// analyze input
+	report, err := vips.Analyze(input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -97,8 +97,8 @@ func (p *Processor) ConvertImageFile(source, sink *os.File, sizer Sizer) error {
 		return ErrUnsupportedFormat.WrapF(report.Format)
 	}
 
-	// rewind source
-	_, err = source.Seek(0, io.SeekStart)
+	// rewind input
+	_, err = input.Seek(0, io.SeekStart)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -117,7 +117,7 @@ func (p *Processor) ConvertImageFile(source, sink *os.File, sizer Sizer) error {
 	}
 
 	// convert image
-	err = vips.Convert(source, sink, opts)
+	err = vips.Convert(input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -126,16 +126,16 @@ func (p *Processor) ConvertImageFile(source, sink *os.File, sizer Sizer) error {
 }
 
 // ConvertAudio will convert an audio stream.
-func (p *Processor) ConvertAudio(source io.Reader, sink io.Writer, progress func(float64)) error {
-	return p.buffer(source, sink, false, func(source, _, sink *os.File) error {
-		return p.ConvertAudioFile(source, sink, progress)
+func (p *Processor) ConvertAudio(input io.Reader, progress func(float64), fn func(output io.ReadSeeker) error) error {
+	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
+		return p.ConvertAudioFile(input, output, progress)
 	})
 }
 
 // ConvertAudioFile will convert an audio file.
-func (p *Processor) ConvertAudioFile(source, sink *os.File, progress func(float64)) error {
-	// analyze source
-	report, err := ffmpeg.Analyze(source)
+func (p *Processor) ConvertAudioFile(input, output *os.File, progress func(float64)) error {
+	// analyze input
+	report, err := ffmpeg.Analyze(input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -152,8 +152,8 @@ func (p *Processor) ConvertAudioFile(source, sink *os.File, progress func(float6
 		}
 	}
 
-	// rewind source
-	_, err = source.Seek(0, io.SeekStart)
+	// rewind input
+	_, err = input.Seek(0, io.SeekStart)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -171,7 +171,7 @@ func (p *Processor) ConvertAudioFile(source, sink *os.File, progress func(float6
 	}
 
 	// convert audio
-	err = ffmpeg.Convert(source, sink, opts)
+	err = ffmpeg.Convert(input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -180,16 +180,16 @@ func (p *Processor) ConvertAudioFile(source, sink *os.File, progress func(float6
 }
 
 // ConvertVideo will convert a video stream with the specified sizer applied.
-func (p *Processor) ConvertVideo(source io.Reader, sink io.Writer, sizer Sizer, progress func(float64)) error {
-	return p.buffer(source, sink, false, func(source, _, sink *os.File) error {
-		return p.ConvertVideoFile(source, sink, sizer, progress)
+func (p *Processor) ConvertVideo(input io.Reader, sizer Sizer, progress func(float64), fn func(output io.ReadSeeker) error) error {
+	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
+		return p.ConvertVideoFile(input, output, sizer, progress)
 	})
 }
 
 // ConvertVideoFile will convert a video file with the specified sizer applied.
-func (p *Processor) ConvertVideoFile(source, sink *os.File, sizer Sizer, progress func(float64)) error {
-	// analyze source
-	report, err := ffmpeg.Analyze(source)
+func (p *Processor) ConvertVideoFile(input, output *os.File, sizer Sizer, progress func(float64)) error {
+	// analyze input
+	report, err := ffmpeg.Analyze(input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -206,8 +206,8 @@ func (p *Processor) ConvertVideoFile(source, sink *os.File, sizer Sizer, progres
 		}
 	}
 
-	// rewind source
-	_, err = source.Seek(0, io.SeekStart)
+	// rewind input
+	_, err = input.Seek(0, io.SeekStart)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -243,7 +243,7 @@ func (p *Processor) ConvertVideoFile(source, sink *os.File, sizer Sizer, progres
 	}
 
 	// convert video
-	err = ffmpeg.Convert(source, sink, opts)
+	err = ffmpeg.Convert(input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -253,17 +253,17 @@ func (p *Processor) ConvertVideoFile(source, sink *os.File, sizer Sizer, progres
 
 // ExtractImage will extract an image stream from a video stream at the provided
 // position with the specified sizer applied.
-func (p *Processor) ExtractImage(source io.Reader, sink io.Writer, pos float64, sizer Sizer) error {
-	return p.buffer(source, sink, true, func(source, temp, sink *os.File) error {
-		return p.ExtractImageFile(source, temp, sink, pos, sizer)
+func (p *Processor) ExtractImage(input io.Reader, pos float64, sizer Sizer, fn func(output io.ReadSeeker) error) error {
+	return p.buffer(input, true, fn, func(input, temp, output *os.File) error {
+		return p.ExtractImageFile(input, temp, output, pos, sizer)
 	})
 }
 
 // ExtractImageFile will extract an image file from a video file at the
 // provided position with the specified sizer applied.
-func (p *Processor) ExtractImageFile(source, temp, sink *os.File, pos float64, sizer Sizer) error {
-	// analyze source
-	report, err := ffmpeg.Analyze(source)
+func (p *Processor) ExtractImageFile(input, temp, output *os.File, pos float64, sizer Sizer) error {
+	// analyze input
+	report, err := ffmpeg.Analyze(input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -280,8 +280,8 @@ func (p *Processor) ExtractImageFile(source, temp, sink *os.File, pos float64, s
 		}
 	}
 
-	// rewind source
-	_, err = source.Seek(0, io.SeekStart)
+	// rewind input
+	_, err = input.Seek(0, io.SeekStart)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -293,13 +293,13 @@ func (p *Processor) ExtractImageFile(source, temp, sink *os.File, pos float64, s
 	}
 
 	// convert video
-	err = ffmpeg.Convert(source, temp, opts)
+	err = ffmpeg.Convert(input, temp, opts)
 	if err != nil {
 		return xo.W(err)
 	}
 
 	// convert image
-	err = p.ConvertImageFile(temp, sink, sizer)
+	err = p.ConvertImageFile(temp, output, sizer)
 	if err != nil {
 		return err
 	}
@@ -307,35 +307,35 @@ func (p *Processor) ExtractImageFile(source, temp, sink *os.File, pos float64, s
 	return nil
 }
 
-func (p *Processor) buffer(source io.Reader, sink io.Writer, temp bool, fn func(source, temp, sink *os.File) error) error {
+func (p *Processor) buffer(input io.Reader, temp bool, output func(io.ReadSeeker) error, fn func(input *os.File, temp *os.File, output *os.File) error) error {
 	// prepare paths
 	id := uuid.New().String()
-	sourcePath := filepath.Join(p.config.Directory, id+"-source")
+	inputPath := filepath.Join(p.config.Directory, id+"-input")
 	tempPath := filepath.Join(p.config.Directory, id+"-temp")
-	sinkPath := filepath.Join(p.config.Directory, id+"-sink")
+	outputPath := filepath.Join(p.config.Directory, id+"-output")
 
-	// create source file
-	sourceFile, err := os.Create(sourcePath)
+	// create input file
+	inputFile, err := os.Create(inputPath)
 	if err != nil {
 		return xo.W(err)
 	}
 	defer func() {
-		_ = sourceFile.Close()
-		_ = os.Remove(sourcePath)
+		_ = inputFile.Close()
+		_ = os.Remove(inputPath)
 	}()
 
-	// copy source
-	_, err = io.Copy(sourceFile, source)
+	// copy input
+	_, err = io.Copy(inputFile, input)
 	if err != nil {
 		return xo.W(err)
 	}
-	err = sourceFile.Sync()
+	err = inputFile.Sync()
 	if err != nil {
 		return xo.W(err)
 	}
 
-	// rewind source
-	_, err = sourceFile.Seek(0, io.SeekStart)
+	// rewind input
+	_, err = inputFile.Seek(0, io.SeekStart)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -353,36 +353,36 @@ func (p *Processor) buffer(source io.Reader, sink io.Writer, temp bool, fn func(
 		}()
 	}
 
-	// create sink file
-	sinkFile, err := os.Create(sinkPath)
+	// create output file
+	outputFile, err := os.Create(outputPath)
 	if err != nil {
 		return xo.W(err)
 	}
 	defer func() {
-		_ = sinkFile.Close()
-		_ = os.Remove(sinkPath)
+		_ = outputFile.Close()
+		_ = os.Remove(outputPath)
 	}()
 
 	// yield
-	err = fn(sourceFile, tempFile, sinkFile)
+	err = fn(inputFile, tempFile, outputFile)
 	if err != nil {
 		return err
 	}
 
-	// sync sink
-	err = sinkFile.Sync()
+	// sync output
+	err = outputFile.Sync()
 	if err != nil {
 		return xo.W(err)
 	}
 
-	// rewind sink
-	_, err = sinkFile.Seek(0, io.SeekStart)
+	// rewind output
+	_, err = outputFile.Seek(0, io.SeekStart)
 	if err != nil {
 		return xo.W(err)
 	}
 
-	// copy sink
-	_, err = io.Copy(sink, sinkFile)
+	// yield output
+	err = output(outputFile)
 	if err != nil {
 		return xo.W(err)
 	}

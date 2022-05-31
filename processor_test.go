@@ -2,6 +2,7 @@ package mediakit
 
 import (
 	"bytes"
+	"io"
 	"os"
 	"testing"
 
@@ -18,7 +19,10 @@ func TestProcessorConvertImage(t *testing.T) {
 	})
 
 	var buf bytes.Buffer
-	err := p.ConvertImage(input, &buf, KeepSize())
+	err := p.ConvertImage(input, KeepSize(), func(output io.ReadSeeker) error {
+		_, err := io.Copy(&buf, output)
+		return err
+	})
 	assert.NoError(t, err)
 	assert.Equal(t, "image/jpeg", Detect(buf.Bytes()))
 }
@@ -35,8 +39,11 @@ func TestProcessorConvertAudio(t *testing.T) {
 
 	var buf bytes.Buffer
 	var progress []float64
-	err := p.ConvertAudio(input, &buf, func(f float64) {
+	err := p.ConvertAudio(input, func(f float64) {
 		progress = append(progress, f)
+	}, func(output io.ReadSeeker) error {
+		_, err := io.Copy(&buf, output)
+		return err
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, "audio/mpeg", Detect(buf.Bytes()))
@@ -55,8 +62,11 @@ func TestProcessorConvertVideo(t *testing.T) {
 
 	var buf bytes.Buffer
 	var progress []float64
-	err := p.ConvertVideo(input, &buf, MaxWidth(500), func(f float64) {
+	err := p.ConvertVideo(input, MaxWidth(500), func(f float64) {
 		progress = append(progress, f)
+	}, func(output io.ReadSeeker) error {
+		_, err := io.Copy(&buf, output)
+		return err
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, "video/mp4", Detect(buf.Bytes()))
@@ -75,7 +85,10 @@ func TestProcessorExtractImage(t *testing.T) {
 	})
 
 	var buf bytes.Buffer
-	err := p.ExtractImage(input, &buf, 0.25, KeepSize())
+	err := p.ExtractImage(input, 0.25, KeepSize(), func(output io.ReadSeeker) error {
+		_, err := io.Copy(&buf, output)
+		return err
+	})
 	assert.NoError(t, err)
 	assert.Equal(t, "image/jpeg", Detect(buf.Bytes()))
 }
