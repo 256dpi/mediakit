@@ -12,9 +12,6 @@ import (
 	"strings"
 )
 
-// TODO: Support segmented encoding:
-//  https://video.stackexchange.com/questions/32297/resuming-a-partially-completed-encode-with-ffmpeg
-
 // WarningsLogger is the logger used to print warnings.
 var WarningsLogger *log.Logger
 
