@@ -122,6 +122,9 @@ type ConvertOptions struct {
 	// Force a frame rate.
 	FrameRate float64
 
+	// Force a sample rate.
+	SampleRate int
+
 	// Receive progress updates.
 	Progress func(Progress)
 }
@@ -151,6 +154,11 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 		"-y", // overwrite
 	}
 
+	// handle early options
+	if opts.Start != 0 {
+		args = append(args, "-ss", strconv.FormatFloat(opts.Start, 'f', -1, 64))
+	}
+
 	// add input
 	if rIsFile {
 		args = append(args, "-i", rFile.Name())
@@ -176,14 +184,14 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	filters = append(filters, opts.Preset.Filters()...)
 
 	// handle options
-	if opts.Start != 0 {
-		args = append(args, "-ss", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
-	}
 	if opts.Duration != 0 {
 		args = append(args, "-t", strconv.FormatFloat(opts.Duration, 'f', -1, 64))
 	}
 	if opts.FrameRate != 0 {
 		args = append(args, "-r", strconv.FormatFloat(opts.FrameRate, 'f', -1, 64))
+	}
+	if opts.SampleRate != 0 {
+		args = append(args, "-ar", strconv.Itoa(opts.SampleRate))
 	}
 
 	// add filters

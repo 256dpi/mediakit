@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"bytes"
 	"io"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -187,7 +188,7 @@ func TestConvertImage(t *testing.T) {
 	}
 }
 
-func TestExtractImage(t *testing.T) {
+func TestConvertExtract(t *testing.T) {
 	for _, sample := range []string{
 		samples.VideoAVI,
 		samples.VideoFLV,
@@ -233,7 +234,89 @@ func TestExtractImage(t *testing.T) {
 	}
 }
 
-// TODO: Test Convert options.
+func TestConvertOptions(t *testing.T) {
+	for i, item := range []struct {
+		sample string
+		opts   ConvertOptions
+		report Report
+	}{
+		// audio
+		{
+			sample: samples.AudioAIFF,
+			opts: ConvertOptions{
+				Preset:     AudioMP3VBRStandard,
+				Start:      1,
+				Duration:   0.5,
+				SampleRate: 16000,
+			},
+			report: Report{
+				Duration: 0.57,
+				Format: Format{
+					Name:     "mp3",
+					Duration: 0,
+				}, Streams: []Stream{
+					{
+						Type:       "audio",
+						Codec:      "mp3",
+						Duration:   0,
+						Channels:   2,
+						SampleRate: 16000,
+					},
+				},
+				DidParse: true,
+			},
+		},
+		// video
+		{
+			sample: samples.VideoMOV,
+			opts: ConvertOptions{
+				Preset:     VideoMP4H264AACFast,
+				Start:      1,
+				Duration:   0.5,
+				Width:      256,
+				Height:     -1,
+				FrameRate:  10,
+				SampleRate: 16000,
+			},
+			report: Report{
+				Duration: 0.7,
+				Format: Format{
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 0.7,
+				}, Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "h264",
+						Duration:  0.5,
+						Width:     256,
+						Height:    144,
+						FrameRate: 10,
+					},
+					{
+						Type:       "audio",
+						Codec:      "aac",
+						Duration:   0.7,
+						Channels:   2,
+						SampleRate: 16000,
+					},
+				},
+			},
+		},
+	} {
+		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
+			sample := samples.Buffer(item.sample)
+			defer sample.Close()
+
+			var buf bytes.Buffer
+			err := Convert(sample, &buf, item.opts)
+			assert.NoError(t, err)
+
+			report, err := Analyze(bytes.NewReader(buf.Bytes()))
+			assert.NoError(t, err)
+			assert.Equal(t, &item.report, report)
+		})
+	}
+}
 
 func TestConvertPipe(t *testing.T) {
 	sample := samples.Load(samples.VideoMPEG4)
