@@ -8,30 +8,18 @@ import (
 
 	"github.com/256dpi/xo"
 	"github.com/google/uuid"
-	"github.com/samber/lo"
 
 	"github.com/256dpi/mediakit/ffmpeg"
 	"github.com/256dpi/mediakit/vips"
 )
 
-// Errors returned by the Processor.
-var (
-	ErrUnsupportedFormat = xo.BF("unsupported format")
-	ErrUnsupportedStream = xo.BF("unsupported stream")
-	ErrUnsupportedCodec  = xo.BF("unsupported codec")
-)
+// ErrMissingStream is returned if a required audio/video stream is missing.
+var ErrMissingStream = xo.BF("missing stream")
 
 // Config defines a Processor configuration.
 type Config struct {
 	// The directory to used for temporary files.
 	Directory string
-
-	// The supported formats and codecs.
-	ImageFormats []string
-	VideoFormats []string
-	AudioFormats []string
-	VideoCodecs  []string
-	AudioCodecs  []string
 
 	// The used presets.
 	ImagePreset vips.Preset   // vips.JPGWeb
@@ -88,11 +76,6 @@ func (p *Processor) ConvertImageFile(input, output *os.File, sizer Sizer) error 
 		return xo.W(err)
 	}
 
-	// check format
-	if p.config.ImageFormats != nil && !lo.Contains(p.config.ImageFormats, report.Format) {
-		return ErrUnsupportedFormat.WrapF(report.Format)
-	}
-
 	// rewind input
 	_, err = input.Seek(0, io.SeekStart)
 	if err != nil {
@@ -136,16 +119,15 @@ func (p *Processor) ConvertAudioFile(input, output *os.File, progress func(float
 		return xo.W(err)
 	}
 
-	// check format, stream type and stream codec
-	if p.config.AudioFormats != nil && !lo.Contains(p.config.AudioFormats, report.Format.Name) {
-		return ErrUnsupportedFormat.WrapF(report.Format.Name)
-	}
+	// check audio stream
+	var ok bool
 	for _, stream := range report.Streams {
-		if stream.Type != "audio" {
-			return ErrUnsupportedStream.WrapF(stream.Type)
-		} else if p.config.AudioCodecs != nil && !lo.Contains(p.config.AudioCodecs, stream.Codec) {
-			return ErrUnsupportedCodec.WrapF(stream.Codec)
+		if stream.Type == "audio" {
+			ok = true
 		}
+	}
+	if !ok {
+		return ErrMissingStream.Wrap()
 	}
 
 	// rewind input
@@ -190,16 +172,15 @@ func (p *Processor) ConvertVideoFile(input, output *os.File, sizer Sizer, progre
 		return xo.W(err)
 	}
 
-	// check format, stream type and stream codec
-	if p.config.VideoFormats != nil && !lo.Contains(p.config.VideoFormats, report.Format.Name) {
-		return ErrUnsupportedFormat.WrapF(report.Format.Name)
-	}
+	// check video stream
+	var ok bool
 	for _, stream := range report.Streams {
-		if stream.Type != "video" && stream.Type != "audio" {
-			return ErrUnsupportedStream.WrapF(stream.Type)
-		} else if p.config.VideoCodecs != nil && !lo.Contains(p.config.VideoCodecs, stream.Codec) {
-			return ErrUnsupportedCodec.WrapF(stream.Codec)
+		if stream.Type == "video" {
+			ok = true
 		}
+	}
+	if !ok {
+		return ErrMissingStream.Wrap()
 	}
 
 	// rewind input
@@ -264,16 +245,15 @@ func (p *Processor) ExtractImageFile(input, temp, output *os.File, pos float64, 
 		return xo.W(err)
 	}
 
-	// check format, stream type and stream codec
-	if p.config.VideoFormats != nil && !lo.Contains(p.config.VideoFormats, report.Format.Name) {
-		return ErrUnsupportedFormat.WrapF(report.Format.Name)
-	}
+	// check audio stream
+	var ok bool
 	for _, stream := range report.Streams {
-		if stream.Type != "video" && stream.Type != "audio" {
-			return ErrUnsupportedStream.WrapF(stream.Type)
-		} else if p.config.VideoCodecs != nil && !lo.Contains(p.config.VideoCodecs, stream.Codec) {
-			return ErrUnsupportedCodec.WrapF(stream.Codec)
+		if stream.Type == "video" {
+			ok = true
 		}
+	}
+	if !ok {
+		return ErrMissingStream.Wrap()
 	}
 
 	// rewind input
