@@ -250,15 +250,12 @@ func TestConvertOptions(t *testing.T) {
 				SampleRate: 16000,
 			},
 			report: Report{
-				Duration: 0.57,
 				Format: Format{
-					Name:     "mp3",
-					Duration: 0,
+					Name: "mp3",
 				}, Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "mp3",
-						Duration:   0,
 						Channels:   2,
 						SampleRate: 16000,
 					},
@@ -279,15 +276,13 @@ func TestConvertOptions(t *testing.T) {
 				SampleRate: 16000,
 			},
 			report: Report{
-				Duration: 0.7,
 				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 0.7,
-				}, Streams: []Stream{
+					Name: "mov,mp4,m4a,3gp,3g2,mj2",
+				},
+				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "h264",
-						Duration:  0.5,
 						Width:     256,
 						Height:    144,
 						FrameRate: 10,
@@ -295,7 +290,6 @@ func TestConvertOptions(t *testing.T) {
 					{
 						Type:       "audio",
 						Codec:      "aac",
-						Duration:   0.7,
 						Channels:   2,
 						SampleRate: 16000,
 					},
@@ -313,6 +307,16 @@ func TestConvertOptions(t *testing.T) {
 
 			report, err := Analyze(bytes.NewReader(buf.Bytes()))
 			assert.NoError(t, err)
+			assert.True(t, report.Duration > 0)
+			report.Duration = 0
+			if item.opts.Preset != AudioMP3VBRStandard {
+				assert.True(t, report.Format.Duration > 0)
+				report.Format.Duration = 0
+				for i, stream := range report.Streams {
+					assert.True(t, stream.Duration > 0)
+					report.Streams[i].Duration = 0
+				}
+			}
 			assert.Equal(t, &item.report, report)
 		})
 	}
