@@ -149,6 +149,12 @@ func TestAnalyzeVideo(t *testing.T) {
 			aCodec: "aac",
 		},
 		{
+			sample: samples.VideoOGG,
+			format: "ogg",
+			vCodec: "theora",
+			aCodec: "flac",
+		},
+		{
 			sample: samples.VideoWebM,
 			format: "matroska,webm",
 			vCodec: "vp9",

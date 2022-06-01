@@ -120,6 +120,10 @@ func TestDetect(t *testing.T) {
 			typ:    "video/mp4",
 		},
 		{
+			sample: samples.VideoOGG,
+			typ:    "application/ogg",
+		},
+		{
 			sample: samples.VideoWebM,
 			typ:    "video/webm",
 		},

@@ -45,6 +45,7 @@ const (
 	VideoMPEG  = "video.mpeg"
 	VideoMPEG2 = "video.mpg"
 	VideoMPEG4 = "video.mp4"  // h264/aac
+	VideoOGG   = "video.ogv"  // theora/flac
 	VideoWebM  = "video.webm" // vp9/vorbis
 	VideoWMV   = "video.wmv"
 )

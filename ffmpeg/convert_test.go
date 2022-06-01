@@ -67,6 +67,7 @@ func TestConvertVideo(t *testing.T) {
 		samples.VideoMPEG,
 		samples.VideoMPEG2,
 		samples.VideoMPEG4,
+		samples.VideoOGG,
 		samples.VideoWebM,
 		samples.VideoWMV,
 	} {
@@ -198,6 +199,7 @@ func TestConvertExtract(t *testing.T) {
 		samples.VideoMPEG,
 		samples.VideoMPEG2,
 		samples.VideoMPEG4,
+		samples.VideoOGG,
 		samples.VideoWebM,
 		samples.VideoWMV,
 	} {
