@@ -269,8 +269,8 @@ func TestConvertProgress(t *testing.T) {
 		Duration: 0,
 		Size:     36,
 	}, progress[0])
-	assert.True(t, progress[1].Duration > 1)
-	assert.True(t, progress[1].Size > 40000)
+	assert.True(t, progress[1].Duration > 0)
+	assert.True(t, progress[1].Size > 36)
 }
 
 func TestConvertError(t *testing.T) {
