@@ -7,10 +7,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/256dpi/mediakit/samples"
 )
 
 func TestProcessorConvertImage(t *testing.T) {
-	input := loadSample("sample.png")
+	input := samples.Load(samples.ImagePNG)
 
 	p := NewProcessor(Config{
 		Directory: t.TempDir(),
@@ -26,7 +28,7 @@ func TestProcessorConvertImage(t *testing.T) {
 }
 
 func TestProcessorConvertAudio(t *testing.T) {
-	input := loadSample("sample.wav")
+	input := samples.Load(samples.AudioWAV)
 
 	p := NewProcessor(Config{
 		Directory: t.TempDir(),
@@ -46,7 +48,7 @@ func TestProcessorConvertAudio(t *testing.T) {
 }
 
 func TestProcessorConvertVideo(t *testing.T) {
-	input := loadSample("sample.avi")
+	input := samples.Load(samples.VideoAVI)
 
 	p := NewProcessor(Config{
 		Directory: t.TempDir(),
@@ -66,7 +68,7 @@ func TestProcessorConvertVideo(t *testing.T) {
 }
 
 func TestProcessorExtractImage(t *testing.T) {
-	input := loadSample("sample.avi")
+	input := samples.Load(samples.VideoMOV)
 
 	p := NewProcessor(Config{
 		Directory: t.TempDir(),

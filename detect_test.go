@@ -7,6 +7,8 @@ import (
 
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/256dpi/mediakit/samples"
 )
 
 func TestDetect(t *testing.T) {
@@ -14,89 +16,120 @@ func TestDetect(t *testing.T) {
 		sample string
 		typ    string
 	}{
+		// image
 		{
-			sample: "sample.aac",
-			typ:    "audio/aac",
-		},
-		{
-			sample: "sample.aiff",
-			typ:    "audio/aiff",
-		},
-		{
-			sample: "sample.avi",
-			typ:    "video/avi",
-		},
-		{
-			sample: "sample.flac",
-			typ:    "audio/flac",
-		},
-		{
-			sample: "sample.gif",
+			sample: samples.ImageGIF,
 			typ:    "image/gif",
 		},
 		{
-			sample: "sample.hevc",
-			typ:    "application/octet-stream",
+			sample: samples.ImageHEIF,
+			typ:    "image/heic",
 		},
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			typ:    "image/jpeg",
 		},
 		{
-			sample: "sample.m4a",
-			typ:    "audio/x-m4a",
+			sample: samples.ImageJPEG2K,
+			typ:    "image/jp2",
 		},
 		{
-			sample: "sample.mov",
-			typ:    "video/quicktime",
+			sample: samples.ImagePDF,
+			typ:    "application/pdf",
 		},
 		{
-			sample: "sample.mp2",
-			typ:    "application/octet-stream",
-		},
-		{
-			sample: "sample.mp3",
-			typ:    "audio/mpeg",
-		},
-		{
-			sample: "sample.mp4",
-			typ:    "video/mp4",
-		},
-		{
-			sample: "sample.mpeg",
-			typ:    "video/mpeg",
-		},
-		{
-			sample: "sample.mpg",
-			typ:    "video/mpeg",
-		},
-		{
-			sample: "sample.ogg",
-			typ:    "application/ogg",
-		},
-		{
-			sample: "sample.png",
+			sample: samples.ImagePNG,
 			typ:    "image/png",
 		},
 		{
-			sample: "sample.wav",
+			sample: samples.ImageTIFF,
+			typ:    "image/tiff",
+		},
+		{
+			sample: samples.ImageWebP,
+			typ:    "image/webp",
+		},
+		// audio
+		{
+			sample: samples.AudioAAC,
+			typ:    "audio/aac",
+		},
+		{
+			sample: samples.AudioAIFF,
+			typ:    "audio/aiff",
+		},
+		{
+			sample: samples.AudioFLAC,
+			typ:    "audio/flac",
+		},
+		{
+			sample: samples.AudioMPEG2,
+			typ:    "application/octet-stream",
+		},
+		{
+			sample: samples.AudioMPEG3,
+			typ:    "audio/mpeg",
+		},
+		{
+			sample: samples.AudioMPEG4,
+			typ:    "audio/x-m4a",
+		},
+		{
+			sample: samples.AudioOGG,
+			typ:    "application/ogg",
+		},
+		{
+			sample: samples.AudioWAV,
 			typ:    "audio/wave",
 		},
 		{
-			sample: "sample.webm",
+			sample: samples.AudioWMA,
+			typ:    "video/x-ms-asf",
+		},
+		// video
+		{
+			sample: samples.VideoAVI,
+			typ:    "video/avi",
+		},
+		{
+			sample: samples.VideoFLV,
+			typ:    "video/x-flv",
+		},
+		{
+			sample: samples.VideoGIF,
+			typ:    "image/gif",
+		},
+		{
+			sample: samples.VideoMKV,
 			typ:    "video/webm",
 		},
 		{
-			sample: "sample.wma",
-			typ:    "video/x-ms-asf",
+			sample: samples.VideoMOV,
+			typ:    "video/quicktime",
 		},
 		{
-			sample: "sample.wmv",
+			sample: samples.VideoMPEG,
+			typ:    "video/mpeg",
+		},
+		{
+			sample: samples.VideoMPEG2,
+			typ:    "video/mpeg",
+		},
+		{
+			sample: samples.VideoMPEG4,
+			typ:    "video/mp4",
+		},
+		{
+			sample: samples.VideoWebM,
+			typ:    "video/webm",
+		},
+		{
+			sample: samples.VideoWMV,
 			typ:    "video/x-ms-asf",
 		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
-			sample := loadSample(item.sample)
+			sample := samples.Load(item.sample)
 			defer sample.Close()
 
 			buf := make([]byte, DetectBytes)
@@ -111,7 +144,7 @@ func TestDetect(t *testing.T) {
 }
 
 func BenchmarkHTTPDetect(b *testing.B) {
-	sample := loadSample("sample.mp3")
+	sample := samples.Load(samples.AudioMPEG3)
 	defer sample.Close()
 
 	buf, err := io.ReadAll(sample)
@@ -126,7 +159,7 @@ func BenchmarkHTTPDetect(b *testing.B) {
 }
 
 func BenchmarkMimeTypeDetect(b *testing.B) {
-	sample := loadSample("sample.mp3")
+	sample := samples.Load(samples.AudioMPEG3)
 	defer sample.Close()
 
 	buf, err := io.ReadAll(sample)
