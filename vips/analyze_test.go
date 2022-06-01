@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/256dpi/mediakit/samples"
 )
 
 func TestAnalyze(t *testing.T) {
@@ -13,70 +15,80 @@ func TestAnalyze(t *testing.T) {
 		report Report
 	}{
 		{
-			sample: "sample.gif",
+			sample: samples.ImageGIF,
 			report: Report{
-				Width:  1280,
-				Height: 853,
-				Bands:  3,
+				Width:  800,
+				Height: 533,
+				Bands:  4,
 				Color:  "srgb",
 				Format: "gif",
 			},
 		},
 		{
-			sample: "sample.heif",
+			sample: samples.ImageHEIF,
 			report: Report{
-				Width:  8736,
-				Height: 5856,
+				Width:  800,
+				Height: 533,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "heif",
 			},
 		},
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			report: Report{
-				Width:  1280,
-				Height: 853,
+				Width:  800,
+				Height: 533,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
 			},
 		},
 		{
-			sample: "sample.pdf",
+			sample: samples.ImageJPEG2K,
+			report: Report{
+				Width:  800,
+				Height: 533,
+				Bands:  3,
+				Color:  "srgb",
+				Format: "jp2k",
+			},
+		},
+		{
+			sample: samples.ImagePDF,
 			report: Report{
 				Width:  0,
-				Height: 792,
+				Height: 533,
 				Bands:  4,
 				Color:  "srgb",
 				Format: "pdf",
 			},
 		},
 		{
-			sample: "sample.png",
+			sample: samples.ImagePNG,
 			report: Report{
-				Width:  1280,
-				Height: 853,
+				Width:  800,
+				Height: 533,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "png",
 			},
 		},
 		{
-			sample: "sample.tiff",
+			sample: samples.ImageTIFF,
 			report: Report{
-				Width:  1280,
-				Height: 853,
-				Bands:  3,
+				Width:  800,
+				Height: 533,
+				Bands:  4,
 				Color:  "srgb",
 				Format: "tiff",
 			},
 		},
 		{
-			sample: "sample.webp",
+			sample: samples.ImageWebP,
 			report: Report{
-				Width:  4275,
-				Height: 2451,
+				Width:  800,
+				Height: 533,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "webp",
@@ -84,7 +96,7 @@ func TestAnalyze(t *testing.T) {
 		},
 	} {
 		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
-			sample := loadSample(item.sample)
+			sample := samples.Load(item.sample)
 			defer sample.Close()
 
 			report, err := Analyze(sample)

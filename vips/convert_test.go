@@ -7,21 +7,24 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/256dpi/mediakit/samples"
 )
 
 func TestConvert(t *testing.T) {
 	presetConvertTest := func(t *testing.T, preset Preset, format string) {
 		for _, name := range []string{
-			"sample.gif",
-			"sample.heif",
-			"sample.jpg",
-			"sample.pdf",
-			"sample.png",
-			"sample.tiff",
-			"sample.webp",
+			samples.ImageGIF,
+			samples.ImageHEIF,
+			samples.ImageJPEG,
+			samples.ImageJPEG2K,
+			samples.ImagePDF,
+			samples.ImagePNG,
+			samples.ImageTIFF,
+			samples.ImageWebP,
 		} {
 			t.Run(name, func(t *testing.T) {
-				sample := loadSample(name)
+				sample := samples.Load(name)
 				defer sample.Close()
 
 				var buf bytes.Buffer
@@ -62,21 +65,21 @@ func TestConvertOptions(t *testing.T) {
 		report Report
 	}{
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  256,
 			},
 			report: Report{
 				Width:  256,
-				Height: 170,
+				Height: 171,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
 			},
 		},
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  512,
@@ -91,7 +94,7 @@ func TestConvertOptions(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset: JPGWeb,
 				Width:  256,
@@ -107,7 +110,7 @@ func TestConvertOptions(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset:      JPGWeb,
 				Width:       256,
@@ -116,7 +119,7 @@ func TestConvertOptions(t *testing.T) {
 			},
 			report: Report{
 				Width:  256,
-				Height: 170,
+				Height: 171,
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
@@ -124,7 +127,7 @@ func TestConvertOptions(t *testing.T) {
 		},
 	} {
 		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
-			sample := loadSample(item.sample)
+			sample := samples.Load(item.sample)
 			defer sample.Close()
 
 			var buf bytes.Buffer

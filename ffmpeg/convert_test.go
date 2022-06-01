@@ -3,27 +3,41 @@ package ffmpeg
 import (
 	"bytes"
 	"io"
-	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/256dpi/mediakit/samples"
 )
 
-func TestConvert(t *testing.T) {
-	for i, item := range []struct {
-		sample  string
-		options ConvertOptions
-		report  Report
-	}{
-		// samples
-		{
-			sample: "sample.wav",
-			options: ConvertOptions{
+func TestConvertAudio(t *testing.T) {
+	for _, sample := range []string{
+		samples.AudioAAC,
+		samples.AudioAIFF,
+		samples.AudioFLAC,
+		samples.AudioMPEG4,
+		samples.AudioMPEG2,
+		samples.AudioMPEG3,
+		samples.AudioOGG,
+		samples.AudioWAV,
+		samples.AudioWMA,
+	} {
+		t.Run(sample, func(t *testing.T) {
+			sample := samples.Buffer(sample)
+			defer sample.Close()
+
+			var out bytes.Buffer
+			err := Convert(sample, &out, ConvertOptions{
 				Preset: AudioMP3VBRStandard,
-			},
-			report: Report{
-				Duration: osFloat(105.82, 105.79),
+			})
+			assert.NoError(t, err)
+
+			report, err := Analyze(bytes.NewReader(out.Bytes()))
+			assert.NoError(t, err)
+			assert.True(t, report.Duration > 2 && report.Duration < 2.2)
+			assert.Equal(t, &Report{
+				Duration: report.Duration,
 				Format: Format{
 					Name:     "mp3",
 					Duration: 0,
@@ -37,214 +51,192 @@ func TestConvert(t *testing.T) {
 					},
 				},
 				DidParse: true,
-			},
-		},
-		{
-			sample: "sample.mpeg",
-			options: ConvertOptions{
-				Preset:    VideoMP4H264AACFast,
-				Duration:  1.047619,
-				Width:     -1,
-				Height:    575,
-				FrameRate: 10.5,
-			},
-			report: Report{
-				Duration: 1.047619,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 1.047619,
-				},
-				Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  1.047619,
-						Width:     1022,
-						Height:    576,
-						FrameRate: 10.5,
-					},
-				},
-			},
-		},
-		{
-			sample: "sample.jpg",
-			options: ConvertOptions{
-				Preset: ImagePNG,
-				Width:  640,
-				Height: -1,
-			},
-			report: Report{
-				Format: Format{
-					Name: "png_pipe",
-				},
-				Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "png",
-						Width:     640,
-						Height:    427,
-						FrameRate: 25,
-					},
-				},
-			},
-		},
-		// combined
-		{
-			sample: "combined_avc-aac.mov",
-			options: ConvertOptions{
-				Preset:   VideoMP4H264AACFast,
-				Duration: 1,
-			},
-			report: Report{
-				Duration: 1.08,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 1.08,
-				},
-				Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  1,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-					{
-						Type:       "audio",
-						Codec:      "aac",
-						Duration:   1.08,
-						Channels:   2,
-						SampleRate: 48000,
-					},
-					{
-						Type:     "data",
-						Duration: 1,
-					},
-				},
-			},
-		},
-		{
-			sample: "combined_hevc-aac.mp4",
-			options: ConvertOptions{
-				Preset:   VideoMP4H264AACFast,
-				Duration: 1,
-			},
-			report: Report{
-				Duration: 1.08,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 1.08,
-				},
-				Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  1,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-					{
-						Type:       "audio",
-						Codec:      "aac",
-						Duration:   1.08,
-						Channels:   2,
-						SampleRate: 48000,
-					},
-				},
-			},
-		},
-		{
-			sample: "combined_mpeg2.mpg",
-			options: ConvertOptions{
-				Preset:   VideoMP4H264AACFast,
-				Duration: 1,
-			},
-			report: Report{
-				Duration: 1.08,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 1.08,
-				},
-				Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  1,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-					{
-						Type:       "audio",
-						Codec:      "aac",
-						Duration:   1.08,
-						Channels:   2,
-						SampleRate: 48000,
-					},
-				},
-			},
-		},
-		// images
-		{
-			sample: "sample.mp4",
-			options: ConvertOptions{
-				Preset: ImageJPEG,
-				Start:  5,
-			},
-			report: Report{
-				Format: Format{
-					Name: "jpeg_pipe",
-				}, Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "mjpeg",
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-				},
-			},
-		},
-		{
-			sample: "sample.mp4",
-			options: ConvertOptions{
-				Preset: ImagePNG,
-				Start:  5,
-			},
-			report: Report{
-				Format: Format{
-					Name: "png_pipe",
-				}, Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "png",
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-				},
-			},
-		},
-	} {
-		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
-			sample := loadSample(item.sample)
-			defer sample.Close()
-
-			var out bytes.Buffer
-			err := Convert(sample, &out, item.options)
-			assert.NoError(t, err)
-
-			report, err := Analyze(bytes.NewReader(out.Bytes()))
-			assert.NoError(t, err)
-			assert.Equal(t, &item.report, report)
+			}, report)
 		})
 	}
 }
 
+func TestConvertVideo(t *testing.T) {
+	for _, sample := range []string{
+		samples.VideoAVI,
+		samples.VideoFLV,
+		// samples.VideoGIF,
+		samples.VideoMKV,
+		samples.VideoMOV,
+		samples.VideoMPEG,
+		samples.VideoMPEG2,
+		samples.VideoMPEG4,
+		samples.VideoWebM,
+		samples.VideoWMV,
+	} {
+		t.Run(sample, func(t *testing.T) {
+			sample := samples.Buffer(sample)
+			defer sample.Close()
+
+			var out bytes.Buffer
+			err := Convert(sample, &out, ConvertOptions{
+				Preset: VideoMP4H264AACFast,
+			})
+			assert.NoError(t, err)
+
+			report, err := Analyze(bytes.NewReader(out.Bytes()))
+			assert.NoError(t, err)
+			assert.True(t, report.Duration > 2 && report.Duration < 2.3)
+			assert.True(t, report.Format.Duration > 2 && report.Format.Duration < 2.3)
+			assert.True(t, report.Streams[0].Duration > 2 && report.Streams[0].Duration < 2.3)
+			assert.True(t, report.Streams[1].Duration > 2 && report.Streams[1].Duration < 2.3)
+			assert.Equal(t, &Report{
+				Duration: report.Duration,
+				Format: Format{
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: report.Format.Duration,
+				}, Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "h264",
+						Duration:  report.Streams[0].Duration,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+					{
+						Type:       "audio",
+						Codec:      "aac",
+						Duration:   report.Streams[1].Duration,
+						Channels:   2,
+						SampleRate: 44100,
+					},
+				},
+			}, report)
+		})
+	}
+}
+
+func TestConvertImage(t *testing.T) {
+	for _, sample := range []string{
+		samples.ImageGIF,
+		// samples.ImageHEIF,
+		samples.ImageJPEG,
+		samples.ImageJPEG2K,
+		// samples.ImagePDF,
+		samples.ImagePNG,
+		samples.ImageTIFF,
+		samples.ImageWebP,
+	} {
+		t.Run(sample, func(t *testing.T) {
+			t.Run("JPG", func(t *testing.T) {
+				sample := samples.Buffer(sample)
+				defer sample.Close()
+
+				var out bytes.Buffer
+				err := Convert(sample, &out, ConvertOptions{
+					Preset: ImageJPEG,
+				})
+				assert.NoError(t, err)
+
+				report, err := Analyze(bytes.NewReader(out.Bytes()))
+				assert.NoError(t, err)
+				assert.Equal(t, &Report{
+					Duration: 0,
+					Format: Format{
+						Name:     "jpeg_pipe",
+						Duration: 0,
+					}, Streams: []Stream{
+						{
+							Type:      "video",
+							Codec:     "mjpeg",
+							Duration:  0,
+							Width:     800,
+							Height:    533,
+							FrameRate: 25,
+						},
+					},
+				}, report)
+			})
+
+			t.Run("PNG", func(t *testing.T) {
+				sample := samples.Buffer(sample)
+				defer sample.Close()
+
+				var out bytes.Buffer
+				err := Convert(sample, &out, ConvertOptions{
+					Preset: ImagePNG,
+				})
+				assert.NoError(t, err)
+
+				report, err := Analyze(bytes.NewReader(out.Bytes()))
+				assert.NoError(t, err)
+				assert.Equal(t, &Report{
+					Duration: 0,
+					Format: Format{
+						Name:     "png_pipe",
+						Duration: 0,
+					}, Streams: []Stream{
+						{
+							Type:      "video",
+							Codec:     "png",
+							Duration:  0,
+							Width:     800,
+							Height:    533,
+							FrameRate: 25,
+						},
+					},
+				}, report)
+			})
+		})
+	}
+}
+
+func TestExtractImage(t *testing.T) {
+	for _, sample := range []string{
+		samples.VideoAVI,
+		samples.VideoFLV,
+		samples.VideoGIF,
+		samples.VideoMKV,
+		samples.VideoMOV,
+		samples.VideoMPEG,
+		samples.VideoMPEG2,
+		samples.VideoMPEG4,
+		samples.VideoWebM,
+		samples.VideoWMV,
+	} {
+		t.Run(sample, func(t *testing.T) {
+			sample := samples.Buffer(sample)
+			defer sample.Close()
+
+			var out bytes.Buffer
+			err := Convert(sample, &out, ConvertOptions{
+				Preset: ImagePNG,
+				Start:  1,
+			})
+			assert.NoError(t, err)
+
+			report, err := Analyze(bytes.NewReader(out.Bytes()))
+			assert.NoError(t, err)
+			assert.Equal(t, &Report{
+				Duration: 0,
+				Format: Format{
+					Name:     "png_pipe",
+					Duration: 0,
+				}, Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "png",
+						Duration:  0,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+				},
+			}, report)
+		})
+	}
+}
+
+// TODO: Test Convert options.
+
 func TestConvertPipe(t *testing.T) {
-	sample := loadSample("combined_hevc-aac.mp4")
+	sample := samples.Load(samples.VideoMPEG4)
 	defer sample.Close()
 
 	buf, err := io.ReadAll(sample)
@@ -259,7 +251,7 @@ func TestConvertPipe(t *testing.T) {
 }
 
 func TestConvertProgress(t *testing.T) {
-	sample := loadSample("sample.mpeg")
+	sample := samples.Load(samples.VideoMPEG2)
 	defer sample.Close()
 
 	var out bytes.Buffer
@@ -277,10 +269,8 @@ func TestConvertProgress(t *testing.T) {
 		Duration: 0,
 		Size:     36,
 	}, progress[0])
-	assert.Equal(t, Progress{
-		Duration: 0.875917,
-		Size:     osInt(775897, 775458),
-	}, progress[1])
+	assert.True(t, progress[1].Duration > 1)
+	assert.True(t, progress[1].Size > 40000)
 }
 
 func TestConvertError(t *testing.T) {

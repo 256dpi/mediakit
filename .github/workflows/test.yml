@@ -14,12 +14,5 @@ jobs:
           go-version: 1.18.x
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cache Samples
-        uses: actions/cache@v3
-        with:
-          path: samples
-          key: samples
-      - name: Download Samples
-        run: make samples
       - name: Test
         run: go test ./...

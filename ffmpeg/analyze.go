@@ -18,6 +18,9 @@ import (
 var imageCodecs = []string{
 	"png",
 	"mjpeg",
+	"jpeg2000",
+	"tiff",
+	"webp",
 }
 
 // Format is a ffprobe format.

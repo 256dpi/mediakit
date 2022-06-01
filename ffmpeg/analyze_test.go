@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/256dpi/mediakit/samples"
 )
 
 func TestAnalyze(t *testing.T) {
@@ -16,18 +18,18 @@ func TestAnalyze(t *testing.T) {
 	}{
 		// audio
 		{
-			sample: "sample.aac",
+			sample: samples.AudioAAC,
 			report: Report{
-				Duration: 96.662622,
+				Duration: 2.127203,
 				Format: Format{
 					Name:     "aac",
-					Duration: 96.662622,
+					Duration: 2.127203,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "aac",
-						Duration:   96.662622,
+						Duration:   2.127203,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -35,18 +37,18 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.aiff",
+			sample: samples.AudioAIFF,
 			report: Report{
-				Duration: 105.772948,
+				Duration: 2.043356,
 				Format: Format{
 					Name:     "aiff",
-					Duration: 105.772948,
+					Duration: 2.043356,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "pcm_s16be",
-						Duration:   105.772948,
+						Duration:   2.043356,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -54,18 +56,18 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.flac",
+			sample: samples.AudioFLAC,
 			report: Report{
-				Duration: 105.772948,
+				Duration: 2.115918,
 				Format: Format{
 					Name:     "flac",
-					Duration: 105.772948,
+					Duration: 2.115918,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "flac",
-						Duration:   105.772948,
+						Duration:   2.115918,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -73,37 +75,18 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.m4a",
+			sample: samples.AudioMPEG2,
 			report: Report{
-				Duration: 105.797,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 105.797,
-				},
-				Streams: []Stream{
-					{
-						Type:       "audio",
-						Codec:      "aac",
-						Duration:   105.772993,
-						Channels:   2,
-						SampleRate: 44100,
-					},
-				},
-			},
-		},
-		{
-			sample: "sample.mp2",
-			report: Report{
-				Duration: 105.795917,
+				Duration: 2.115917,
 				Format: Format{
 					Name:     "mp3",
-					Duration: 105.795917,
+					Duration: 2.115917,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "mp2",
-						Duration:   105.795917,
+						Duration:   2.115917,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -111,18 +94,18 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.mp3",
+			sample: samples.AudioMPEG3,
 			report: Report{
-				Duration: 105.822041,
+				Duration: 2.123813,
 				Format: Format{
 					Name:     "mp3",
-					Duration: 105.822041,
+					Duration: 2.123813,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "mp3",
-						Duration:   105.822041,
+						Duration:   2.123813,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -130,36 +113,18 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.ogg",
+			sample: samples.AudioMPEG4,
 			report: Report{
-				Duration: 105.772948,
+				Duration: 2.116,
 				Format: Format{
-					Name:     "ogg",
-					Duration: 105.772948,
-				}, Streams: []Stream{
-					{
-						Type:       "audio",
-						Codec:      "vorbis",
-						Duration:   105.772948,
-						Channels:   2,
-						SampleRate: 44100,
-					},
-				},
-			},
-		},
-		{
-			sample: "sample.wav",
-			report: Report{
-				Duration: 105.772948,
-				Format: Format{
-					Name:     "wav",
-					Duration: 105.772948,
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 2.116,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
-						Codec:      "pcm_s16le",
-						Duration:   105.772948,
+						Codec:      "aac",
+						Duration:   2.115918,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -167,18 +132,55 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
-			sample: "sample.wma",
+			sample: samples.AudioOGG,
 			report: Report{
-				Duration: 105.789,
+				Duration: 2.115918,
+				Format: Format{
+					Name:     "ogg",
+					Duration: 2.115918,
+				}, Streams: []Stream{
+					{
+						Type:       "audio",
+						Codec:      "vorbis",
+						Duration:   2.115918,
+						Channels:   2,
+						SampleRate: 44100,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.AudioWAV,
+			report: Report{
+				Duration: 2.043356,
+				Format: Format{
+					Name:     "wav",
+					Duration: 2.043356,
+				},
+				Streams: []Stream{
+					{
+						Type:       "audio",
+						Codec:      "pcm_s24le",
+						Duration:   2.043356,
+						Channels:   2,
+						SampleRate: 44100,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.AudioWMA,
+			report: Report{
+				Duration: 2.135,
 				Format: Format{
 					Name:     "asf",
-					Duration: 105.789,
+					Duration: 2.135,
 				},
 				Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "wmav2",
-						Duration:   105.789,
+						Duration:   2.135,
 						Channels:   2,
 						SampleRate: 44100,
 					},
@@ -187,260 +189,270 @@ func TestAnalyze(t *testing.T) {
 		},
 		// video
 		{
-			sample: "sample.hevc",
+			sample: samples.VideoAVI,
 			report: Report{
-				Duration: 28.23,
+				Duration: 2.136236,
 				Format: Format{
-					Name:     "hevc",
-					Duration: 0,
+					Name:     "avi",
+					Duration: 2.136236,
+				},
+				Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "h264",
+						Duration:  2.04,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+					{
+						Type:       "audio",
+						Codec:      "aac",
+						Duration:   2.136236,
+						Channels:   2,
+						SampleRate: 44100,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.VideoFLV,
+			report: Report{
+				Duration: 2.069,
+				Format: Format{
+					Name:     "flv",
+					Duration: 2.069,
+				},
+				Streams: []Stream{
+					{
+						Type:       "audio",
+						Codec:      "mp3",
+						Duration:   0,
+						Channels:   2,
+						SampleRate: 44100,
+					},
+					{
+						Type:      "video",
+						Codec:     "flv1",
+						Duration:  0,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.VideoGIF,
+			report: Report{
+				Duration: 2,
+				Format: Format{
+					Name:     "gif",
+					Duration: 2,
+				},
+				Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "gif",
+						Duration:  2,
+						Width:     800,
+						Height:    450,
+						FrameRate: 5,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.VideoMKV,
+			report: Report{
+				Duration: 2.055,
+				Format: Format{
+					Name:     "matroska,webm",
+					Duration: 2.055,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "hevc",
 						Duration:  0,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
 					},
-				},
-				DidParse: true,
-			},
-		},
-		{
-			sample: "sample.avi",
-			report: Report{
-				Duration: 28.236542,
-				Format: Format{
-					Name:     "avi",
-					Duration: 28.236542,
-				},
-				Streams: []Stream{
 					{
-						Type:      "video",
-						Codec:     "mpeg4",
-						Duration:  28.236542,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Type:       "audio",
+						Codec:      "ac3",
+						Duration:   0,
+						Channels:   2,
+						SampleRate: 44100,
 					},
 				},
 			},
 		},
 		{
-			sample: "sample.mov",
+			sample: samples.VideoMOV,
 			report: Report{
-				Duration: 28.237,
+				Duration: 2.044,
 				Format: Format{
 					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 28.237,
+					Duration: 2.044,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "h264",
-						Duration:  28.236542,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Duration:  2.04,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
 					},
-				},
-			},
-		},
-		{
-			sample: "sample.mp4",
-			report: Report{
-				Duration: 28.237,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 28.237,
-				},
-				Streams: []Stream{
 					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  28.236542,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Type:       "audio",
+						Codec:      "aac",
+						Duration:   2.042993,
+						Channels:   2,
+						SampleRate: 44100,
 					},
 				},
 			},
 		},
 		{
-			sample: "sample.mpeg",
+			sample: samples.VideoMPEG,
 			report: Report{
-				Duration: 28.236533,
+				Duration: 2.063678,
 				Format: Format{
 					Name:     "mpeg",
-					Duration: 28.236533,
+					Duration: 2.063678,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "mpeg1video",
-						Duration:  28.236533,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Duration:  2.04,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+					{
+						Type:       "audio",
+						Codec:      "mp2",
+						Duration:   2.063678,
+						Channels:   2,
+						SampleRate: 44100,
 					},
 				},
 			},
 		},
 		{
-			sample: "sample.mpg",
+			sample: samples.VideoMPEG2,
 			report: Report{
-				Duration: 28.27,
+				Duration: 2.063678,
 				Format: Format{
-					Name:     "mpegvideo",
-					Duration: 0,
+					Name:     "mpeg",
+					Duration: 2.063678,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "mpeg2video",
-						Duration:  0,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Duration:  2.04,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+					{
+						Type:       "audio",
+						Codec:      "mp2",
+						Duration:   2.063678,
+						Channels:   2,
+						SampleRate: 44100,
 					},
 				},
-				DidParse: true,
 			},
 		},
 		{
-			sample: "sample.webm",
+			sample: samples.VideoMPEG4,
 			report: Report{
-				Duration: 28.237,
+				Duration: 2.066578,
+				Format: Format{
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: 2.066578,
+				},
+				Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "h264",
+						Duration:  2.04,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+					{
+						Type:       "audio",
+						Codec:      "aac",
+						Duration:   2.04,
+						Channels:   2,
+						SampleRate: 44100,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.VideoWebM,
+			report: Report{
+				Duration: 2.05,
 				Format: Format{
 					Name:     "matroska,webm",
-					Duration: 28.237,
+					Duration: 2.05,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
 						Codec:     "vp9",
 						Duration:  0,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
+						Width:     800,
+						Height:    450,
+						FrameRate: 25,
+					},
+					{
+						Type:       "audio",
+						Codec:      "vorbis",
+						Channels:   2,
+						SampleRate: 44100,
 					},
 				},
 			},
 		},
 		{
-			sample: "sample.wmv",
+			sample: samples.VideoWMV,
 			report: Report{
-				Duration: 28.237,
+				Duration: 2.132,
 				Format: Format{
 					Name:     "asf",
-					Duration: 28.237,
+					Duration: 2.132,
 				},
 				Streams: []Stream{
 					{
 						Type:      "video",
-						Codec:     "msmpeg4v3",
-						Duration:  28.237,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 23.976023976023978,
-					},
-				},
-			},
-		},
-		// combined
-		{
-			sample: "combined_avc-aac.mov",
-			report: Report{
-				Duration: 7.2,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 7.2,
-				},
-				Streams: []Stream{
-					{
-						Type:       "audio",
-						Codec:      "aac",
-						Duration:   7.2,
-						Channels:   2,
-						SampleRate: 48000,
-					},
-					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  7.2,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-					{
-						Type:       "data",
-						Codec:      "",
-						Duration:   7.2,
-						Channels:   0,
-						SampleRate: 0,
-						Width:      0,
-						Height:     0,
-					},
-				},
-			},
-		},
-		{
-			sample: "combined_hevc-aac.mp4",
-			report: Report{
-				Duration: 7.189333,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: 7.189333,
-				},
-				Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "hevc",
-						Duration:  7.16,
-						Width:     1280,
-						Height:    720,
+						Codec:     "wmv2",
+						Duration:  2.086,
+						Width:     800,
+						Height:    450,
 						FrameRate: 25,
 					},
 					{
 						Type:       "audio",
-						Codec:      "aac",
-						Duration:   7.16,
+						Codec:      "wmav2",
+						Duration:   2.086,
 						Channels:   2,
-						SampleRate: 48000,
-					},
-				},
-			},
-		},
-		{
-			sample: "combined_mpeg2.mpg",
-			report: Report{
-				Duration: 7.224,
-				Format: Format{
-					Name:     "mpeg",
-					Duration: 7.224,
-				}, Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "mpeg2video",
-						Duration:  7.08,
-						Width:     1280,
-						Height:    720,
-						FrameRate: 25,
-					},
-					{
-						Type:       "audio",
-						Codec:      "mp2",
-						Duration:   7.224,
-						Channels:   2,
-						SampleRate: 48000,
+						SampleRate: 44100,
 					},
 				},
 			},
 		},
 		// image
 		{
-			sample: "sample.gif",
+			sample: samples.ImageGIF,
 			report: Report{
 				Duration: 0.1,
 				Format: Format{
@@ -452,15 +464,15 @@ func TestAnalyze(t *testing.T) {
 						Type:      "video",
 						Codec:     "gif",
 						Duration:  0.1,
-						Width:     1280,
-						Height:    853,
+						Width:     800,
+						Height:    533,
 						FrameRate: 10,
 					},
 				},
 			},
 		},
 		{
-			sample: "sample.jpg",
+			sample: samples.ImageJPEG,
 			report: Report{
 				Duration: 0.04,
 				Format: Format{
@@ -472,15 +484,32 @@ func TestAnalyze(t *testing.T) {
 						Type:      "video",
 						Codec:     "mjpeg",
 						Duration:  0.04,
-						Width:     1280,
-						Height:    853,
+						Width:     800,
+						Height:    533,
 						FrameRate: 25,
 					},
 				},
 			},
 		},
 		{
-			sample: "sample.png",
+			sample: samples.ImageJPEG2K,
+			report: Report{
+				Format: Format{
+					Name: "j2k_pipe",
+				},
+				Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "jpeg2000",
+						Width:     800,
+						Height:    533,
+						FrameRate: 25,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.ImagePNG,
 			report: Report{
 				Format: Format{
 					Name: "png_pipe",
@@ -489,8 +518,42 @@ func TestAnalyze(t *testing.T) {
 					{
 						Type:      "video",
 						Codec:     "png",
-						Width:     1280,
-						Height:    853,
+						Width:     800,
+						Height:    533,
+						FrameRate: 25,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.ImageTIFF,
+			report: Report{
+				Format: Format{
+					Name: "tiff_pipe",
+				},
+				Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "tiff",
+						Width:     800,
+						Height:    533,
+						FrameRate: 25,
+					},
+				},
+			},
+		},
+		{
+			sample: samples.ImageWebP,
+			report: Report{
+				Format: Format{
+					Name: "webp_pipe",
+				},
+				Streams: []Stream{
+					{
+						Type:      "video",
+						Codec:     "webp",
+						Width:     800,
+						Height:    533,
 						FrameRate: 25,
 					},
 				},
@@ -498,7 +561,7 @@ func TestAnalyze(t *testing.T) {
 		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
-			sample := loadSample(item.sample)
+			sample := samples.Buffer(item.sample)
 			defer sample.Close()
 
 			report, err := Analyze(sample)
@@ -509,7 +572,7 @@ func TestAnalyze(t *testing.T) {
 }
 
 func TestAnalyzePipe(t *testing.T) {
-	sample := loadSample("sample.aac")
+	sample := samples.Load(samples.AudioAAC)
 	defer sample.Close()
 
 	buf, err := io.ReadAll(sample)
@@ -517,8 +580,9 @@ func TestAnalyzePipe(t *testing.T) {
 
 	report, err := Analyze(bytes.NewReader(buf))
 	assert.NoError(t, err)
+	assert.True(t, report.Duration > 2)
 	assert.Equal(t, &Report{
-		Duration: osFloat(105.81, 105.79),
+		Duration: report.Duration,
 		Format: Format{
 			Name:     "aac",
 			Duration: 0,
@@ -544,7 +608,7 @@ func TestAnalyzeError(t *testing.T) {
 }
 
 func BenchmarkAnalyze(b *testing.B) {
-	sample := loadSample("sample.mp3")
+	sample := samples.Load(samples.AudioMPEG3)
 	defer sample.Close()
 
 	var buf bytes.Buffer
