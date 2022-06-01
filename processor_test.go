@@ -13,8 +13,7 @@ func TestProcessorConvertImage(t *testing.T) {
 	input := loadSample("sample.png")
 
 	p := NewProcessor(Config{
-		Directory:    t.TempDir(),
-		ImageFormats: []string{"png"},
+		Directory: t.TempDir(),
 	})
 
 	var buf bytes.Buffer
@@ -30,9 +29,7 @@ func TestProcessorConvertAudio(t *testing.T) {
 	input := loadSample("sample.wav")
 
 	p := NewProcessor(Config{
-		Directory:    t.TempDir(),
-		AudioFormats: []string{"wav"},
-		AudioCodecs:  []string{"pcm_s16le"},
+		Directory: t.TempDir(),
 	})
 
 	var buf bytes.Buffer
@@ -52,9 +49,7 @@ func TestProcessorConvertVideo(t *testing.T) {
 	input := loadSample("sample.avi")
 
 	p := NewProcessor(Config{
-		Directory:    t.TempDir(),
-		VideoFormats: []string{"avi"},
-		VideoCodecs:  []string{"mpeg4"},
+		Directory: t.TempDir(),
 	})
 
 	var buf bytes.Buffer
@@ -74,10 +69,7 @@ func TestProcessorExtractImage(t *testing.T) {
 	input := loadSample("sample.avi")
 
 	p := NewProcessor(Config{
-		Directory:    t.TempDir(),
-		ImageFormats: []string{"png"},
-		VideoFormats: []string{"avi"},
-		VideoCodecs:  []string{"mpeg4"},
+		Directory: t.TempDir(),
 	})
 
 	var buf bytes.Buffer

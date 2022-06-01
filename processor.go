@@ -89,7 +89,7 @@ func (p *Processor) ConvertImageFile(input, output *os.File, sizer Sizer) error 
 	}
 
 	// check format
-	if !lo.Contains(p.config.ImageFormats, report.Format) {
+	if p.config.ImageFormats != nil && !lo.Contains(p.config.ImageFormats, report.Format) {
 		return ErrUnsupportedFormat.WrapF(report.Format)
 	}
 
@@ -137,13 +137,13 @@ func (p *Processor) ConvertAudioFile(input, output *os.File, progress func(float
 	}
 
 	// check format, stream type and stream codec
-	if !lo.Contains(p.config.AudioFormats, report.Format.Name) {
+	if p.config.AudioFormats != nil && !lo.Contains(p.config.AudioFormats, report.Format.Name) {
 		return ErrUnsupportedFormat.WrapF(report.Format.Name)
 	}
 	for _, stream := range report.Streams {
 		if stream.Type != "audio" {
 			return ErrUnsupportedStream.WrapF(stream.Type)
-		} else if !lo.Contains(p.config.AudioCodecs, stream.Codec) {
+		} else if p.config.AudioCodecs != nil && !lo.Contains(p.config.AudioCodecs, stream.Codec) {
 			return ErrUnsupportedCodec.WrapF(stream.Codec)
 		}
 	}
@@ -191,13 +191,13 @@ func (p *Processor) ConvertVideoFile(input, output *os.File, sizer Sizer, progre
 	}
 
 	// check format, stream type and stream codec
-	if !lo.Contains(p.config.VideoFormats, report.Format.Name) {
+	if p.config.VideoFormats != nil && !lo.Contains(p.config.VideoFormats, report.Format.Name) {
 		return ErrUnsupportedFormat.WrapF(report.Format.Name)
 	}
 	for _, stream := range report.Streams {
-		if stream.Type != "video" {
+		if stream.Type != "video" && stream.Type != "audio" {
 			return ErrUnsupportedStream.WrapF(stream.Type)
-		} else if !lo.Contains(p.config.VideoCodecs, stream.Codec) {
+		} else if p.config.VideoCodecs != nil && !lo.Contains(p.config.VideoCodecs, stream.Codec) {
 			return ErrUnsupportedCodec.WrapF(stream.Codec)
 		}
 	}
@@ -265,13 +265,13 @@ func (p *Processor) ExtractImageFile(input, temp, output *os.File, pos float64, 
 	}
 
 	// check format, stream type and stream codec
-	if !lo.Contains(p.config.VideoFormats, report.Format.Name) {
+	if p.config.VideoFormats != nil && !lo.Contains(p.config.VideoFormats, report.Format.Name) {
 		return ErrUnsupportedFormat.WrapF(report.Format.Name)
 	}
 	for _, stream := range report.Streams {
-		if stream.Type != "video" {
+		if stream.Type != "video" && stream.Type != "audio" {
 			return ErrUnsupportedStream.WrapF(stream.Type)
-		} else if !lo.Contains(p.config.VideoCodecs, stream.Codec) {
+		} else if p.config.VideoCodecs != nil && !lo.Contains(p.config.VideoCodecs, stream.Codec) {
 			return ErrUnsupportedCodec.WrapF(stream.Codec)
 		}
 	}
