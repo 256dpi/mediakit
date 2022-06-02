@@ -8,18 +8,18 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/256dpi/mediakit/ffmpeg"
 	"github.com/256dpi/mediakit/samples"
+	"github.com/256dpi/mediakit/vips"
 )
 
 func TestProcessorConvertImage(t *testing.T) {
 	input := samples.Load(samples.ImagePNG)
 
-	p := NewProcessor(Config{
-		Directory: t.TempDir(),
-	})
+	p := NewProcessor(t.TempDir())
 
 	var buf bytes.Buffer
-	err := p.ConvertImage(input, KeepSize(), func(output *os.File) error {
+	err := p.ConvertImage(input, vips.JPGWeb, KeepSize(), func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
 		return err
 	})
@@ -30,13 +30,11 @@ func TestProcessorConvertImage(t *testing.T) {
 func TestProcessorConvertAudio(t *testing.T) {
 	input := samples.Load(samples.AudioWAV)
 
-	p := NewProcessor(Config{
-		Directory: t.TempDir(),
-	})
+	p := NewProcessor(t.TempDir())
 
 	var buf bytes.Buffer
 	var progress []float64
-	err := p.ConvertAudio(input, func(f float64) {
+	err := p.ConvertAudio(input, ffmpeg.AudioMP3VBRStandard, func(f float64) {
 		progress = append(progress, f)
 	}, func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
@@ -50,13 +48,11 @@ func TestProcessorConvertAudio(t *testing.T) {
 func TestProcessorConvertVideo(t *testing.T) {
 	input := samples.Load(samples.VideoAVI)
 
-	p := NewProcessor(Config{
-		Directory: t.TempDir(),
-	})
+	p := NewProcessor(t.TempDir())
 
 	var buf bytes.Buffer
 	var progress []float64
-	err := p.ConvertVideo(input, MaxWidth(500), func(f float64) {
+	err := p.ConvertVideo(input, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, func(f float64) {
 		progress = append(progress, f)
 	}, func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
@@ -70,12 +66,10 @@ func TestProcessorConvertVideo(t *testing.T) {
 func TestProcessorExtractImage(t *testing.T) {
 	input := samples.Load(samples.VideoMOV)
 
-	p := NewProcessor(Config{
-		Directory: t.TempDir(),
-	})
+	p := NewProcessor(t.TempDir())
 
 	var buf bytes.Buffer
-	err := p.ExtractImage(input, 0.25, KeepSize(), func(output *os.File) error {
+	err := p.ExtractImage(input, 0.25, vips.JPGWeb, KeepSize(), func(output *os.File) error {
 		_, err := io.Copy(&buf, output)
 		return err
 	})

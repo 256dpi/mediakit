@@ -15,82 +15,54 @@ import (
 // ErrMissingStream is returned if a required audio/video stream is missing.
 var ErrMissingStream = xo.BF("missing stream")
 
-// Config defines a Processor configuration.
-type Config struct {
-	// The directory to used for temporary files.
-	Directory string
-
-	// The used presets.
-	ImagePreset vips.Preset   // vips.JPGWeb
-	AudioPreset ffmpeg.Preset // ffmpeg.AudioMP3VBRStandard
-	VideoPreset ffmpeg.Preset // ffmpeg.VideoMP4H264AACFast
-
-	// The maximum video frame rate.
-	MaxFrameRate float64 // 30
-}
-
 // Processor provides methods to convert streams and files as well as extract
 // images from video streams or files.
 type Processor struct {
-	config Config
+	dir string
 }
 
 // NewProcessor creates and returns a new processor using the specified config.
-func NewProcessor(config Config) *Processor {
-	// ensure defaults
-	if config.ImagePreset == 0 {
-		config.ImagePreset = vips.JPGWeb
-	}
-	if config.AudioPreset == 0 {
-		config.AudioPreset = ffmpeg.AudioMP3VBRStandard
-	}
-	if config.VideoPreset == 0 {
-		config.VideoPreset = ffmpeg.VideoMP4H264AACFast
-	}
-	if config.MaxFrameRate == 0 {
-		config.MaxFrameRate = 30
-	}
-
+func NewProcessor(directory string) *Processor {
 	return &Processor{
-		config: config,
+		dir: directory,
 	}
 }
 
 // ConvertImage will convert an image stream with the specified sizer applied.
-func (p *Processor) ConvertImage(input io.Reader, sizer Sizer, fn func(output *os.File) error) error {
+func (p *Processor) ConvertImage(input io.Reader, preset vips.Preset, sizer Sizer, fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return ConvertImage(input, output, p.config.ImagePreset, sizer)
+		return ConvertImage(input, output, preset, sizer)
 	})
 }
 
 // ConvertAudio will convert an audio stream.
-func (p *Processor) ConvertAudio(input io.Reader, progress func(float64), fn func(output *os.File) error) error {
+func (p *Processor) ConvertAudio(input io.Reader, preset ffmpeg.Preset, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return ConvertAudio(input, output, p.config.AudioPreset, progress)
+		return ConvertAudio(input, output, preset, progress)
 	})
 }
 
 // ConvertVideo will convert a video stream with the specified sizer applied.
-func (p *Processor) ConvertVideo(input io.Reader, sizer Sizer, progress func(float64), fn func(output *os.File) error) error {
+func (p *Processor) ConvertVideo(input io.Reader, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return ConvertVideo(input, output, p.config.VideoPreset, sizer, p.config.MaxFrameRate, progress)
+		return ConvertVideo(input, output, preset, sizer, maxFrameRate, progress)
 	})
 }
 
 // ExtractImage will extract an image stream from a video stream at the provided
 // position with the specified sizer applied.
-func (p *Processor) ExtractImage(input io.Reader, pos float64, sizer Sizer, fn func(output *os.File) error) error {
+func (p *Processor) ExtractImage(input io.Reader, pos float64, preset vips.Preset, sizer Sizer, fn func(output *os.File) error) error {
 	return p.buffer(input, true, fn, func(input, temp, output *os.File) error {
-		return ExtractImage(input, temp, output, pos, p.config.ImagePreset, sizer)
+		return ExtractImage(input, temp, output, pos, preset, sizer)
 	})
 }
 
 func (p *Processor) buffer(input io.Reader, temp bool, output func(*os.File) error, fn func(input *os.File, temp *os.File, output *os.File) error) error {
 	// prepare paths
 	id := uuid.New().String()
-	inputPath := filepath.Join(p.config.Directory, id+"-input")
-	tempPath := filepath.Join(p.config.Directory, id+"-temp")
-	outputPath := filepath.Join(p.config.Directory, id+"-output")
+	inputPath := filepath.Join(p.dir, id+"-input")
+	tempPath := filepath.Join(p.dir, id+"-temp")
+	outputPath := filepath.Join(p.dir, id+"-output")
 
 	// create input file
 	inputFile, err := os.Create(inputPath)
