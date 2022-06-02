@@ -119,18 +119,6 @@ func (p *Processor) buffer(input io.Reader, temp bool, output func(*os.File) err
 		return err
 	}
 
-	// sync output
-	err = outputFile.Sync()
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// rewind output
-	_, err = outputFile.Seek(0, io.SeekStart)
-	if err != nil {
-		return xo.W(err)
-	}
-
 	// yield output
 	err = output(outputFile)
 	if err != nil {

@@ -44,6 +44,12 @@ func ConvertImage(input, output *os.File, preset vips.Preset, sizer Sizer) error
 		return xo.W(err)
 	}
 
+	// sync and rewind file
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -95,6 +101,12 @@ func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, maxSampleRate in
 	err = ffmpeg.Convert(input, output, opts)
 	if err != nil {
 		return xo.W(err)
+	}
+
+	// sync and rewind file
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -161,6 +173,12 @@ func ConvertVideo(input, output *os.File, preset ffmpeg.Preset, sizer Sizer, max
 		return xo.W(err)
 	}
 
+	// sync and rewind file
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -203,6 +221,28 @@ func ExtractImage(input, temp, output *os.File, position float64, preset vips.Pr
 
 	// convert image
 	err = ConvertImage(temp, output, preset, sizer)
+	if err != nil {
+		return err
+	}
+
+	// sync and rewind file
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func syncAndRewind(file *os.File) error {
+	// sync file
+	err := file.Sync()
+	if err != nil {
+		return err
+	}
+
+	// rewind file
+	_, err = file.Seek(0, io.SeekStart)
 	if err != nil {
 		return err
 	}
