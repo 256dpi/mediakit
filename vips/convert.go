@@ -2,6 +2,7 @@ package vips
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os/exec"
@@ -65,7 +66,12 @@ type ConvertOptions struct {
 
 // Convert will run the vips utility to convert the specified input to the
 // configured output.
-func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
+func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions) error {
+	// ensure context
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	// check preset
 	if !opts.Preset.Valid() {
 		return fmt.Errorf("invalid preset")
@@ -100,7 +106,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// prepare command
-	cmd := exec.Command("vips", args...)
+	cmd := exec.CommandContext(ctx, "vips", args...)
 
 	// set input {
 	cmd.Stdin = r

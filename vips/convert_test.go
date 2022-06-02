@@ -28,7 +28,7 @@ func TestConvert(t *testing.T) {
 				defer sample.Close()
 
 				var buf bytes.Buffer
-				err := Convert(sample, &buf, ConvertOptions{
+				err := Convert(nil, sample, &buf, ConvertOptions{
 					Preset: preset,
 					Width:  256,
 					Height: 256,
@@ -36,7 +36,7 @@ func TestConvert(t *testing.T) {
 				})
 				assert.NoError(t, err)
 
-				report, err := Analyze(&buf)
+				report, err := Analyze(nil, &buf)
 				assert.NoError(t, err)
 				assert.Equal(t, &Report{
 					Width:  256,
@@ -131,10 +131,10 @@ func TestConvertOptions(t *testing.T) {
 			defer sample.Close()
 
 			var buf bytes.Buffer
-			err := Convert(sample, &buf, item.opts)
+			err := Convert(nil, sample, &buf, item.opts)
 			assert.NoError(t, err)
 
-			report, err := Analyze(&buf)
+			report, err := Analyze(nil, &buf)
 			assert.NoError(t, err)
 			assert.Equal(t, &item.report, report)
 		})
@@ -143,7 +143,7 @@ func TestConvertOptions(t *testing.T) {
 
 func TestConvertError(t *testing.T) {
 	var buf bytes.Buffer
-	err := Convert(strings.NewReader("foo"), &buf, ConvertOptions{
+	err := Convert(nil, strings.NewReader("foo"), &buf, ConvertOptions{
 		Preset: JPGWeb,
 		Width:  1,
 	})

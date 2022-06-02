@@ -1,6 +1,7 @@
 package mediakit
 
 import (
+	"context"
 	"io"
 	"math"
 	"os"
@@ -15,9 +16,9 @@ import (
 var ErrMissingStream = xo.BF("missing stream")
 
 // ConvertImage will convert an image using a preset and sizer.
-func ConvertImage(input, output *os.File, preset vips.Preset, sizer Sizer) error {
+func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Preset, sizer Sizer) error {
 	// analyze input
-	report, err := vips.Analyze(input)
+	report, err := vips.Analyze(ctx, input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -42,7 +43,7 @@ func ConvertImage(input, output *os.File, preset vips.Preset, sizer Sizer) error
 	}
 
 	// convert image
-	err = vips.Convert(input, output, opts)
+	err = vips.Convert(ctx, input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -57,9 +58,9 @@ func ConvertImage(input, output *os.File, preset vips.Preset, sizer Sizer) error
 }
 
 // ConvertAudio will convert audio using a preset.
-func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress func(float64)) error {
+func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress func(float64)) error {
 	// analyze input
-	report, err := ffmpeg.Analyze(input)
+	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -101,7 +102,7 @@ func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, maxSampleRate in
 	}
 
 	// convert audio
-	err = ffmpeg.Convert(input, output, opts)
+	err = ffmpeg.Convert(ctx, input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -116,9 +117,9 @@ func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, maxSampleRate in
 }
 
 // ConvertVideo will convert video using a preset, sizer and max frame rate.
-func ConvertVideo(input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, progress func(float64)) error {
+func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, progress func(float64)) error {
 	// analyze input
-	report, err := ffmpeg.Analyze(input)
+	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -171,7 +172,7 @@ func ConvertVideo(input, output *os.File, preset ffmpeg.Preset, sizer Sizer, max
 	}
 
 	// convert video
-	err = ffmpeg.Convert(input, output, opts)
+	err = ffmpeg.Convert(ctx, input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -186,9 +187,9 @@ func ConvertVideo(input, output *os.File, preset ffmpeg.Preset, sizer Sizer, max
 }
 
 // ExtractImage will extract an image using a position, preset and sizer.
-func ExtractImage(input, temp, output *os.File, position float64, preset vips.Preset, sizer Sizer) error {
+func ExtractImage(ctx context.Context, input, temp, output *os.File, position float64, preset vips.Preset, sizer Sizer) error {
 	// analyze input
-	report, err := ffmpeg.Analyze(input)
+	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
 		return xo.W(err)
 	}
@@ -217,13 +218,13 @@ func ExtractImage(input, temp, output *os.File, position float64, preset vips.Pr
 	}
 
 	// convert video
-	err = ffmpeg.Convert(input, temp, opts)
+	err = ffmpeg.Convert(ctx, input, temp, opts)
 	if err != nil {
 		return xo.W(err)
 	}
 
 	// convert image
-	err = ConvertImage(temp, output, preset, sizer)
+	err = ConvertImage(ctx, temp, output, preset, sizer)
 	if err != nil {
 		return err
 	}

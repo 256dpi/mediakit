@@ -17,7 +17,7 @@ func TestConvertImage(t *testing.T) {
 	input := samples.Buffer(samples.ImagePNG)
 	output := makeBuffers(t.TempDir(), "output")[0]
 
-	err := ConvertImage(input, output, vips.JPGWeb, KeepSize())
+	err := ConvertImage(nil, input, output, vips.JPGWeb, KeepSize())
 	assert.NoError(t, err)
 
 	buf := make([]byte, DetectBytes)
@@ -31,7 +31,7 @@ func TestConvertAudio(t *testing.T) {
 	output := makeBuffers(t.TempDir(), "output")[0]
 
 	var progress []float64
-	err := ConvertAudio(input, output, ffmpeg.AudioMP3VBRStandard, 48000, func(f float64) {
+	err := ConvertAudio(nil, input, output, ffmpeg.AudioMP3VBRStandard, 48000, func(f float64) {
 		progress = append(progress, f)
 	})
 	assert.NoError(t, err)
@@ -48,7 +48,7 @@ func TestConvertVideo(t *testing.T) {
 	output := makeBuffers(t.TempDir(), "output")[0]
 
 	var progress []float64
-	err := ConvertVideo(input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, func(f float64) {
+	err := ConvertVideo(nil, input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, func(f float64) {
 		progress = append(progress, f)
 	})
 	assert.NoError(t, err)
@@ -64,7 +64,7 @@ func TestExtractImage(t *testing.T) {
 	input := samples.Buffer(samples.VideoMOV)
 	buffers := makeBuffers(t.TempDir(), "temp", "output")
 
-	err := ExtractImage(input, buffers[0], buffers[1], 0.25, vips.JPGWeb, KeepSize())
+	err := ExtractImage(nil, input, buffers[0], buffers[1], 0.25, vips.JPGWeb, KeepSize())
 	assert.NoError(t, err)
 
 	buf := make([]byte, DetectBytes)

@@ -99,7 +99,7 @@ func TestAnalyze(t *testing.T) {
 			sample := samples.Load(item.sample)
 			defer sample.Close()
 
-			report, err := Analyze(sample)
+			report, err := Analyze(nil, sample)
 			assert.NoError(t, err)
 			assert.Equal(t, &item.report, report)
 		})

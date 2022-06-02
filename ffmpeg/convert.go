@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -131,7 +132,12 @@ type ConvertOptions struct {
 // will be mapped via the filesystem. Otherwise, pipes are created to connect
 // the input or output. Using files is recommended to allow ffmpeg to seek
 // within the files.
-func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
+func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions) error {
+	// ensure context
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	// check input and output
 	rFile, _ := r.(*os.File)
 	wFile, _ := w.(*os.File)
@@ -204,7 +210,7 @@ func Convert(r io.Reader, w io.Writer, opts ConvertOptions) error {
 	}
 
 	// prepare command
-	cmd := exec.Command("ffmpeg", args...)
+	cmd := exec.CommandContext(ctx, "ffmpeg", args...)
 
 	// set input
 	if !rIsFile {

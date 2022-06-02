@@ -68,7 +68,7 @@ func TestAnalyzeAudio(t *testing.T) {
 			sample := samples.Buffer(item.sample)
 			defer sample.Close()
 
-			report, err := Analyze(sample)
+			report, err := Analyze(nil, sample)
 			assert.NoError(t, err)
 			assert.True(t, report.Duration > 2)
 			assert.True(t, report.Format.Duration > 2)
@@ -171,7 +171,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			sample := samples.Buffer(item.sample)
 			defer sample.Close()
 
-			report, err := Analyze(sample)
+			report, err := Analyze(nil, sample)
 			if item.format == "flv" {
 				report.Streams = lo.Reverse(report.Streams)
 			}
@@ -260,7 +260,7 @@ func TestAnalyzeImage(t *testing.T) {
 			sample := samples.Buffer(item.sample)
 			defer sample.Close()
 
-			report, err := Analyze(sample)
+			report, err := Analyze(nil, sample)
 			assert.NoError(t, err)
 			assert.Equal(t, &Report{
 				Duration: report.Duration,
@@ -290,7 +290,7 @@ func TestAnalyzePipe(t *testing.T) {
 	buf, err := io.ReadAll(sample)
 	assert.NoError(t, err)
 
-	report, err := Analyze(bytes.NewReader(buf))
+	report, err := Analyze(nil, bytes.NewReader(buf))
 	assert.NoError(t, err)
 	assert.True(t, report.Duration > 2)
 	assert.Equal(t, &Report{
@@ -313,7 +313,7 @@ func TestAnalyzePipe(t *testing.T) {
 }
 
 func TestAnalyzeError(t *testing.T) {
-	report, err := Analyze(strings.NewReader("foo"))
+	report, err := Analyze(nil, strings.NewReader("foo"))
 	assert.Error(t, err)
 	assert.Nil(t, report)
 	assert.Equal(t, "invalid data found when processing input", err.Error())
@@ -334,7 +334,7 @@ func BenchmarkAnalyze(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		reader.Reset(buf.Bytes())
 
-		_, err := Analyze(reader)
+		_, err := Analyze(nil, reader)
 		if err != nil {
 			panic(err)
 		}

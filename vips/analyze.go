@@ -2,6 +2,7 @@ package vips
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os/exec"
@@ -20,9 +21,14 @@ type Report struct {
 
 // Analyze will run the vipsheader utility on the specified input and
 // return the parsed report.
-func Analyze(r io.Reader) (*Report, error) {
+func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
+	// ensure context
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	// prepare command
-	cmd := exec.Command("vipsheader", "stdin")
+	cmd := exec.CommandContext(ctx, "vipsheader", "stdin")
 
 	// set input
 	cmd.Stdin = r

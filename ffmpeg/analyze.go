@@ -2,6 +2,7 @@ package ffmpeg
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -134,7 +135,12 @@ func (r Report) SampleRate() int {
 // return the parsed report. If the input is an *os.File and has a name it will
 // be mapped via the filesystem. Otherwise, a pipe is created to connect the
 // input. Using a file is recommended to allow ffprobe to seek within the file.
-func Analyze(r io.Reader) (*Report, error) {
+func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
+	// ensure context
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	// check input
 	file, _ := r.(*os.File)
 	isFile := file != nil && file.Name() != ""
@@ -155,7 +161,7 @@ func Analyze(r io.Reader) (*Report, error) {
 	}
 
 	// prepare command
-	cmd := exec.Command("ffprobe", args...)
+	cmd := exec.CommandContext(ctx, "ffprobe", args...)
 
 	// set input
 	if !isFile {
@@ -215,7 +221,7 @@ func Analyze(r io.Reader) (*Report, error) {
 		}
 
 		// prepare command
-		cmd = exec.Command("ffmpeg", "-nostats", "-hide_banner", "-i", "pipe:", "-f", "null", "-")
+		cmd = exec.CommandContext(ctx, "ffmpeg", "-nostats", "-hide_banner", "-i", "pipe:", "-f", "null", "-")
 
 		// set input
 		cmd.Stdin = r
