@@ -2,7 +2,6 @@ package mediakit
 
 import (
 	"io"
-	"math"
 	"os"
 	"path/filepath"
 
@@ -26,9 +25,8 @@ type Config struct {
 	AudioPreset ffmpeg.Preset // ffmpeg.AudioMP3VBRStandard
 	VideoPreset ffmpeg.Preset // ffmpeg.VideoMP4H264AACFast
 
-	// The maximum and targeted video frame rate.
-	MaxFrameRate    float64 // 30
-	TargetFrameRate float64 // 25
+	// The maximum video frame rate.
+	MaxFrameRate float64 // 30
 }
 
 // Processor provides methods to convert streams and files as well as extract
@@ -52,9 +50,6 @@ func NewProcessor(config Config) *Processor {
 	if config.MaxFrameRate == 0 {
 		config.MaxFrameRate = 30
 	}
-	if config.TargetFrameRate == 0 {
-		config.TargetFrameRate = 25
-	}
 
 	return &Processor{
 		config: config,
@@ -64,223 +59,30 @@ func NewProcessor(config Config) *Processor {
 // ConvertImage will convert an image stream with the specified sizer applied.
 func (p *Processor) ConvertImage(input io.Reader, sizer Sizer, fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return p.ConvertImageFile(input, output, sizer)
+		return ConvertImage(input, output, p.config.ImagePreset, sizer)
 	})
-}
-
-// ConvertImageFile will convert an image file with the specified sizer applied.
-func (p *Processor) ConvertImageFile(input, output *os.File, sizer Sizer) error {
-	// analyze input
-	report, err := vips.Analyze(input)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// rewind input
-	_, err = input.Seek(0, io.SeekStart)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// apply sizer
-	size := sizer(Size{
-		W: float64(report.Width),
-		H: float64(report.Height),
-	})
-
-	// prepare options
-	opts := vips.ConvertOptions{
-		Preset: p.config.ImagePreset,
-		Width:  int(math.Round(size.W)),
-		Height: int(math.Round(size.H)),
-	}
-
-	// convert image
-	err = vips.Convert(input, output, opts)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	return nil
 }
 
 // ConvertAudio will convert an audio stream.
 func (p *Processor) ConvertAudio(input io.Reader, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return p.ConvertAudioFile(input, output, progress)
+		return ConvertAudio(input, output, p.config.AudioPreset, progress)
 	})
-}
-
-// ConvertAudioFile will convert an audio file.
-func (p *Processor) ConvertAudioFile(input, output *os.File, progress func(float64)) error {
-	// analyze input
-	report, err := ffmpeg.Analyze(input)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// check audio stream
-	var ok bool
-	for _, stream := range report.Streams {
-		if stream.Type == "audio" {
-			ok = true
-		}
-	}
-	if !ok {
-		return ErrMissingStream.Wrap()
-	}
-
-	// rewind input
-	_, err = input.Seek(0, io.SeekStart)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// prepare options
-	opts := ffmpeg.ConvertOptions{
-		Preset: p.config.AudioPreset,
-	}
-
-	// set progress
-	if progress != nil {
-		opts.Progress = func(p ffmpeg.Progress) {
-			progress(math.Min(p.Duration/report.Duration, 1))
-		}
-	}
-
-	// convert audio
-	err = ffmpeg.Convert(input, output, opts)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	return nil
 }
 
 // ConvertVideo will convert a video stream with the specified sizer applied.
 func (p *Processor) ConvertVideo(input io.Reader, sizer Sizer, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return p.ConvertVideoFile(input, output, sizer, progress)
+		return ConvertVideo(input, output, p.config.VideoPreset, sizer, p.config.MaxFrameRate, progress)
 	})
-}
-
-// ConvertVideoFile will convert a video file with the specified sizer applied.
-func (p *Processor) ConvertVideoFile(input, output *os.File, sizer Sizer, progress func(float64)) error {
-	// analyze input
-	report, err := ffmpeg.Analyze(input)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// check video stream
-	var ok bool
-	for _, stream := range report.Streams {
-		if stream.Type == "video" {
-			ok = true
-		}
-	}
-	if !ok {
-		return ErrMissingStream.Wrap()
-	}
-
-	// rewind input
-	_, err = input.Seek(0, io.SeekStart)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// get size
-	width, height := report.Size()
-
-	// apply sizer
-	size := sizer(Size{
-		W: float64(width),
-		H: float64(height),
-	})
-
-	// get frame rate
-	frameRate := report.FrameRate()
-	if frameRate > p.config.MaxFrameRate {
-		frameRate = p.config.TargetFrameRate
-	}
-
-	// prepare options
-	opts := ffmpeg.ConvertOptions{
-		Preset:    p.config.VideoPreset,
-		Width:     int(math.Round(size.W)),
-		Height:    int(math.Round(size.H)),
-		FrameRate: frameRate,
-	}
-
-	// set progress
-	if progress != nil {
-		opts.Progress = func(p ffmpeg.Progress) {
-			progress(math.Min(p.Duration/report.Duration, 1))
-		}
-	}
-
-	// convert video
-	err = ffmpeg.Convert(input, output, opts)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	return nil
 }
 
 // ExtractImage will extract an image stream from a video stream at the provided
 // position with the specified sizer applied.
 func (p *Processor) ExtractImage(input io.Reader, pos float64, sizer Sizer, fn func(output *os.File) error) error {
 	return p.buffer(input, true, fn, func(input, temp, output *os.File) error {
-		return p.ExtractImageFile(input, temp, output, pos, sizer)
+		return ExtractImage(input, temp, output, pos, p.config.ImagePreset, sizer)
 	})
-}
-
-// ExtractImageFile will extract an image file from a video file at the
-// provided position with the specified sizer applied.
-func (p *Processor) ExtractImageFile(input, temp, output *os.File, pos float64, sizer Sizer) error {
-	// analyze input
-	report, err := ffmpeg.Analyze(input)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// check audio stream
-	var ok bool
-	for _, stream := range report.Streams {
-		if stream.Type == "video" {
-			ok = true
-		}
-	}
-	if !ok {
-		return ErrMissingStream.Wrap()
-	}
-
-	// rewind input
-	_, err = input.Seek(0, io.SeekStart)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// prepare options
-	opts := ffmpeg.ConvertOptions{
-		Preset: ffmpeg.ImagePNG, // lossless
-		Start:  report.Duration * pos,
-	}
-
-	// convert video
-	err = ffmpeg.Convert(input, temp, opts)
-	if err != nil {
-		return xo.W(err)
-	}
-
-	// convert image
-	err = p.ConvertImageFile(temp, output, sizer)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (p *Processor) buffer(input io.Reader, temp bool, output func(*os.File) error, fn func(input *os.File, temp *os.File, output *os.File) error) error {
