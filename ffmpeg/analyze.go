@@ -92,7 +92,7 @@ type Report struct {
 // Has returns whether as stream of the specified type is available.
 func (r Report) Has(typ string) bool {
 	for _, stream := range r.Streams {
-		if stream.Type == "video" {
+		if stream.Type == typ {
 			return true
 		}
 	}
