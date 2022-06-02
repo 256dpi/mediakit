@@ -89,6 +89,16 @@ type Report struct {
 	DidParse bool
 }
 
+// Has returns whether as stream of the specified type is available.
+func (r Report) Has(typ string) bool {
+	for _, stream := range r.Streams {
+		if stream.Type == "video" {
+			return true
+		}
+	}
+	return false
+}
+
 // Size returns the maximum stream width and height.
 func (r Report) Size() (int, int) {
 	// get size

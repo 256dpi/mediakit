@@ -66,13 +66,7 @@ func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 	}
 
 	// check audio stream
-	var ok bool
-	for _, stream := range report.Streams {
-		if stream.Type == "audio" {
-			ok = true
-		}
-	}
-	if !ok {
+	if !report.Has("audio") {
 		return ErrMissingStream.Wrap()
 	}
 
@@ -125,13 +119,7 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 	}
 
 	// check video stream
-	var ok bool
-	for _, stream := range report.Streams {
-		if stream.Type == "video" {
-			ok = true
-		}
-	}
-	if !ok {
+	if !report.Has("video") {
 		return ErrMissingStream.Wrap()
 	}
 
@@ -194,14 +182,8 @@ func ExtractImage(ctx context.Context, input, temp, output *os.File, position fl
 		return xo.W(err)
 	}
 
-	// check audio stream
-	var ok bool
-	for _, stream := range report.Streams {
-		if stream.Type == "video" {
-			ok = true
-		}
-	}
-	if !ok {
+	// check video stream
+	if !report.Has("video") {
 		return ErrMissingStream.Wrap()
 	}
 
