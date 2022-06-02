@@ -31,15 +31,15 @@ func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Prese
 
 	// apply sizer
 	size := sizer(Size{
-		W: float64(report.Width),
-		H: float64(report.Height),
+		Width:  float64(report.Width),
+		Height: float64(report.Height),
 	})
 
 	// prepare options
 	opts := vips.ConvertOptions{
 		Preset: preset,
-		Width:  int(math.Round(size.W)),
-		Height: int(math.Round(size.H)),
+		Width:  int(math.Round(size.Width)),
+		Height: int(math.Round(size.Height)),
 	}
 
 	// convert image
@@ -134,8 +134,8 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 
 	// apply sizer
 	size := sizer(Size{
-		W: float64(width),
-		H: float64(height),
+		Width:  float64(width),
+		Height: float64(height),
 	})
 
 	// get frame rate
@@ -147,8 +147,8 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 	// prepare options
 	opts := ffmpeg.ConvertOptions{
 		Preset:    preset,
-		Width:     int(math.Round(size.W)),
-		Height:    int(math.Round(size.H)),
+		Width:     int(math.Round(size.Width)),
+		Height:    int(math.Round(size.Height)),
 		FrameRate: frameRate,
 	}
 

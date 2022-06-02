@@ -4,24 +4,24 @@ import "math"
 
 // Size defines a size.
 type Size struct {
-	W, H float64
+	Width, Height float64
 }
 
 // Area returns the area.
 func (s Size) Area() float64 {
-	return s.W * s.H
+	return s.Width * s.Height
 }
 
 // Aspect returns the aspect ratio.
 func (s Size) Aspect() float64 {
-	return s.W / s.H
+	return s.Width / s.Height
 }
 
 // Scale returns a scaled size.
 func (s Size) Scale(f float64) Size {
 	return Size{
-		W: s.W * f,
-		H: s.H * f,
+		Width:  s.Width * f,
+		Height: s.Height * f,
 	}
 }
 
@@ -38,12 +38,12 @@ func KeepSize() Sizer {
 // MaxWidth limits the size by the specified width.
 func MaxWidth(max float64) Sizer {
 	return func(s Size) Size {
-		if s.W <= max {
+		if s.Width <= max {
 			return s
 		}
 		return Size{
-			W: max,
-			H: max / s.Aspect(),
+			Width:  max,
+			Height: max / s.Aspect(),
 		}
 	}
 }
@@ -51,12 +51,12 @@ func MaxWidth(max float64) Sizer {
 // MaxHeight limits the size by the specified height.
 func MaxHeight(max float64) Sizer {
 	return func(s Size) Size {
-		if s.H <= max {
+		if s.Height <= max {
 			return s
 		}
 		return Size{
-			W: max * s.Aspect(),
-			H: max,
+			Width:  max * s.Aspect(),
+			Height: max,
 		}
 	}
 }
@@ -75,11 +75,11 @@ func MaxArea(max float64) Sizer {
 // MaxSize limits the size by the specified size.
 func MaxSize(max Size) Sizer {
 	return func(s Size) Size {
-		if s.W <= max.W && s.H <= max.H {
+		if s.Width <= max.Width && s.Height <= max.Height {
 			return s
 		}
-		fw := max.W / s.W
-		fh := max.H / s.H
+		fw := max.Width / s.Width
+		fh := max.Height / s.Height
 		if fw < fh {
 			return s.Scale(fw)
 		}
