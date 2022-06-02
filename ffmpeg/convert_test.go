@@ -41,7 +41,7 @@ func TestConvertAudio(t *testing.T) {
 						SampleRate: 44100,
 					},
 				},
-				DidParse: true,
+				DidScan: true,
 			}, report)
 		})
 	}
@@ -247,7 +247,7 @@ func TestConvertOptions(t *testing.T) {
 						SampleRate: 16000,
 					},
 				},
-				DidParse: true,
+				DidScan: true,
 			},
 		},
 		// video

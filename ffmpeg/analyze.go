@@ -64,11 +64,9 @@ func (r *FrameRate) UnmarshalJSON(bytes []byte) error {
 
 // Stream is a ffprobe stream.
 type Stream struct {
-	// codec
-	Type  string `json:"codec_type"`
-	Codec string `json:"codec_name"`
-
 	// generic
+	Type     string  `json:"codec_type"`
+	Codec    string  `json:"codec_name"`
 	Duration float64 `json:"duration,string"`
 
 	// audio
@@ -86,7 +84,7 @@ type Report struct {
 	Duration float64
 	Format   Format   `json:"format"`
 	Streams  []Stream `json:"streams"`
-	DidParse bool
+	DidScan  bool
 }
 
 // Has returns whether as stream of the specified type is available.
@@ -222,7 +220,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 	// decode full file to get duration if still missing
 	if !image && report.Duration == 0 && seeker != nil {
 		// set flag
-		report.DidParse = true
+		report.DidScan = true
 
 		// seek start
 		_, err = seeker.Seek(0, io.SeekStart)

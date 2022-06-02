@@ -308,7 +308,7 @@ func TestAnalyzePipe(t *testing.T) {
 				SampleRate: 44100,
 			},
 		},
-		DidParse: true,
+		DidScan: true,
 	}, report)
 }
 
