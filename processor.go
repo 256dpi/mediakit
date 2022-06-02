@@ -12,9 +12,6 @@ import (
 	"github.com/256dpi/mediakit/vips"
 )
 
-// ErrMissingStream is returned if a required audio/video stream is missing.
-var ErrMissingStream = xo.BF("missing stream")
-
 // Processor provides methods to convert streams and files as well as extract
 // images from video streams or files.
 type Processor struct {

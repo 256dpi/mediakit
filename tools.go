@@ -11,6 +11,9 @@ import (
 	"github.com/256dpi/mediakit/vips"
 )
 
+// ErrMissingStream is returned if a required audio/video stream is missing.
+var ErrMissingStream = xo.BF("missing stream")
+
 // ConvertImage will convert an image using a preset and sizer.
 func ConvertImage(input, output *os.File, preset vips.Preset, sizer Sizer) error {
 	// analyze input
