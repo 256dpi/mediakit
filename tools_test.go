@@ -2,6 +2,7 @@ package mediakit
 
 import (
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -12,6 +13,10 @@ import (
 	"github.com/256dpi/mediakit/samples"
 	"github.com/256dpi/mediakit/vips"
 )
+
+func init() {
+	ffmpeg.WarningsLogger = log.Default()
+}
 
 func TestConvertImage(t *testing.T) {
 	input := samples.Buffer(samples.ImagePNG)
