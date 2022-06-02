@@ -48,7 +48,7 @@ func ConvertImage(input, output *os.File, preset vips.Preset, sizer Sizer) error
 }
 
 // ConvertAudio will convert audio using a preset.
-func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, progress func(float64)) error {
+func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress func(float64)) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(input)
 	if err != nil {
@@ -72,9 +72,16 @@ func ConvertAudio(input, output *os.File, preset ffmpeg.Preset, progress func(fl
 		return xo.W(err)
 	}
 
+	// get frame rate
+	sampleRate := report.SampleRate()
+	if sampleRate > maxSampleRate {
+		sampleRate = maxSampleRate
+	}
+
 	// prepare options
 	opts := ffmpeg.ConvertOptions{
-		Preset: preset,
+		Preset:     preset,
+		SampleRate: sampleRate,
 	}
 
 	// set progress

@@ -34,7 +34,7 @@ func TestProcessorConvertAudio(t *testing.T) {
 
 	var buf bytes.Buffer
 	var progress []float64
-	err := p.ConvertAudio(input, ffmpeg.AudioMP3VBRStandard, func(f float64) {
+	err := p.ConvertAudio(input, ffmpeg.AudioMP3VBRStandard, 48000, func(f float64) {
 		progress = append(progress, f)
 	}, func(output *os.File) error {
 		_, err := io.Copy(&buf, output)

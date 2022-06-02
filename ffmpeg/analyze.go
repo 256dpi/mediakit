@@ -117,6 +117,19 @@ func (r Report) FrameRate() float64 {
 	return frameRate
 }
 
+// SampleRate returns the maximum stream sample rate.
+func (r Report) SampleRate() int {
+	// get sample rate
+	var sampleRate int
+	for _, stream := range r.Streams {
+		if stream.SampleRate > sampleRate {
+			sampleRate = stream.SampleRate
+		}
+	}
+
+	return sampleRate
+}
+
 // Analyze will run the ffprobe and ffmpeg utilities on the specified input and
 // return the parsed report. If the input is an *os.File and has a name it will
 // be mapped via the filesystem. Otherwise, a pipe is created to connect the

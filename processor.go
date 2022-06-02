@@ -36,9 +36,9 @@ func (p *Processor) ConvertImage(input io.Reader, preset vips.Preset, sizer Size
 }
 
 // ConvertAudio will convert an audio stream.
-func (p *Processor) ConvertAudio(input io.Reader, preset ffmpeg.Preset, progress func(float64), fn func(output *os.File) error) error {
+func (p *Processor) ConvertAudio(input io.Reader, preset ffmpeg.Preset, maxSampleRate int, progress func(float64), fn func(output *os.File) error) error {
 	return p.buffer(input, false, fn, func(input, _, output *os.File) error {
-		return ConvertAudio(input, output, preset, progress)
+		return ConvertAudio(input, output, preset, maxSampleRate, progress)
 	})
 }
 
