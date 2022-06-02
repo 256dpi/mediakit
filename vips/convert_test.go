@@ -13,16 +13,7 @@ import (
 
 func TestConvert(t *testing.T) {
 	presetConvertTest := func(t *testing.T, preset Preset, format string) {
-		for _, name := range []string{
-			samples.ImageGIF,
-			samples.ImageHEIF,
-			samples.ImageJPEG,
-			samples.ImageJPEG2K,
-			samples.ImagePDF,
-			samples.ImagePNG,
-			samples.ImageTIFF,
-			samples.ImageWebP,
-		} {
+		for _, name := range samples.Images() {
 			t.Run(name, func(t *testing.T) {
 				sample := samples.Load(name)
 				defer sample.Close()

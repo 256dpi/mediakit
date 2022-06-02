@@ -50,6 +50,52 @@ const (
 	VideoWMV   = "video.wmv"
 )
 
+// Images returns all image samples.
+func Images() []string {
+	return []string{
+		ImageGIF,
+		ImageHEIF,
+		ImageJPEG,
+		ImageJPEG2K,
+		ImagePDF,
+		ImagePNG,
+		ImageTIFF,
+		ImageWebP,
+	}
+}
+
+// Audio returns all audio samples.
+func Audio() []string {
+	return []string{
+		AudioAAC,
+		AudioAIFF,
+		AudioFLAC,
+		AudioMPEG2,
+		AudioMPEG3,
+		AudioMPEG4,
+		AudioOGG,
+		AudioWAV,
+		AudioWMA,
+	}
+}
+
+// Video returns all video samples.
+func Video() []string {
+	return []string{
+		VideoAVI,
+		VideoFLV,
+		VideoGIF,
+		VideoMKV,
+		VideoMOV,
+		VideoMPEG,
+		VideoMPEG2,
+		VideoMPEG4,
+		VideoOGG,
+		VideoWebM,
+		VideoWMV,
+	}
+}
+
 // Load will load the specified sample.
 func Load(sample string) io.ReadCloser {
 	// open file

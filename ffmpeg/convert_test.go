@@ -13,23 +13,13 @@ import (
 )
 
 func TestConvertAudio(t *testing.T) {
-	for _, sample := range []string{
-		samples.AudioAAC,
-		samples.AudioAIFF,
-		samples.AudioFLAC,
-		samples.AudioMPEG4,
-		samples.AudioMPEG2,
-		samples.AudioMPEG3,
-		samples.AudioOGG,
-		samples.AudioWAV,
-		samples.AudioWMA,
-	} {
+	for _, sample := range samples.Audio() {
 		t.Run(sample, func(t *testing.T) {
-			sample := samples.Buffer(sample)
-			defer sample.Close()
+			file := samples.Buffer(sample)
+			defer file.Close()
 
 			var out bytes.Buffer
-			err := Convert(nil, sample, &out, ConvertOptions{
+			err := Convert(nil, file, &out, ConvertOptions{
 				Preset: AudioMP3VBRStandard,
 			})
 			assert.NoError(t, err)
@@ -58,58 +48,65 @@ func TestConvertAudio(t *testing.T) {
 }
 
 func TestConvertVideo(t *testing.T) {
-	for _, sample := range []string{
-		samples.VideoAVI,
-		samples.VideoFLV,
-		// samples.VideoGIF,
-		samples.VideoMKV,
-		samples.VideoMOV,
-		samples.VideoMPEG,
-		samples.VideoMPEG2,
-		samples.VideoMPEG4,
-		samples.VideoOGG,
-		samples.VideoWebM,
-		samples.VideoWMV,
-	} {
+	for _, sample := range samples.Video() {
 		t.Run(sample, func(t *testing.T) {
-			sample := samples.Buffer(sample)
-			defer sample.Close()
+			file := samples.Buffer(sample)
+			defer file.Close()
 
 			var out bytes.Buffer
-			err := Convert(nil, sample, &out, ConvertOptions{
+			err := Convert(nil, file, &out, ConvertOptions{
 				Preset: VideoMP4H264AACFast,
 			})
 			assert.NoError(t, err)
 
 			report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
 			assert.NoError(t, err)
-			assert.True(t, report.Duration > 2 && report.Duration < 2.3)
-			assert.True(t, report.Format.Duration > 2 && report.Format.Duration < 2.3)
-			assert.True(t, report.Streams[0].Duration > 2 && report.Streams[0].Duration < 2.3)
-			assert.True(t, report.Streams[1].Duration > 2 && report.Streams[1].Duration < 2.3)
-			assert.Equal(t, &Report{
-				Duration: report.Duration,
-				Format: Format{
-					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-					Duration: report.Format.Duration,
-				}, Streams: []Stream{
-					{
-						Type:      "video",
-						Codec:     "h264",
-						Duration:  report.Streams[0].Duration,
-						Width:     800,
-						Height:    450,
-						FrameRate: 25,
+			assert.True(t, report.Duration >= 2 && report.Duration < 2.3)
+			assert.True(t, report.Format.Duration >= 2 && report.Format.Duration < 2.3)
+			assert.True(t, report.Streams[0].Duration >= 2 && report.Streams[0].Duration < 2.3)
+			if sample == samples.VideoGIF {
+				assert.Equal(t, &Report{
+					Duration: report.Duration,
+					Format: Format{
+						Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+						Duration: report.Format.Duration,
+					}, Streams: []Stream{
+						{
+							Type:      "video",
+							Codec:     "h264",
+							Duration:  report.Streams[0].Duration,
+							Width:     800,
+							Height:    450,
+							FrameRate: 5,
+						},
 					},
-					{
-						Type:       "audio",
-						Codec:      "aac",
-						Duration:   report.Streams[1].Duration,
-						Channels:   2,
-						SampleRate: 44100,
+				}, report)
+			} else {
+				assert.True(t, report.Streams[1].Duration >= 2 && report.Streams[1].Duration < 2.3)
+				assert.Equal(t, &Report{
+					Duration: report.Duration,
+					Format: Format{
+						Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+						Duration: report.Format.Duration,
+					}, Streams: []Stream{
+						{
+							Type:      "video",
+							Codec:     "h264",
+							Duration:  report.Streams[0].Duration,
+							Width:     800,
+							Height:    450,
+							FrameRate: 25,
+						},
+						{
+							Type:       "audio",
+							Codec:      "aac",
+							Duration:   report.Streams[1].Duration,
+							Channels:   2,
+							SampleRate: 44100,
+						},
 					},
-				},
-			}, report)
+				}, report)
+			}
 		})
 	}
 }
@@ -190,19 +187,7 @@ func TestConvertImage(t *testing.T) {
 }
 
 func TestConvertExtract(t *testing.T) {
-	for _, sample := range []string{
-		samples.VideoAVI,
-		samples.VideoFLV,
-		samples.VideoGIF,
-		samples.VideoMKV,
-		samples.VideoMOV,
-		samples.VideoMPEG,
-		samples.VideoMPEG2,
-		samples.VideoMPEG4,
-		samples.VideoOGG,
-		samples.VideoWebM,
-		samples.VideoWMV,
-	} {
+	for _, sample := range samples.Video() {
 		t.Run(sample, func(t *testing.T) {
 			sample := samples.Buffer(sample)
 			defer sample.Close()
