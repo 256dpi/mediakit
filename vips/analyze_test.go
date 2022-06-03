@@ -1,7 +1,6 @@
 package vips
 
 import (
-	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,98 +9,73 @@ import (
 )
 
 func TestAnalyze(t *testing.T) {
-	for i, item := range []struct {
-		sample string
-		report Report
-	}{
-		{
-			sample: samples.ImageGIF,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  4,
-				Color:  "srgb",
-				Format: "gif",
-			},
+	reports := map[string]*Report{
+		samples.ImageGIF: {
+			Width:  800,
+			Height: 533,
+			Bands:  4,
+			Color:  "srgb",
+			Format: "gif",
 		},
-		{
-			sample: samples.ImageHEIF,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  3,
-				Color:  "srgb",
-				Format: "heif",
-			},
+		samples.ImageHEIF: {
+			Width:  800,
+			Height: 533,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "heif",
 		},
-		{
-			sample: samples.ImageJPEG,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  3,
-				Color:  "srgb",
-				Format: "jpeg",
-			},
+		samples.ImageJPEG: {
+			Width:  800,
+			Height: 533,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "jpeg",
 		},
-		{
-			sample: samples.ImageJPEG2K,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  3,
-				Color:  "srgb",
-				Format: "jp2k",
-			},
+		samples.ImageJPEG2K: {
+			Width:  800,
+			Height: 533,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "jp2k",
 		},
-		{
-			sample: samples.ImagePDF,
-			report: Report{
-				Width:  0,
-				Height: 533,
-				Bands:  4,
-				Color:  "srgb",
-				Format: "pdf",
-			},
+		samples.ImagePDF: {
+			Width:  0,
+			Height: 533,
+			Bands:  4,
+			Color:  "srgb",
+			Format: "pdf",
 		},
-		{
-			sample: samples.ImagePNG,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  3,
-				Color:  "srgb",
-				Format: "png",
-			},
+		samples.ImagePNG: {
+			Width:  800,
+			Height: 533,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "png",
 		},
-		{
-			sample: samples.ImageTIFF,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  4,
-				Color:  "srgb",
-				Format: "tiff",
-			},
+		samples.ImageTIFF: {
+			Width:  800,
+			Height: 533,
+			Bands:  4,
+			Color:  "srgb",
+			Format: "tiff",
 		},
-		{
-			sample: samples.ImageWebP,
-			report: Report{
-				Width:  800,
-				Height: 533,
-				Bands:  3,
-				Color:  "srgb",
-				Format: "webp",
-			},
+		samples.ImageWebP: {
+			Width:  800,
+			Height: 533,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "webp",
 		},
-	} {
-		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
-			sample := samples.Load(item.sample)
-			defer sample.Close()
+	}
 
-			report, err := Analyze(nil, sample)
+	for _, sample := range samples.Images() {
+		t.Run(sample, func(t *testing.T) {
+			file := samples.Load(sample)
+			defer file.Close()
+
+			report, err := Analyze(nil, file)
 			assert.NoError(t, err)
-			assert.Equal(t, &item.report, report)
+			assert.Equal(t, reports[sample], report)
 		})
 	}
 }

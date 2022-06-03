@@ -2,7 +2,6 @@ package vips
 
 import (
 	"bytes"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -13,13 +12,13 @@ import (
 
 func TestConvert(t *testing.T) {
 	presetConvertTest := func(t *testing.T, preset Preset, format string) {
-		for _, name := range samples.Images() {
-			t.Run(name, func(t *testing.T) {
-				sample := samples.Load(name)
-				defer sample.Close()
+		for _, sample := range samples.Images() {
+			t.Run(sample, func(t *testing.T) {
+				file := samples.Load(sample)
+				defer file.Close()
 
 				var buf bytes.Buffer
-				err := Convert(nil, sample, &buf, ConvertOptions{
+				err := Convert(nil, file, &buf, ConvertOptions{
 					Preset: preset,
 					Width:  256,
 					Height: 256,
@@ -50,12 +49,14 @@ func TestConvert(t *testing.T) {
 }
 
 func TestConvertOptions(t *testing.T) {
-	for i, item := range []struct {
+	for _, item := range []struct {
+		name   string
 		sample string
 		opts   ConvertOptions
 		report Report
 	}{
 		{
+			name:   "ResizeByWidth",
 			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset: JPGWeb,
@@ -70,6 +71,7 @@ func TestConvertOptions(t *testing.T) {
 			},
 		},
 		{
+			name:   "ResizeBySize",
 			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset: JPGWeb,
@@ -85,6 +87,7 @@ func TestConvertOptions(t *testing.T) {
 			},
 		},
 		{
+			name:   "CropyBySize",
 			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset: JPGWeb,
@@ -101,6 +104,7 @@ func TestConvertOptions(t *testing.T) {
 			},
 		},
 		{
+			name:   "ResizeAndKeepMeta",
 			sample: samples.ImageJPEG,
 			opts: ConvertOptions{
 				Preset:      JPGWeb,
@@ -117,12 +121,12 @@ func TestConvertOptions(t *testing.T) {
 			},
 		},
 	} {
-		t.Run(strconv.Itoa(i)+"-"+item.sample, func(t *testing.T) {
-			sample := samples.Load(item.sample)
-			defer sample.Close()
+		t.Run(item.name, func(t *testing.T) {
+			file := samples.Load(item.sample)
+			defer file.Close()
 
 			var buf bytes.Buffer
-			err := Convert(nil, sample, &buf, item.opts)
+			err := Convert(nil, file, &buf, item.opts)
 			assert.NoError(t, err)
 
 			report, err := Analyze(nil, &buf)
