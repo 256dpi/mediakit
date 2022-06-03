@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/256dpi/xo v0.4.2
 	github.com/gabriel-vasile/mimetype v1.4.0
-	github.com/google/uuid v1.3.0
 	github.com/samber/lo v1.21.0
 	github.com/stretchr/testify v1.7.1
 )
