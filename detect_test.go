@@ -129,15 +129,8 @@ func TestDetect(t *testing.T) {
 		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
-			sample := samples.Load(item.sample)
-			defer sample.Close()
-
-			buf := make([]byte, DetectBytes)
-			n, err := io.ReadFull(sample, buf)
-			assert.NoError(t, err)
-			buf = buf[:n]
-
-			contentType := Detect(buf)
+			sample := samples.Read(item.sample)
+			contentType := Detect(sample[:DetectBytes])
 			assert.Equal(t, item.typ, contentType)
 		})
 	}

@@ -27,7 +27,6 @@ const (
 	AudioAAC   = "audio.aac"
 	AudioAIFF  = "audio.aif"
 	AudioFLAC  = "audio.flac"
-	AudioMPEG2 = "audio.mp2"
 	AudioMPEG3 = "audio.mp3"
 	AudioMPEG4 = "audio.m4a" // aac
 	AudioOGG   = "audio.ogg" // vorbis
@@ -104,6 +103,17 @@ func Load(sample string) io.ReadCloser {
 	}
 
 	return stream
+}
+
+// Read will read the specified sample.
+func Read(sample string) []byte {
+	// read sample
+	buf, err := io.ReadAll(Load(sample))
+	if err != nil {
+		panic(err)
+	}
+
+	return buf
 }
 
 // Buffer will load and buffer a sample.
