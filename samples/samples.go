@@ -70,7 +70,6 @@ func Audio() []string {
 		AudioAAC,
 		AudioAIFF,
 		AudioFLAC,
-		AudioMPEG2,
 		AudioMPEG3,
 		AudioMPEG4,
 		AudioOGG,

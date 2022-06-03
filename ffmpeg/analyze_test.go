@@ -34,11 +34,6 @@ func TestAnalyzeAudio(t *testing.T) {
 			codec:  "flac",
 		},
 		{
-			sample: samples.AudioMPEG2,
-			format: "mp3",
-			codec:  "mp2",
-		},
-		{
 			sample: samples.AudioMPEG3,
 			format: "mp3",
 			codec:  "mp3",

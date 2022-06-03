@@ -63,10 +63,6 @@ func TestDetect(t *testing.T) {
 			typ:    "audio/flac",
 		},
 		{
-			sample: samples.AudioMPEG2,
-			typ:    "application/octet-stream",
-		},
-		{
 			sample: samples.AudioMPEG3,
 			typ:    "audio/mpeg",
 		},
