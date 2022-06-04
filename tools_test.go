@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -36,8 +37,11 @@ func TestConvertAudio(t *testing.T) {
 	output := makeBuffers(t.TempDir(), "output")[0]
 
 	var progress []float64
-	err := ConvertAudio(nil, input, output, ffmpeg.AudioMP3VBRStandard, 48000, func(f float64) {
-		progress = append(progress, f)
+	err := ConvertAudio(nil, input, output, ffmpeg.AudioMP3VBRStandard, 48000, &Progress{
+		Rate: time.Second,
+		Func: func(f float64) {
+			progress = append(progress, f)
+		},
 	})
 	assert.NoError(t, err)
 	assert.True(t, len(progress) >= 2)
@@ -53,8 +57,11 @@ func TestConvertVideo(t *testing.T) {
 	output := makeBuffers(t.TempDir(), "output")[0]
 
 	var progress []float64
-	err := ConvertVideo(nil, input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, func(f float64) {
-		progress = append(progress, f)
+	err := ConvertVideo(nil, input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, &Progress{
+		Rate: time.Second,
+		Func: func(f float64) {
+			progress = append(progress, f)
+		},
 	})
 	assert.NoError(t, err)
 	assert.True(t, len(progress) >= 2)

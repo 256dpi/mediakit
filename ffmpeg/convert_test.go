@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -333,9 +334,10 @@ func TestConvertProgress(t *testing.T) {
 	err := Convert(nil, sample, &out, ConvertOptions{
 		Preset:   VideoMP4H264AACFast,
 		Duration: 1,
-		Progress: func(p Progress) {
+		ProgressFunc: func(p Progress) {
 			progress = append(progress, p)
 		},
+		ProgressRate: time.Second,
 	})
 	assert.NoError(t, err)
 	assert.Len(t, progress, 2)

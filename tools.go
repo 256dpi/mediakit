@@ -5,6 +5,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"time"
 
 	"github.com/256dpi/xo"
 
@@ -14,6 +15,12 @@ import (
 
 // ErrMissingStream is returned if a required audio/video stream is missing.
 var ErrMissingStream = xo.BF("missing stream")
+
+// Progress describes a progress update receiver.
+type Progress struct {
+	Rate time.Duration
+	Func func(float64)
+}
 
 // ConvertImage will convert an image using a preset and sizer.
 func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Preset, sizer Sizer) error {
@@ -58,7 +65,7 @@ func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Prese
 }
 
 // ConvertAudio will convert audio using a preset.
-func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress func(float64)) error {
+func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
@@ -90,9 +97,10 @@ func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 
 	// set progress
 	if progress != nil {
-		opts.Progress = func(p ffmpeg.Progress) {
-			progress(math.Min(p.Duration/report.Duration, 1))
+		opts.ProgressFunc = func(p ffmpeg.Progress) {
+			progress.Func(math.Min(p.Duration/report.Duration, 1))
 		}
+		opts.ProgressRate = progress.Rate
 	}
 
 	// convert audio
@@ -111,7 +119,7 @@ func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 }
 
 // ConvertVideo will convert video using a preset, sizer and max frame rate.
-func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, progress func(float64)) error {
+func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
@@ -154,9 +162,10 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 
 	// set progress
 	if progress != nil {
-		opts.Progress = func(p ffmpeg.Progress) {
-			progress(math.Min(p.Duration/report.Duration, 1))
+		opts.ProgressFunc = func(p ffmpeg.Progress) {
+			progress.Func(math.Min(p.Duration/report.Duration, 1))
 		}
+		opts.ProgressRate = progress.Rate
 	}
 
 	// convert video

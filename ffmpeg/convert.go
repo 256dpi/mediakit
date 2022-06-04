@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // WarningsLogger is the logger used to print warnings.
@@ -124,7 +125,8 @@ type ConvertOptions struct {
 	SampleRate int
 
 	// Receive progress updates.
-	Progress func(Progress)
+	ProgressFunc func(Progress)
+	ProgressRate time.Duration
 }
 
 // Convert will run the ffmpeg utility to convert the specified input to the
@@ -170,8 +172,13 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 	}
 
 	// enable progress
-	if opts.Progress != nil {
-		args = append(args, "-progress", "pipe:3")
+	if opts.ProgressFunc != nil && opts.ProgressRate > 0 {
+		args = append(args,
+			"-progress",
+			"pipe:3",
+			"-stats_period",
+			strconv.FormatFloat(opts.ProgressRate.Seconds(), 'f', -1, 64),
+		)
 	}
 
 	// prepare filters
@@ -225,7 +232,7 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 	cmd.Stderr = &stderr
 
 	// handle progress
-	if opts.Progress != nil {
+	if opts.ProgressFunc != nil && opts.ProgressRate > 0 {
 		// prepare progress pipe
 		pr, pw, err := os.Pipe()
 		if err != nil {
@@ -254,7 +261,7 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 					progress.Size, _ = strconv.ParseInt(sizeStr, 10, 64)
 				} else if strings.HasPrefix(line, "progress=") {
 					// emit and clear progress
-					opts.Progress(progress)
+					opts.ProgressFunc(progress)
 					progress = Progress{}
 				}
 			}
