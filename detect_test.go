@@ -14,13 +14,13 @@ func TestDetectImages(t *testing.T) {
 	for _, sample := range samples.Images() {
 		t.Run(sample, func(t *testing.T) {
 			typ := Detect(samples.Read(sample))
-			assert.Contains(t, SupportedImageTypes(), typ)
+			assert.Contains(t, ImageTypes(), typ)
 		})
 	}
 }
 
 func TestDetectAudio(t *testing.T) {
-	list := append(SupportedAudioTypes(), SupportedContainerTypes()...)
+	list := append(AudioTypes(), ContainerTypes()...)
 
 	for _, sample := range samples.Audio() {
 		t.Run(sample, func(t *testing.T) {
@@ -31,7 +31,7 @@ func TestDetectAudio(t *testing.T) {
 }
 
 func TestDetectVideo(t *testing.T) {
-	list := append(SupportedVideoTypes(), SupportedContainerTypes()...)
+	list := append(VideoTypes(), ContainerTypes()...)
 
 	for _, sample := range samples.Video() {
 		t.Run(sample, func(t *testing.T) {

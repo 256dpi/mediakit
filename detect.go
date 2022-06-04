@@ -25,9 +25,9 @@ func Detect(buf []byte) string {
 	return typ
 }
 
-// SupportedImageTypes is a canonical list of well-known and modern image
-// formats supported by mediakit.
-func SupportedImageTypes() []string {
+// ImageTypes is a canonical list of well-known and modern image formats
+// supported by mediakit.
+func ImageTypes() []string {
 	return []string{
 		"image/gif",
 		"image/heic",
@@ -41,9 +41,9 @@ func SupportedImageTypes() []string {
 	}
 }
 
-// SupportedAudioTypes is a canonical list of well-known and modern audio
-// formats supported by mediakit.
-func SupportedAudioTypes() []string {
+// AudioTypes is a canonical list of well-known and modern audio formats
+// supported by mediakit.
+func AudioTypes() []string {
 	return []string{
 		"audio/aac",
 		"audio/aiff",
@@ -54,9 +54,9 @@ func SupportedAudioTypes() []string {
 	}
 }
 
-// SupportedVideoTypes is a canonical list of well-known and modern video
-// formats supported by mediakit.
-func SupportedVideoTypes() []string {
+// VideoTypes is a canonical list of well-known and modern video formats
+// supported by mediakit.
+func VideoTypes() []string {
 	return []string{
 		"video/avi",
 		"video/x-flv",
@@ -69,9 +69,9 @@ func SupportedVideoTypes() []string {
 	}
 }
 
-// SupportedContainerTypes is a canonical list of additional container formats
-// supported by mediakit that may contain audio, video or both.
-func SupportedContainerTypes() []string {
+// ContainerTypes is a canonical list of additional container formats supported
+// by mediakit that may contain audio, video or both.
+func ContainerTypes() []string {
 	return []string{
 		"application/ogg",
 		"video/x-ms-asf",
