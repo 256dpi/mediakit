@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 //go:embed files
@@ -118,8 +119,11 @@ func Read(sample string) []byte {
 
 // Buffer will load and buffer a sample.
 func Buffer(sample string) *os.File {
+	// build name without extension
+	name := "mediakit-samples-" + strings.ReplaceAll(sample, ".", "-")
+
 	// create file
-	file, err := os.Create(filepath.Join(os.TempDir(), "mediakit-samples-"+sample))
+	file, err := os.Create(filepath.Join(os.TempDir(), name))
 	if err != nil {
 		panic(err)
 	}

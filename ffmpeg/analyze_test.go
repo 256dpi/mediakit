@@ -227,7 +227,7 @@ func TestAnalyzeImage(t *testing.T) {
 		},
 		{
 			sample: samples.ImageJPEG,
-			format: "image2",
+			format: "jpeg_pipe",
 			codec:  "mjpeg",
 		},
 		{
