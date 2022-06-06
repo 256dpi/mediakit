@@ -21,7 +21,7 @@ func init() {
 
 func TestConvertImage(t *testing.T) {
 	input := samples.Buffer(samples.ImagePNG)
-	output := makeBuffers(t.TempDir(), "output")[0]
+	output := makeBuffer(t.TempDir(), "output")
 
 	err := ConvertImage(nil, input, output, vips.JPGWeb, KeepSize())
 	assert.NoError(t, err)
@@ -34,7 +34,7 @@ func TestConvertImage(t *testing.T) {
 
 func TestConvertAudio(t *testing.T) {
 	input := samples.Buffer(samples.AudioWAV)
-	output := makeBuffers(t.TempDir(), "output")[0]
+	output := makeBuffer(t.TempDir(), "output")
 
 	var progress []float64
 	err := ConvertAudio(nil, input, output, ffmpeg.AudioMP3VBRStandard, 48000, &Progress{
@@ -54,7 +54,7 @@ func TestConvertAudio(t *testing.T) {
 
 func TestConvertVideo(t *testing.T) {
 	input := samples.Buffer(samples.VideoAVI)
-	output := makeBuffers(t.TempDir(), "output")[0]
+	output := makeBuffer(t.TempDir(), "output")
 
 	var progress []float64
 	err := ConvertVideo(nil, input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, 48000, &Progress{
@@ -74,25 +74,22 @@ func TestConvertVideo(t *testing.T) {
 
 func TestExtractImage(t *testing.T) {
 	input := samples.Buffer(samples.VideoMOV)
-	buffers := makeBuffers(t.TempDir(), "temp", "output")
+	output := makeBuffer(t.TempDir(), "output")
 
-	err := ExtractImage(nil, input, buffers[0], buffers[1], 0.25, vips.JPGWeb, KeepSize())
+	err := ExtractImage(nil, input, output, 0.25, vips.JPGWeb, KeepSize())
 	assert.NoError(t, err)
 
 	buf := make([]byte, DetectBytes)
-	_, err = io.ReadFull(buffers[1], buf)
+	_, err = io.ReadFull(output, buf)
 	assert.NoError(t, err)
 	assert.Equal(t, "image/jpeg", Detect(buf))
 }
 
-func makeBuffers(dir string, names ...string) []*os.File {
-	var list []*os.File
-	for _, name := range names {
-		file, err := os.Create(filepath.Join(dir, name))
-		if err != nil {
-			panic(err)
-		}
-		list = append(list, file)
+func makeBuffer(dir string, name string) *os.File {
+	file, err := os.Create(filepath.Join(dir, name))
+	if err != nil {
+		panic(err)
 	}
-	return list
+
+	return file
 }

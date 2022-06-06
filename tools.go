@@ -191,7 +191,7 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 }
 
 // ExtractImage will extract an image using a position, preset and sizer.
-func ExtractImage(ctx context.Context, input, temp, output *os.File, position float64, preset vips.Preset, sizer Sizer) error {
+func ExtractImage(ctx context.Context, input, output *os.File, position float64, preset vips.Preset, sizer Sizer) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
@@ -216,13 +216,19 @@ func ExtractImage(ctx context.Context, input, temp, output *os.File, position fl
 	}
 
 	// convert video
-	err = ffmpeg.Convert(ctx, input, temp, opts)
+	err = ffmpeg.Convert(ctx, input, output, opts)
 	if err != nil {
 		return xo.W(err)
 	}
 
+	// transfer output to input
+	err = transfer(output, input)
+	if err != nil {
+		return err
+	}
+
 	// convert image
-	err = ConvertImage(ctx, temp, output, preset, sizer)
+	err = ConvertImage(ctx, input, output, preset, sizer)
 	if err != nil {
 		return err
 	}
@@ -240,13 +246,53 @@ func syncAndRewind(file *os.File) error {
 	// sync file
 	err := file.Sync()
 	if err != nil {
-		return err
+		return xo.W(err)
 	}
 
 	// rewind file
 	_, err = file.Seek(0, io.SeekStart)
 	if err != nil {
+		return xo.W(err)
+	}
+
+	return nil
+}
+
+func transfer(input, output *os.File) error {
+	// sync and rewind
+	err := syncAndRewind(input)
+	if err != nil {
 		return err
+	}
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
+	}
+
+	// copy data
+	n, err := io.Copy(output, input)
+	if err != nil {
+		return xo.W(err)
+	}
+
+	// sync and rewind
+	err = syncAndRewind(input)
+	if err != nil {
+		return err
+	}
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
+	}
+
+	// truncate
+	err = output.Truncate(n)
+	if err != nil {
+		return xo.W(err)
+	}
+	err = input.Truncate(0)
+	if err != nil {
+		return xo.W(err)
 	}
 
 	return nil
