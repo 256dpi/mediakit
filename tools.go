@@ -119,7 +119,7 @@ func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 }
 
 // ConvertVideo will convert video using a preset, sizer and max frame rate.
-func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, progress *Progress) error {
+func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, maxSampleRate int, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
 	if err != nil {
@@ -152,12 +152,19 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 		frameRate = maxFrameRate
 	}
 
+	// get sample rate
+	sampleRate := report.SampleRate()
+	if sampleRate > maxSampleRate {
+		sampleRate = maxSampleRate
+	}
+
 	// prepare options
 	opts := ffmpeg.ConvertOptions{
-		Preset:    preset,
-		Width:     size.Width,
-		Height:    size.Height,
-		FrameRate: frameRate,
+		Preset:     preset,
+		Width:      size.Width,
+		Height:     size.Height,
+		FrameRate:  frameRate,
+		SampleRate: sampleRate,
 	}
 
 	// set progress

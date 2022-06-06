@@ -57,7 +57,7 @@ func TestConvertVideo(t *testing.T) {
 	output := makeBuffers(t.TempDir(), "output")[0]
 
 	var progress []float64
-	err := ConvertVideo(nil, input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, &Progress{
+	err := ConvertVideo(nil, input, output, ffmpeg.VideoMP4H264AACFast, MaxWidth(500), 30, 48000, &Progress{
 		Rate: time.Second,
 		Func: func(f float64) {
 			progress = append(progress, f)
