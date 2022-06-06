@@ -190,12 +190,12 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 				String string `json:"string"`
 			} `json:"error"`
 		}
-		err = json.Unmarshal(stdout.Bytes(), &report)
-		if err != nil || report.Error.String == "" {
-			return nil, fmt.Errorf("unkown error")
+		_ = json.Unmarshal(stdout.Bytes(), &report)
+		if report.Error.String != "" {
+			return nil, fmt.Errorf(strings.ToLower(report.Error.String))
 		}
 
-		return nil, fmt.Errorf(strings.ToLower(report.Error.String))
+		return nil, err
 	}
 
 	// decode report
