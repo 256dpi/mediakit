@@ -8,7 +8,7 @@ import (
 	"github.com/256dpi/mediakit/samples"
 )
 
-func TestAnalyze(t *testing.T) {
+func TestAnalyzeImages(t *testing.T) {
 	reports := map[string]*Report{
 		samples.ImageGIF: {
 			Width:  800,
@@ -78,4 +78,19 @@ func TestAnalyze(t *testing.T) {
 			assert.Equal(t, reports[sample], report)
 		})
 	}
+}
+
+func TestAnalyzePDF(t *testing.T) {
+	file := samples.Load(samples.DocumentPDF)
+	defer file.Close()
+
+	report, err := Analyze(nil, file)
+	assert.NoError(t, err)
+	assert.Equal(t, &Report{
+		Width:  595,
+		Height: 842,
+		Bands:  4,
+		Color:  "srgb",
+		Format: "pdf",
+	}, report)
 }

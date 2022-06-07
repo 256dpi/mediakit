@@ -50,6 +50,9 @@ const (
 	VideoWMV   = "video.wmv"
 )
 
+// DocumentPDF is multi-page PDF document.
+const DocumentPDF = "document.pdf"
+
 // Images returns all image samples.
 func Images() []string {
 	return []string{
