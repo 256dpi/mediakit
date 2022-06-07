@@ -47,8 +47,16 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 		return nil, err
 	}
 
+	// get output
+	line := stdout.String()
+
+	// strip filename if present
+	if i := strings.Index(line, ":"); i >= 0 {
+		line = line[i+1:]
+	}
+
 	// split string
-	parts := strings.Split(strings.TrimSpace(stdout.String()), ", ")
+	parts := strings.Split(strings.TrimSpace(line), ", ")
 
 	// parse size
 	var width, height int

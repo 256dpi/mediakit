@@ -39,7 +39,7 @@ func TestAnalyze(t *testing.T) {
 			Format: "jp2k",
 		},
 		samples.ImagePDF: {
-			Width:  0,
+			Width:  800,
 			Height: 533,
 			Bands:  4,
 			Color:  "srgb",
