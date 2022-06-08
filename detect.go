@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/gabriel-vasile/mimetype"
 )
@@ -69,7 +70,7 @@ const DetectBytes = 3072
 // It delegates to mimetype.Detect and http.DetectContentType which together
 // should detect a faire amount of media types and falls back to
 // "application/octet-stream" if undetected.
-func Detect(buf []byte) string {
+func Detect(buf []byte, withParameters bool) string {
 	// use built-in detector
 	typ := mimetype.Detect(buf).String()
 
@@ -78,13 +79,18 @@ func Detect(buf []byte) string {
 		typ = http.DetectContentType(buf)
 	}
 
+	// remove parameters if not requested and present
+	if !withParameters && strings.Contains(typ, ";") {
+		typ = typ[:strings.Index(typ, ";")]
+	}
+
 	return typ
 }
 
 // DetectStream will attempt to detect a media from the provided reader using
 // Detect. It will read up to DetectBytes from the reader and return a new
 // reader that will read from the read bytes and the remaining stream.
-func DetectStream(stream io.Reader) (string, io.Reader, error) {
+func DetectStream(stream io.Reader, withCharset bool) (string, io.Reader, error) {
 	// read from stream
 	buf := make([]byte, DetectBytes)
 	n, err := io.ReadFull(stream, buf)
@@ -96,7 +102,7 @@ func DetectStream(stream io.Reader) (string, io.Reader, error) {
 	buf = buf[:n]
 
 	// detect media type
-	typ := Detect(buf)
+	typ := Detect(buf, withCharset)
 
 	// assemble reader
 	stream = io.MultiReader(bytes.NewReader(buf), stream)

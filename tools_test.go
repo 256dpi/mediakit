@@ -29,7 +29,7 @@ func TestConvertImage(t *testing.T) {
 	buf := make([]byte, DetectBytes)
 	_, err = io.ReadFull(output, buf)
 	assert.NoError(t, err)
-	assert.Equal(t, "image/jpeg", Detect(buf))
+	assert.Equal(t, "image/jpeg", Detect(buf, false))
 }
 
 func TestConvertAudio(t *testing.T) {
@@ -49,7 +49,7 @@ func TestConvertAudio(t *testing.T) {
 	buf := make([]byte, DetectBytes)
 	_, err = io.ReadFull(output, buf)
 	assert.NoError(t, err)
-	assert.Equal(t, "audio/mpeg", Detect(buf))
+	assert.Equal(t, "audio/mpeg", Detect(buf, false))
 }
 
 func TestConvertVideo(t *testing.T) {
@@ -69,7 +69,7 @@ func TestConvertVideo(t *testing.T) {
 	buf := make([]byte, DetectBytes)
 	_, err = io.ReadFull(output, buf)
 	assert.NoError(t, err)
-	assert.Equal(t, "video/mp4", Detect(buf))
+	assert.Equal(t, "video/mp4", Detect(buf, false))
 }
 
 func TestExtractImage(t *testing.T) {
@@ -82,7 +82,7 @@ func TestExtractImage(t *testing.T) {
 	buf := make([]byte, DetectBytes)
 	_, err = io.ReadFull(buffers[1], buf)
 	assert.NoError(t, err)
-	assert.Equal(t, "image/jpeg", Detect(buf))
+	assert.Equal(t, "image/jpeg", Detect(buf, false))
 }
 
 func makeBuffers(dir string, names ...string) []*os.File {

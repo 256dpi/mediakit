@@ -10,10 +10,18 @@ import (
 	"github.com/256dpi/mediakit/samples"
 )
 
+func TestDetect(t *testing.T) {
+	assert.Equal(t, "text/plain", Detect([]byte{}, true))
+	assert.Equal(t, "application/octet-stream", Detect([]byte("\x00\x01"), true))
+	assert.Equal(t, "text/plain; charset=utf-8", Detect([]byte("Hello world!"), true))
+	assert.Equal(t, "text/plain", Detect([]byte("Hello world!"), false))
+	assert.Equal(t, "image/jpeg", Detect(samples.Read(samples.ImageJPEG), true))
+}
+
 func TestDetectImages(t *testing.T) {
 	for _, sample := range samples.Images() {
 		t.Run(sample, func(t *testing.T) {
-			typ := Detect(samples.Read(sample))
+			typ := Detect(samples.Read(sample), false)
 			assert.Contains(t, ImageTypes(), typ)
 		})
 	}
@@ -24,7 +32,7 @@ func TestDetectAudio(t *testing.T) {
 
 	for _, sample := range samples.Audio() {
 		t.Run(sample, func(t *testing.T) {
-			typ := Detect(samples.Read(sample))
+			typ := Detect(samples.Read(sample), false)
 			assert.Contains(t, list, typ)
 		})
 	}
@@ -35,7 +43,7 @@ func TestDetectVideo(t *testing.T) {
 
 	for _, sample := range samples.Video() {
 		t.Run(sample, func(t *testing.T) {
-			typ := Detect(samples.Read(sample))
+			typ := Detect(samples.Read(sample), false)
 			assert.Contains(t, list, typ)
 		})
 	}
@@ -44,7 +52,7 @@ func TestDetectVideo(t *testing.T) {
 func TestDetectStream(t *testing.T) {
 	/* empty */
 
-	typ, stream, err := DetectStream(bytes.NewReader([]byte{}))
+	typ, stream, err := DetectStream(bytes.NewReader([]byte{}), false)
 	assert.NoError(t, err)
 	assert.Equal(t, "text/plain", typ)
 	assert.NotNil(t, stream)
@@ -55,7 +63,7 @@ func TestDetectStream(t *testing.T) {
 
 	/* bytes */
 
-	typ, stream, err = DetectStream(bytes.NewReader([]byte("\x01\x02")))
+	typ, stream, err = DetectStream(bytes.NewReader([]byte("\x01\x02")), false)
 	assert.NoError(t, err)
 	assert.Equal(t, "application/octet-stream", typ)
 	assert.NotNil(t, stream)
@@ -69,7 +77,7 @@ func TestDetectStream(t *testing.T) {
 	sample := samples.Load(samples.AudioMPEG3)
 	defer sample.Close()
 
-	typ, stream, err = DetectStream(sample)
+	typ, stream, err = DetectStream(sample, false)
 	assert.NoError(t, err)
 	assert.Equal(t, "audio/mpeg", typ)
 	assert.NotNil(t, stream)
@@ -86,6 +94,6 @@ func BenchmarkDetect(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		Detect(sample)
+		Detect(sample, false)
 	}
 }
