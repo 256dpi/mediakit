@@ -1,6 +1,7 @@
 package mediakit
 
 import (
+	"io"
 	"net/http"
 	"testing"
 
@@ -39,6 +40,20 @@ func TestDetectVideo(t *testing.T) {
 			assert.Contains(t, list, typ)
 		})
 	}
+}
+
+func TestDetectStream(t *testing.T) {
+	sample := samples.Load(samples.AudioMPEG3)
+	defer sample.Close()
+
+	typ, stream, err := DetectStream(sample)
+	assert.NoError(t, err)
+	assert.Equal(t, "audio/mpeg", typ)
+	assert.NotNil(t, stream)
+
+	buf, err := io.ReadAll(stream)
+	assert.NoError(t, err)
+	assert.Equal(t, samples.Read(samples.AudioMPEG3), buf)
 }
 
 func BenchmarkHTTPDetect(b *testing.B) {

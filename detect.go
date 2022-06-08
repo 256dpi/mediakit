@@ -1,29 +1,12 @@
 package mediakit
 
 import (
+	"bytes"
+	"io"
 	"net/http"
 
 	"github.com/gabriel-vasile/mimetype"
 )
-
-// DetectBytes defines the maximum number of bytes used by Detect.
-const DetectBytes = 3072
-
-// Detect will attempt to detect a content type from the specified buffer.
-// It delegates to http.DetectContentType and mimetype.Detect which together
-// should detect a faire amount of content types and falls back to
-// "application/octet-stream" if undetected.
-func Detect(buf []byte) string {
-	// use built-in detector
-	typ := http.DetectContentType(buf)
-
-	// use mimetype if not found
-	if typ == "application/octet-stream" {
-		typ = mimetype.Detect(buf).String()
-	}
-
-	return typ
-}
 
 // ImageTypes is a canonical list of well-known and modern image formats
 // supported by mediakit.
@@ -76,4 +59,46 @@ func ContainerTypes() []string {
 		"application/ogg",
 		"video/x-ms-asf",
 	}
+}
+
+// DetectBytes defines the maximum number of bytes used by Detect.
+const DetectBytes = 3072
+
+// Detect will attempt to detect a media type from the specified buffer.
+// It delegates to http.DetectContentType and mimetype.Detect which together
+// should detect a faire amount of media types and falls back to
+// "application/octet-stream" if undetected.
+func Detect(buf []byte) string {
+	// use built-in detector
+	typ := http.DetectContentType(buf)
+
+	// use mimetype if not found
+	if typ == "application/octet-stream" {
+		typ = mimetype.Detect(buf).String()
+	}
+
+	return typ
+}
+
+// DetectStream will attempt to detect a media from the provided reader using
+// Detect. It will read up to DetectBytes from the reader and return a new
+// reader that will read from the read bytes and the remaining stream.
+func DetectStream(stream io.Reader) (string, io.Reader, error) {
+	// read from stream
+	buf := make([]byte, DetectBytes)
+	n, err := io.ReadFull(stream, buf)
+	if err != nil {
+		return "", nil, err
+	}
+
+	// resize buffer
+	buf = buf[:n]
+
+	// detect media type
+	typ := Detect(buf)
+
+	// assemble reader
+	stream = io.MultiReader(bytes.NewReader(buf), stream)
+
+	return typ, stream, nil
 }
