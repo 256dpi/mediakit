@@ -31,9 +31,10 @@ func AudioTypes() []string {
 		"audio/aac",
 		"audio/aiff",
 		"audio/flac",
-		"audio/mpeg",
 		"audio/x-m4a",
-		"audio/wave",
+		"audio/mpeg",
+		"audio/ogg",
+		"audio/wav",
 	}
 }
 
@@ -41,13 +42,14 @@ func AudioTypes() []string {
 // supported by mediakit.
 func VideoTypes() []string {
 	return []string{
-		"video/avi",
+		"video/x-msvideo", // avi
 		"video/x-flv",
 		"image/gif",
-		"video/webm",
-		"video/quicktime",
+		"video/x-matroska",
+		"video/quicktime", // mov
 		"video/mpeg",
 		"video/mp4",
+		"video/ogg",
 		"video/webm",
 	}
 }
@@ -56,8 +58,7 @@ func VideoTypes() []string {
 // by mediakit that may contain audio, video or both.
 func ContainerTypes() []string {
 	return []string{
-		"application/ogg",
-		"video/x-ms-asf",
+		"video/x-ms-asf", // wma, wmv
 	}
 }
 
@@ -65,16 +66,16 @@ func ContainerTypes() []string {
 const DetectBytes = 3072
 
 // Detect will attempt to detect a media type from the specified buffer.
-// It delegates to http.DetectContentType and mimetype.Detect which together
+// It delegates to mimetype.Detect and http.DetectContentType which together
 // should detect a faire amount of media types and falls back to
 // "application/octet-stream" if undetected.
 func Detect(buf []byte) string {
 	// use built-in detector
-	typ := http.DetectContentType(buf)
+	typ := mimetype.Detect(buf).String()
 
-	// use mimetype if not found
+	// use native if not found
 	if typ == "application/octet-stream" {
-		typ = mimetype.Detect(buf).String()
+		typ = http.DetectContentType(buf)
 	}
 
 	return typ
