@@ -88,7 +88,7 @@ func DetectStream(stream io.Reader) (string, io.Reader, error) {
 	// read from stream
 	buf := make([]byte, DetectBytes)
 	n, err := io.ReadFull(stream, buf)
-	if err != nil {
+	if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
 		return "", nil, err
 	}
 

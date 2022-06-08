@@ -1,6 +1,7 @@
 package mediakit
 
 import (
+	"bytes"
 	"io"
 	"testing"
 
@@ -41,15 +42,39 @@ func TestDetectVideo(t *testing.T) {
 }
 
 func TestDetectStream(t *testing.T) {
+	/* empty */
+
+	typ, stream, err := DetectStream(bytes.NewReader([]byte{}))
+	assert.NoError(t, err)
+	assert.Equal(t, "text/plain", typ)
+	assert.NotNil(t, stream)
+
+	buf, err := io.ReadAll(stream)
+	assert.NoError(t, err)
+	assert.Equal(t, []byte{}, buf)
+
+	/* bytes */
+
+	typ, stream, err = DetectStream(bytes.NewReader([]byte("\x01\x02")))
+	assert.NoError(t, err)
+	assert.Equal(t, "application/octet-stream", typ)
+	assert.NotNil(t, stream)
+
+	buf, err = io.ReadAll(stream)
+	assert.NoError(t, err)
+	assert.Equal(t, []byte("\x01\x02"), buf)
+
+	/* audio */
+
 	sample := samples.Load(samples.AudioMPEG3)
 	defer sample.Close()
 
-	typ, stream, err := DetectStream(sample)
+	typ, stream, err = DetectStream(sample)
 	assert.NoError(t, err)
 	assert.Equal(t, "audio/mpeg", typ)
 	assert.NotNil(t, stream)
 
-	buf, err := io.ReadAll(stream)
+	buf, err = io.ReadAll(stream)
 	assert.NoError(t, err)
 	assert.Equal(t, samples.Read(samples.AudioMPEG3), buf)
 }
