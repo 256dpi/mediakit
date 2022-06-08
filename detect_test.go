@@ -2,10 +2,8 @@ package mediakit
 
 import (
 	"io"
-	"net/http"
 	"testing"
 
-	"github.com/gabriel-vasile/mimetype"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/256dpi/mediakit/samples"
@@ -56,24 +54,13 @@ func TestDetectStream(t *testing.T) {
 	assert.Equal(t, samples.Read(samples.AudioMPEG3), buf)
 }
 
-func BenchmarkHTTPDetect(b *testing.B) {
+func BenchmarkDetect(b *testing.B) {
 	sample := samples.Read(samples.AudioMPEG3)
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		http.DetectContentType(sample)
-	}
-}
-
-func BenchmarkMimeTypeDetect(b *testing.B) {
-	sample := samples.Read(samples.AudioMPEG3)
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		mimetype.Detect(sample)
+		Detect(sample)
 	}
 }
