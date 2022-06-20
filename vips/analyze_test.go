@@ -1,6 +1,7 @@
 package vips
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -93,4 +94,11 @@ func TestAnalyzePDF(t *testing.T) {
 		Color:  "srgb",
 		Format: "pdf",
 	}, report)
+}
+
+func TestAnalyzeError(t *testing.T) {
+	report, err := Analyze(nil, strings.NewReader("foo"))
+	assert.Error(t, err)
+	assert.Nil(t, report)
+	assert.Equal(t, "vipsheader: exit status 255", err.Error())
 }

@@ -195,7 +195,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 			return nil, fmt.Errorf(strings.ToLower(report.Error.String))
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("ffprobe: %s", err.Error())
 	}
 
 	// decode report
@@ -240,7 +240,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 			if stderr.Len() > 0 {
 				return nil, fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
 			}
-			return nil, err
+			return nil, fmt.Errorf("ffmpeg: %s", err.Error())
 		}
 
 		// find duration string

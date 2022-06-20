@@ -44,7 +44,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 		if stderr.Len() > 0 {
 			return nil, fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
 		}
-		return nil, err
+		return nil, fmt.Errorf("vipsheader: %s", err.Error())
 	}
 
 	// get output

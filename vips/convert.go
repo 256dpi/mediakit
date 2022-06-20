@@ -122,7 +122,7 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		if stderr.Len() > 0 {
 			return fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
 		}
-		return err
+		return fmt.Errorf("vips: %s", err.Error())
 	}
 
 	return nil
