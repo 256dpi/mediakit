@@ -309,6 +309,21 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
+			sample: samples.VideoMPEG4R,
+			report: Report{
+				MediaType:  "video/mp4",
+				FileFormat: "mov,mp4,m4a,3gp,3g2,mj2",
+				Width:      800,
+				Height:     450,
+				Streams:    []string{"video", "audio"},
+				Codecs:     []string{"h264", "aac"},
+				Duration:   2.04,
+				Channels:   2,
+				SampleRate: 44100,
+				FrameRate:  25,
+			},
+		},
+		{
 			sample: samples.VideoOGG,
 			report: Report{
 				MediaType:  "video/ogg",
