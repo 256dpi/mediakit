@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/256dpi/xo v0.4.2
 	github.com/gabriel-vasile/mimetype v1.4.0
+	github.com/kr/pretty v0.1.0
 	github.com/samber/lo v1.21.0
 	github.com/stretchr/testify v1.7.1
 )
@@ -16,6 +17,7 @@ require (
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/throttled/throttled/v2 v2.6.0 // indirect
