@@ -8,6 +8,7 @@ import (
 
 	"github.com/256dpi/mediakit"
 	"github.com/256dpi/mediakit/ffmpeg"
+	"github.com/256dpi/mediakit/vips"
 	"github.com/kr/pretty"
 )
 
@@ -30,7 +31,14 @@ func main() {
 	}
 	defer input.Close()
 
-	// open output
+	// create temporary file
+	temporary, err := os.Create(path + ".tmp")
+	if err != nil {
+		panic(err)
+	}
+	defer temporary.Close()
+
+	// create output
 	output, err := os.Create(path + ".out")
 	if err != nil {
 		panic(err)
@@ -55,9 +63,17 @@ func main() {
 				pretty.Println(progress)
 			},
 		})
+	case "extract":
+		err = mediakit.ExtractImage(nil, input, temporary, output, 0.25, vips.JPGWeb, mediakit.MaxWidth(300))
 	default:
 		panic("unknown mode: " + *mode)
 	}
+	if err != nil {
+		panic(err)
+	}
+
+	// remove temporary
+	err = os.Remove(path + ".tmp")
 	if err != nil {
 		panic(err)
 	}
