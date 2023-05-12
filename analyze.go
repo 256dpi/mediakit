@@ -64,10 +64,12 @@ func Analyze(ctx context.Context, input *os.File) (*Report, error) {
 		var codecs []string
 		var channels int
 		for _, stream := range rep.Streams {
-			streams = append(streams, stream.Type)
-			codecs = append(codecs, stream.Codec)
-			if stream.Channels > channels {
-				channels = stream.Channels
+			if stream.Type != "data" {
+				streams = append(streams, stream.Type)
+				codecs = append(codecs, stream.Codec)
+				if stream.Channels > channels {
+					channels = stream.Channels
+				}
 			}
 		}
 
