@@ -37,17 +37,18 @@ const (
 
 // The available video samples.
 const (
-	VideoAVI   = "video.avi" // h264/aac
-	VideoFLV   = "video.flv" // h263/mp3
-	VideoGIF   = "video.gif"
-	VideoMKV   = "video.mkv" // h265/ac3
-	VideoMOV   = "video.mov" // h264/aac
-	VideoMPEG  = "video.mpeg"
-	VideoMPEG2 = "video.mpg"
-	VideoMPEG4 = "video.mp4"  // h264/aac
-	VideoOGG   = "video.ogv"  // theora/flac
-	VideoWebM  = "video.webm" // vp9/vorbis
-	VideoWMV   = "video.wmv"
+	VideoAVI    = "video.avi" // h264/aac
+	VideoFLV    = "video.flv" // h263/mp3
+	VideoGIF    = "video.gif"
+	VideoMKV    = "video.mkv" // h265/ac3
+	VideoMOV    = "video.mov" // h264/aac
+	VideoMPEG   = "video.mpeg"
+	VideoMPEG2  = "video.mpg"
+	VideoMPEG4  = "video.mp4"   // h264/aac
+	VideoMPEG4R = "video-r.mp4" // h264/aac rotated
+	VideoOGG    = "video.ogv"   // theora/flac
+	VideoWebM   = "video.webm"  // vp9/vorbis
+	VideoWMV    = "video.wmv"
 )
 
 // DocumentPDF is multi-page PDF document.
@@ -92,6 +93,7 @@ func Video() []string {
 		VideoMPEG,
 		VideoMPEG2,
 		VideoMPEG4,
+		VideoMPEG4R,
 		VideoOGG,
 		VideoWebM,
 		VideoWMV,
