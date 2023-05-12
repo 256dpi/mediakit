@@ -157,7 +157,6 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		"-hide_banner",
 		"-loglevel", "repeat+warning",
 		"-y", // overwrite
-		"-noautorotate",
 	}
 
 	// handle early options

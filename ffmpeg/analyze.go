@@ -62,6 +62,11 @@ func (r *FrameRate) UnmarshalJSON(bytes []byte) error {
 	return nil
 }
 
+// SideData defines stream side data.
+type SideData struct {
+	Rotation int `json:"rotation"`
+}
+
 // Stream is a ffprobe stream.
 type Stream struct {
 	// generic
@@ -77,6 +82,9 @@ type Stream struct {
 	Width     int       `json:"width"`
 	Height    int       `json:"height"`
 	FrameRate FrameRate `json:"r_frame_rate"`
+
+	// other
+	SideData []SideData `json:"side_data_list"`
 }
 
 // Report is a ffprobe report.
@@ -213,6 +221,17 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 
 	// determine if image
 	image := len(report.Streams) == 1 && lo.Contains(imageCodecs, report.Streams[0].Codec)
+
+	// handle side data
+	for i, stream := range report.Streams {
+		for _, sd := range stream.SideData {
+			if sd.Rotation == 90 || sd.Rotation == -90 {
+				report.Streams[i].Width = stream.Height
+				report.Streams[i].Height = stream.Width
+			}
+		}
+		report.Streams[i].SideData = nil
+	}
 
 	// get seeker
 	seeker, _ := r.(io.Seeker)

@@ -60,6 +60,11 @@ func TestConvertVideo(t *testing.T) {
 			})
 			assert.NoError(t, err)
 
+			width, height := 800, 450
+			if sample == samples.VideoMPEG4R {
+				width, height = 450, 800
+			}
+
 			report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
 			assert.NoError(t, err)
 			assert.True(t, report.Duration >= 2 && report.Duration < 2.3)
@@ -76,8 +81,8 @@ func TestConvertVideo(t *testing.T) {
 							Type:      "video",
 							Codec:     "h264",
 							Duration:  report.Streams[0].Duration,
-							Width:     800,
-							Height:    450,
+							Width:     width,
+							Height:    height,
 							FrameRate: 5,
 						},
 					},
@@ -94,8 +99,8 @@ func TestConvertVideo(t *testing.T) {
 							Type:      "video",
 							Codec:     "h264",
 							Duration:  report.Streams[0].Duration,
-							Width:     800,
-							Height:    450,
+							Width:     width,
+							Height:    height,
 							FrameRate: 25,
 						},
 						{
@@ -190,15 +195,20 @@ func TestConvertImage(t *testing.T) {
 func TestConvertExtract(t *testing.T) {
 	for _, sample := range samples.Video() {
 		t.Run(sample, func(t *testing.T) {
-			sample := samples.Buffer(sample)
-			defer sample.Close()
+			file := samples.Buffer(sample)
+			defer file.Close()
 
 			var out bytes.Buffer
-			err := Convert(nil, sample, &out, ConvertOptions{
+			err := Convert(nil, file, &out, ConvertOptions{
 				Preset: ImagePNG,
 				Start:  1,
 			})
 			assert.NoError(t, err)
+
+			width, height := 800, 450
+			if sample == samples.VideoMPEG4R {
+				width, height = 450, 800
+			}
 
 			report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
 			assert.NoError(t, err)
@@ -212,8 +222,8 @@ func TestConvertExtract(t *testing.T) {
 						Type:      "video",
 						Codec:     "png",
 						Duration:  0,
-						Width:     800,
-						Height:    450,
+						Width:     width,
+						Height:    height,
 						FrameRate: 25,
 					},
 				},

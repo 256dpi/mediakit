@@ -90,10 +90,11 @@ func TestAnalyzeAudio(t *testing.T) {
 
 func TestAnalyzeVideo(t *testing.T) {
 	for _, item := range []struct {
-		sample string
-		format string
-		vCodec string
-		aCodec string
+		sample  string
+		format  string
+		vCodec  string
+		aCodec  string
+		rotated bool
 	}{
 		{
 			sample: samples.VideoAVI,
@@ -144,6 +145,13 @@ func TestAnalyzeVideo(t *testing.T) {
 			aCodec: "aac",
 		},
 		{
+			sample:  samples.VideoMPEG4R,
+			format:  "mov,mp4,m4a,3gp,3g2,mj2",
+			vCodec:  "h264",
+			aCodec:  "aac",
+			rotated: true,
+		},
+		{
 			sample: samples.VideoOGG,
 			format: "ogg",
 			vCodec: "theora",
@@ -186,6 +194,12 @@ func TestAnalyzeVideo(t *testing.T) {
 				assert.True(t, report.Streams[0].Duration >= 2, report.Streams[0].Duration)
 				assert.True(t, report.Streams[1].Duration >= 2, report.Streams[1].Duration)
 			}
+
+			width, height := 800, 450
+			if item.rotated {
+				width, height = 450, 800
+			}
+
 			assert.Equal(t, &Report{
 				Duration: report.Duration,
 				Format: Format{
@@ -197,8 +211,8 @@ func TestAnalyzeVideo(t *testing.T) {
 						Type:      "video",
 						Codec:     item.vCodec,
 						Duration:  report.Streams[0].Duration,
-						Width:     800,
-						Height:    450,
+						Width:     width,
+						Height:    height,
 						FrameRate: FrameRate(lo.Ternary(item.format == "gif", 5, 25)),
 					},
 					{
