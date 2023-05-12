@@ -17,29 +17,36 @@ var mode = flag.String("mode", "video", "")
 func main() {
 	// parse flags
 	flag.Parse()
+	if flag.NArg() != 2 {
+		panic("usage: mk-convert <input> <output>")
+	}
 
-	// get path
-	path, err := filepath.Abs(flag.Arg(0))
+	// get paths
+	inPath, err := filepath.Abs(flag.Arg(0))
+	if err != nil {
+		panic(err)
+	}
+	outPath, err := filepath.Abs(flag.Arg(1))
 	if err != nil {
 		panic(err)
 	}
 
 	// open input
-	input, err := os.Open(path)
+	input, err := os.Open(inPath)
 	if err != nil {
 		panic(err)
 	}
 	defer input.Close()
 
 	// create temporary file
-	temporary, err := os.Create(path + ".tmp")
+	temporary, err := os.Create(outPath + ".tmp")
 	if err != nil {
 		panic(err)
 	}
 	defer temporary.Close()
 
 	// create output
-	output, err := os.Create(path + ".out")
+	output, err := os.Create(outPath)
 	if err != nil {
 		panic(err)
 	}
@@ -73,7 +80,7 @@ func main() {
 	}
 
 	// remove temporary
-	err = os.Remove(path + ".tmp")
+	err = os.Remove(outPath + ".tmp")
 	if err != nil {
 		panic(err)
 	}
