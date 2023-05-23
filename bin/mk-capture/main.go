@@ -40,7 +40,7 @@ func main() {
 	var buf []byte
 	switch *mode {
 	case "image":
-		buf, err = chromium.CaptureScreenshot(nil, inURL, chromium.Options{
+		buf, err = chromium.Screenshot(nil, inURL, chromium.Options{
 			Width:    *width,
 			Height:   *height,
 			Scale:    *scale,

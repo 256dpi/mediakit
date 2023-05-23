@@ -25,19 +25,18 @@ func Allocate() (context.Context, context.CancelFunc, error) {
 	return ctx, cancel, nil
 }
 
-// Options are the options for the screenshot capture.
+// Options are the options used for taking a screenshot.
 type Options struct {
 	Width    int64
 	Height   int64
 	Full     bool
 	Scale    float64
-	Scroll   float64
 	Pedantic bool
 }
 
-// CaptureScreenshot will capture a screenshot of the given URL. A browser
+// Screenshot will capture a screenshot of the given URL. A browser
 // context may be provided using Allocate, otherwise a new one will be allocated.
-func CaptureScreenshot(ctx context.Context, url string, opts Options) ([]byte, error) {
+func Screenshot(ctx context.Context, url string, opts Options) ([]byte, error) {
 	// ensure context
 	if ctx == nil {
 		ctx = context.Background()
@@ -50,7 +49,6 @@ func CaptureScreenshot(ctx context.Context, url string, opts Options) ([]byte, e
 	// collect errors
 	var logErrors []string
 	chromedp.ListenTarget(ctx, func(ev interface{}) {
-		// check for errors
 		if ev, ok := ev.(*log.EventEntryAdded); ok {
 			if ev.Entry.Level == log.LevelError {
 				logErrors = append(logErrors, fmt.Sprintf("%s (%s)", ev.Entry.Text, ev.Entry.URL))

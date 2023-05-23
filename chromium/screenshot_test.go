@@ -9,10 +9,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCaptureScreenshot(t *testing.T) {
+func TestScreenshot(t *testing.T) {
 	/* without allocate */
 
-	buf, err := CaptureScreenshot(nil, "https://www.google.com", Options{})
+	buf, err := Screenshot(nil, "https://www.google.com", Options{})
 	assert.NoError(t, err)
 	assert.NotEmpty(t, buf)
 
@@ -30,7 +30,7 @@ func TestCaptureScreenshot(t *testing.T) {
 	assert.NotNil(t, ctx)
 	defer cancel()
 
-	buf, err = CaptureScreenshot(ctx, "https://www.google.com", Options{
+	buf, err = Screenshot(ctx, "https://www.google.com", Options{
 		Width:  1920,
 		Height: 1080,
 		Scale:  2,
