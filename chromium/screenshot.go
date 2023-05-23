@@ -63,10 +63,14 @@ func Screenshot(ctx context.Context, url string, opts Options) ([]byte, error) {
 		chromedp.Navigate(url),
 		chromedp.WaitReady("body"),
 		chromedp.ActionFunc(func(ctx context.Context) error {
-			var err error
+			var height int64
+			err := chromedp.Evaluate(`document.body.scrollHeight`, &height).Do(ctx)
+			if err != nil {
+				return err
+			}
 			buf, err = page.CaptureScreenshot().
 				WithFormat(page.CaptureScreenshotFormatPng).
-				WithCaptureBeyondViewport(opts.Full).
+				WithCaptureBeyondViewport(opts.Full && height > opts.Height).
 				Do(ctx)
 			return err
 		}),

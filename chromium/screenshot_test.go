@@ -12,7 +12,7 @@ import (
 func TestScreenshot(t *testing.T) {
 	/* without allocate */
 
-	buf, err := Screenshot(nil, "https://www.google.com", Options{})
+	buf, err := Screenshot(nil, "https://www.chromium.org", Options{})
 	assert.NoError(t, err)
 	assert.NotEmpty(t, buf)
 
@@ -30,7 +30,7 @@ func TestScreenshot(t *testing.T) {
 	assert.NotNil(t, ctx)
 	defer cancel()
 
-	buf, err = Screenshot(ctx, "https://www.google.com", Options{
+	buf, err = Screenshot(ctx, "https://www.chromium.org", Options{
 		Width:  1920,
 		Height: 1080,
 		Scale:  2,
@@ -45,4 +45,20 @@ func TestScreenshot(t *testing.T) {
 		Min: image.Point{},
 		Max: image.Point{X: 3840, Y: 2160},
 	}, img.Bounds())
+
+	/* longer page */
+
+	buf, err = Screenshot(ctx, "https://en.wikipedia.org/wiki/Chromium", Options{
+		Width:  1280,
+		Height: 720,
+		Scale:  2,
+		Full:   true,
+	})
+	assert.NoError(t, err)
+	assert.NotEmpty(t, buf)
+
+	img, err = png.Decode(bytes.NewReader(buf))
+	assert.NoError(t, err)
+	assert.Equal(t, 2560, img.Bounds().Dx())
+	assert.True(t, img.Bounds().Dy() > 25_000)
 }
