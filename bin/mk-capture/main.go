@@ -40,7 +40,7 @@ func main() {
 	// convert input
 	switch *mode {
 	case "image":
-		err = mediakit.CaptureScreenshot(nil, inURL, output, chromium.Options{
+		err = mediakit.CaptureScreenshot(nil, inURL, output, chromium.ScreenshotOptions{
 			Width:    *width,
 			Height:   *height,
 			Scale:    *scale,

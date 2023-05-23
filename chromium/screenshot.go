@@ -25,8 +25,8 @@ func Allocate() (context.Context, context.CancelFunc, error) {
 	return ctx, cancel, nil
 }
 
-// Options are the options used for taking a screenshot.
-type Options struct {
+// ScreenshotOptions are the options used for taking a screenshot.
+type ScreenshotOptions struct {
 	Width    int64
 	Height   int64
 	Full     bool
@@ -34,9 +34,9 @@ type Options struct {
 	Pedantic bool
 }
 
-// Screenshot will capture a screenshot of the given URL. A browser
-// context may be provided using Allocate, otherwise a new one will be allocated.
-func Screenshot(ctx context.Context, url string, opts Options) ([]byte, error) {
+// Screenshot will capture a screenshot of the given URL. A browser context may
+// be provided using Allocate, otherwise a new one will be allocated.
+func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte, error) {
 	// ensure context
 	if ctx == nil {
 		ctx = context.Background()

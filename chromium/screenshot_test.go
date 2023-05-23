@@ -12,7 +12,7 @@ import (
 func TestScreenshot(t *testing.T) {
 	/* without allocate */
 
-	buf, err := Screenshot(nil, "https://www.chromium.org", Options{})
+	buf, err := Screenshot(nil, "https://www.chromium.org", ScreenshotOptions{})
 	assert.NoError(t, err)
 	assert.NotEmpty(t, buf)
 
@@ -30,7 +30,7 @@ func TestScreenshot(t *testing.T) {
 	assert.NotNil(t, ctx)
 	defer cancel()
 
-	buf, err = Screenshot(ctx, "https://www.chromium.org", Options{
+	buf, err = Screenshot(ctx, "https://www.chromium.org", ScreenshotOptions{
 		Width:  1920,
 		Height: 1080,
 		Scale:  2,
@@ -48,7 +48,7 @@ func TestScreenshot(t *testing.T) {
 
 	/* longer page */
 
-	buf, err = Screenshot(ctx, "https://en.wikipedia.org/wiki/Chromium", Options{
+	buf, err = Screenshot(ctx, "https://en.wikipedia.org/wiki/Chromium", ScreenshotOptions{
 		Width:  1280,
 		Height: 720,
 		Scale:  2,

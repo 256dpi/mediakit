@@ -238,7 +238,7 @@ func ExtractImage(ctx context.Context, input, temp, output *os.File, position fl
 }
 
 // CaptureScreenshot will capture a screenshot using a URL and options.
-func CaptureScreenshot(ctx context.Context, url string, output *os.File, opts chromium.Options) error {
+func CaptureScreenshot(ctx context.Context, url string, output *os.File, opts chromium.ScreenshotOptions) error {
 	// capture screenshot
 	buf, err := chromium.Screenshot(ctx, url, opts)
 	if err != nil {
