@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Prepare
-        run: sudo apt-get install -y ffmpeg libvips-tools
+        run: sudo apt-get install -y ffmpeg libvips-tools chromium
       - name: Info
-        run: ffmpeg -version; vips --version
+        run: ffmpeg -version; vips --version; chromium --version
       - name: Install
         uses: actions/setup-go@v2
         with:
