@@ -9,6 +9,7 @@ import (
 
 	"github.com/256dpi/xo"
 
+	"github.com/256dpi/mediakit/chromium"
 	"github.com/256dpi/mediakit/ffmpeg"
 	"github.com/256dpi/mediakit/vips"
 )
@@ -223,6 +224,29 @@ func ExtractImage(ctx context.Context, input, temp, output *os.File, position fl
 
 	// convert image
 	err = ConvertImage(ctx, temp, output, preset, sizer)
+	if err != nil {
+		return err
+	}
+
+	// sync and rewind file
+	err = syncAndRewind(output)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// CaptureScreenshot will capture a screenshot using a URL and options.
+func CaptureScreenshot(ctx context.Context, url string, output *os.File, opts chromium.Options) error {
+	// capture screenshot
+	buf, err := chromium.Screenshot(ctx, url, opts)
+	if err != nil {
+		return err
+	}
+
+	// copy image
+	_, err = output.Write(buf)
 	if err != nil {
 		return err
 	}

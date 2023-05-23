@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/256dpi/mediakit"
 	"github.com/256dpi/mediakit/chromium"
 )
 
@@ -37,10 +38,9 @@ func main() {
 	defer output.Close()
 
 	// convert input
-	var buf []byte
 	switch *mode {
 	case "image":
-		buf, err = chromium.Screenshot(nil, inURL, chromium.Options{
+		err = mediakit.CaptureScreenshot(nil, inURL, output, chromium.Options{
 			Width:    *width,
 			Height:   *height,
 			Scale:    *scale,
@@ -50,12 +50,6 @@ func main() {
 	default:
 		panic("unknown mode: " + *mode)
 	}
-	if err != nil {
-		panic(err)
-	}
-
-	// copy output
-	_, err = output.Write(buf)
 	if err != nil {
 		panic(err)
 	}

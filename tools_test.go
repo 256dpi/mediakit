@@ -10,6 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/256dpi/mediakit/chromium"
 	"github.com/256dpi/mediakit/ffmpeg"
 	"github.com/256dpi/mediakit/samples"
 	"github.com/256dpi/mediakit/vips"
@@ -83,6 +84,18 @@ func TestExtractImage(t *testing.T) {
 	_, err = io.ReadFull(buffers[1], buf)
 	assert.NoError(t, err)
 	assert.Equal(t, "image/jpeg", Detect(buf, false))
+}
+
+func TestCaptureScreenshot(t *testing.T) {
+	output := makeBuffers(t.TempDir(), "output")[0]
+
+	err := CaptureScreenshot(nil, "https://www.chromium.org", output, chromium.Options{})
+	assert.NoError(t, err)
+
+	buf := make([]byte, DetectBytes)
+	_, err = io.ReadFull(output, buf)
+	assert.NoError(t, err)
+	assert.Equal(t, "image/png", Detect(buf, false))
 }
 
 func makeBuffers(dir string, names ...string) []*os.File {
