@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/256dpi/mediakit"
+	"github.com/256dpi/xo"
 	"github.com/kr/pretty"
 )
 
@@ -14,16 +15,12 @@ func main() {
 
 	// open file
 	file, err := os.Open(flag.Arg(0))
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 	defer file.Close()
 
 	// analyze file
 	report, err := mediakit.Analyze(nil, file)
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 
 	// print report
 	pretty.Println(report)

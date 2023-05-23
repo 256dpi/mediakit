@@ -9,6 +9,7 @@ import (
 	"github.com/256dpi/mediakit"
 	"github.com/256dpi/mediakit/ffmpeg"
 	"github.com/256dpi/mediakit/vips"
+	"github.com/256dpi/xo"
 	"github.com/kr/pretty"
 )
 
@@ -23,33 +24,23 @@ func main() {
 
 	// get paths
 	inPath, err := filepath.Abs(flag.Arg(0))
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 	outPath, err := filepath.Abs(flag.Arg(1))
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 
 	// open input
 	input, err := os.Open(inPath)
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 	defer input.Close()
 
 	// create temporary file
 	temporary, err := os.Create(outPath + ".tmp")
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 	defer temporary.Close()
 
 	// create output
 	output, err := os.Create(outPath)
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 	defer output.Close()
 
 	// convert input
@@ -75,13 +66,9 @@ func main() {
 	default:
 		panic("unknown mode: " + *mode)
 	}
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 
 	// remove temporary
 	err = os.Remove(outPath + ".tmp")
-	if err != nil {
-		panic(err)
-	}
+	xo.PanicIf(err)
 }
