@@ -6,8 +6,6 @@ jobs:
     steps:
       - name: Prepare
         run: sudo apt-get install -y ffmpeg libvips-tools
-      - name: Chrome
-        uses: browser-actions/setup-chrome@v1
       - name: Info
         run: ffmpeg -version; vips --version; chrome --version
       - name: Install
