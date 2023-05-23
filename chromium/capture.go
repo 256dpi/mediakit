@@ -27,10 +27,12 @@ func Allocate() (context.Context, context.CancelFunc, error) {
 
 // Options are the options for the screenshot capture.
 type Options struct {
-	Width  int64
-	Height int64
-	Full   bool
-	Scale  float64
+	Width    int64
+	Height   int64
+	Full     bool
+	Scale    float64
+	Scroll   float64
+	Pedantic bool
 }
 
 // CaptureScreenshot will capture a screenshot of the given URL. A browser
@@ -76,7 +78,7 @@ func CaptureScreenshot(ctx context.Context, url string, opts Options) ([]byte, e
 	}
 
 	// handle log errors
-	if len(logErrors) > 0 {
+	if opts.Pedantic && len(logErrors) > 0 {
 		return nil, fmt.Errorf("log errors: %s", logErrors)
 	}
 

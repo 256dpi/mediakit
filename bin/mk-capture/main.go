@@ -13,6 +13,7 @@ var width = flag.Int64("width", 1920, "")
 var height = flag.Int64("height", 1080, "")
 var scale = flag.Float64("scale", 2, "")
 var full = flag.Bool("full", false, "")
+var pedantic = flag.Bool("pedantic", false, "")
 
 func main() {
 	// parse flags
@@ -40,10 +41,11 @@ func main() {
 	switch *mode {
 	case "image":
 		buf, err = chromium.CaptureScreenshot(nil, inURL, chromium.Options{
-			Width:  *width,
-			Height: *height,
-			Scale:  *scale,
-			Full:   *full,
+			Width:    *width,
+			Height:   *height,
+			Scale:    *scale,
+			Full:     *full,
+			Pedantic: *pedantic,
 		})
 	default:
 		panic("unknown mode: " + *mode)
