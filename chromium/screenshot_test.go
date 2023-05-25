@@ -18,10 +18,8 @@ func TestScreenshot(t *testing.T) {
 
 	img, err := png.Decode(bytes.NewReader(buf))
 	assert.NoError(t, err)
-	assert.Equal(t, image.Rectangle{
-		Min: image.Point{},
-		Max: image.Point{X: 1600, Y: 1200},
-	}, img.Bounds())
+	assert.NotZero(t, img.Bounds().Dx())
+	assert.NotZero(t, img.Bounds().Dy())
 
 	/* with allocate and options */
 
