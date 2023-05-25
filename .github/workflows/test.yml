@@ -9,7 +9,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg libvips-tools
       - name: Info
-        run: ffmpeg -version; vips --version; chrome --version
+        run: ffmpeg -version; vips --version; chromium --version
       - name: Install
         uses: actions/setup-go@v2
         with:
