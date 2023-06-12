@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/png"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -33,6 +34,7 @@ func TestScreenshot(t *testing.T) {
 		Height: 1080,
 		Scale:  2,
 		Full:   true,
+		Wait:   200 * time.Millisecond,
 	})
 	assert.NoError(t, err)
 	assert.NotEmpty(t, buf)

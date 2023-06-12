@@ -15,6 +15,7 @@ var height = flag.Int64("height", 1080, "")
 var scale = flag.Float64("scale", 2, "")
 var full = flag.Bool("full", false, "")
 var pedantic = flag.Bool("pedantic", false, "")
+var wait = flag.Duration("wait", 0, "")
 
 func main() {
 	// parse flags
@@ -46,6 +47,7 @@ func main() {
 			Scale:    *scale,
 			Full:     *full,
 			Pedantic: *pedantic,
+			Wait:     *wait,
 		})
 	default:
 		panic("unknown mode: " + *mode)

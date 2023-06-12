@@ -3,11 +3,39 @@ package chromium
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/chromedp/cdproto/log"
 	"github.com/chromedp/cdproto/page"
+	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
 )
+
+const scrollThrough = `
+new Promise((resolve) => {
+	const step = window.innerHeight / 2; // pixel
+	const frequency = 8; // 120 Hz
+	
+	let scrolls = 0;
+	function scroll() {
+		window.setTimeout(() => {
+			window.scrollTo(0, scrolls * step);
+
+			const total = document.body.scrollHeight / step;
+			console.log(step, frequency, total, scrolls);
+
+			if (scrolls < total) {
+				scrolls += 1;
+				scroll();
+			}
+
+			resolve(true);
+		}, frequency);
+	}
+	
+	scroll();
+});
+`
 
 // Allocate will allocate a new browser instance and return an associated
 // context and cancel function.
@@ -32,6 +60,7 @@ type ScreenshotOptions struct {
 	Full     bool
 	Scale    float64
 	Pedantic bool
+	Wait     time.Duration
 }
 
 // Screenshot will capture a screenshot of the given URL. A browser context may
@@ -63,16 +92,42 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 		chromedp.Navigate(url),
 		chromedp.WaitReady("body"),
 		chromedp.ActionFunc(func(ctx context.Context) error {
+			// scroll through page once
+			if opts.Full {
+				err := chromedp.Evaluate(scrollThrough, nil, func(params *runtime.EvaluateParams) *runtime.EvaluateParams {
+					return params.WithAwaitPromise(true)
+				}).Do(ctx)
+				if err != nil {
+					return err
+				}
+				err = chromedp.Evaluate(`window.scroll({top: 0})`, nil).Do(ctx)
+				if err != nil {
+					return err
+				}
+			}
+
+			// wait some time
+			if opts.Wait > 0 {
+				time.Sleep(opts.Wait)
+			}
+
+			// get height
 			var height int64
 			err := chromedp.Evaluate(`document.body.scrollHeight`, &height).Do(ctx)
 			if err != nil {
 				return err
 			}
+
+			// capture screenshot
 			buf, err = page.CaptureScreenshot().
 				WithFormat(page.CaptureScreenshotFormatPng).
 				WithCaptureBeyondViewport(opts.Full && height > opts.Height).
 				Do(ctx)
-			return err
+			if err != nil {
+				return err
+			}
+
+			return nil
 		}),
 	)
 	if err != nil {
