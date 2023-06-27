@@ -19,30 +19,30 @@ func TestConvertAudio(t *testing.T) {
 			file := samples.Buffer(sample)
 			defer file.Close()
 
-			var out bytes.Buffer
-			err := Convert(nil, file, &out, ConvertOptions{
+			out := tempFile(t)
+			err := Convert(nil, file, out, ConvertOptions{
 				Preset: AudioMP3VBRStandard,
 			})
 			assert.NoError(t, err)
 
-			report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
+			rewind(out)
+			report, err := Analyze(nil, out)
 			assert.NoError(t, err)
 			assert.True(t, report.Duration > 2 && report.Duration < 2.2)
 			assert.Equal(t, &Report{
 				Duration: report.Duration,
 				Format: Format{
 					Name:     "mp3",
-					Duration: 0,
+					Duration: report.Duration,
 				}, Streams: []Stream{
 					{
 						Type:       "audio",
 						Codec:      "mp3",
-						Duration:   0,
+						Duration:   report.Duration,
 						Channels:   2,
 						SampleRate: 44100,
 					},
 				},
-				DidScan: true,
 			}, report)
 		})
 	}
@@ -54,8 +54,8 @@ func TestConvertVideo(t *testing.T) {
 			file := samples.Buffer(sample)
 			defer file.Close()
 
-			var out bytes.Buffer
-			err := Convert(nil, file, &out, ConvertOptions{
+			out := tempFile(t)
+			err := Convert(nil, file, out, ConvertOptions{
 				Preset: VideoMP4H264AACFast,
 			})
 			assert.NoError(t, err)
@@ -65,7 +65,8 @@ func TestConvertVideo(t *testing.T) {
 				width, height = 450, 800
 			}
 
-			report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
+			rewind(out)
+			report, err := Analyze(nil, out)
 			assert.NoError(t, err)
 			assert.True(t, report.Duration >= 2 && report.Duration < 2.3)
 			assert.True(t, report.Format.Duration >= 2 && report.Format.Duration < 2.3)
@@ -133,13 +134,14 @@ func TestConvertImage(t *testing.T) {
 				sample := samples.Buffer(sample)
 				defer sample.Close()
 
-				var out bytes.Buffer
-				err := Convert(nil, sample, &out, ConvertOptions{
+				out := tempFile(t)
+				err := Convert(nil, sample, out, ConvertOptions{
 					Preset: ImageJPEG,
 				})
 				assert.NoError(t, err)
 
-				report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
+				rewind(out)
+				report, err := Analyze(nil, out)
 				assert.NoError(t, err)
 				assert.Equal(t, &Report{
 					Duration: 0,
@@ -163,13 +165,14 @@ func TestConvertImage(t *testing.T) {
 				sample := samples.Buffer(sample)
 				defer sample.Close()
 
-				var out bytes.Buffer
-				err := Convert(nil, sample, &out, ConvertOptions{
+				out := tempFile(t)
+				err := Convert(nil, sample, out, ConvertOptions{
 					Preset: ImagePNG,
 				})
 				assert.NoError(t, err)
 
-				report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
+				rewind(out)
+				report, err := Analyze(nil, out)
 				assert.NoError(t, err)
 				assert.Equal(t, &Report{
 					Duration: 0,
@@ -198,8 +201,8 @@ func TestConvertExtract(t *testing.T) {
 			file := samples.Buffer(sample)
 			defer file.Close()
 
-			var out bytes.Buffer
-			err := Convert(nil, file, &out, ConvertOptions{
+			out := tempFile(t)
+			err := Convert(nil, file, out, ConvertOptions{
 				Preset: ImagePNG,
 				Start:  1,
 			})
@@ -210,7 +213,8 @@ func TestConvertExtract(t *testing.T) {
 				width, height = 450, 800
 			}
 
-			report, err := Analyze(nil, bytes.NewReader(out.Bytes()))
+			rewind(out)
+			report, err := Analyze(nil, out)
 			assert.NoError(t, err)
 			assert.Equal(t, &Report{
 				Duration: 0,
@@ -339,9 +343,9 @@ func TestConvertProgress(t *testing.T) {
 	sample := samples.Load(samples.VideoMPEG2)
 	defer sample.Close()
 
-	var out bytes.Buffer
+	out := tempFile(t)
 	var progress []Progress
-	err := Convert(nil, sample, &out, ConvertOptions{
+	err := Convert(nil, sample, out, ConvertOptions{
 		Preset:   VideoMP4H264AACFast,
 		Duration: 1,
 		ProgressFunc: func(p Progress) {
@@ -353,7 +357,7 @@ func TestConvertProgress(t *testing.T) {
 	assert.Len(t, progress, 2)
 	assert.Equal(t, Progress{
 		Duration: 0,
-		Size:     36,
+		Size:     0,
 	}, progress[0])
 	assert.True(t, progress[1].Duration > 0)
 	assert.True(t, progress[1].Size > 36)
