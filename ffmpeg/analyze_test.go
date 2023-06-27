@@ -96,6 +96,7 @@ func TestAnalyzeVideo(t *testing.T) {
 		aCodec  string
 		rotated bool
 		pixFmt  string
+		colSpc  string
 	}{
 		{
 			sample: samples.VideoAVI,
@@ -103,6 +104,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec: "h264",
 			aCodec: "aac",
 			pixFmt: "yuv420p",
+			colSpc: "bt709",
 		},
 		{
 			sample: samples.VideoFLV,
@@ -123,6 +125,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec: "hevc",
 			aCodec: "ac3",
 			pixFmt: "yuv420p",
+			colSpc: "smpte170m",
 		},
 		{
 			sample: samples.VideoMOV,
@@ -130,6 +133,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec: "h264",
 			aCodec: "aac",
 			pixFmt: "yuv420p",
+			colSpc: "bt709",
 		},
 		{
 			sample: samples.VideoMPEG,
@@ -144,6 +148,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec: "mpeg2video",
 			aCodec: "mp2",
 			pixFmt: "yuv420p",
+			colSpc: "bt709",
 		},
 		{
 			sample: samples.VideoMPEG4,
@@ -151,6 +156,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec: "h264",
 			aCodec: "aac",
 			pixFmt: "yuv420p",
+			colSpc: "bt709",
 		},
 		{
 			sample:  samples.VideoMPEG4R,
@@ -159,6 +165,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			aCodec:  "aac",
 			rotated: true,
 			pixFmt:  "yuv420p",
+			colSpc:  "bt709",
 		},
 		{
 			sample: samples.VideoOGG,
@@ -173,6 +180,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec: "vp9",
 			aCodec: "vorbis",
 			pixFmt: "yuv420p",
+			colSpc: "bt709",
 		},
 		{
 			sample: samples.VideoWMV,
@@ -227,6 +235,7 @@ func TestAnalyzeVideo(t *testing.T) {
 						Height:      height,
 						FrameRate:   FrameRate(lo.Ternary(item.format == "gif", 5, 25)),
 						PixelFormat: item.pixFmt,
+						ColorSpace:  item.colSpc,
 					},
 					{
 						Type:       "audio",
@@ -247,6 +256,7 @@ func TestAnalyzeImage(t *testing.T) {
 		format string
 		codec  string
 		pixFmt string
+		colSpc string
 	}{
 		{
 			sample: samples.ImageGIF,
@@ -259,6 +269,7 @@ func TestAnalyzeImage(t *testing.T) {
 			format: "jpeg_pipe",
 			codec:  "mjpeg",
 			pixFmt: "yuvj444p",
+			colSpc: "bt470bg",
 		},
 		{
 			sample: samples.ImageJPEG2K,
@@ -283,6 +294,7 @@ func TestAnalyzeImage(t *testing.T) {
 			format: "webp_pipe",
 			codec:  "webp",
 			pixFmt: "yuv420p",
+			colSpc: "bt470bg",
 		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
@@ -306,6 +318,7 @@ func TestAnalyzeImage(t *testing.T) {
 						Height:      533,
 						FrameRate:   report.Streams[0].FrameRate,
 						PixelFormat: item.pixFmt,
+						ColorSpace:  item.colSpc,
 					},
 				},
 			}, report)

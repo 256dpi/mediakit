@@ -27,15 +27,15 @@ const (
 	// https://trac.ffmpeg.org/wiki/Encode/MP3
 	AudioMP3VBRStandard = iota + 1
 
-	// VideoMP4H264AACFast is a fast yuv420p MP4 H.264/AAC encoding preset.
+	// VideoMP4H264AACFast is a fast MP4 H.264/AAC encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/H.264
 	// https://trac.ffmpeg.org/wiki/Encode/AAC
 	VideoMP4H264AACFast
 
-	// ImageJPEG is a basic 24bit JPEG encoding preset.
+	// ImageJPEG is a basic JPEG encoding preset.
 	ImageJPEG
 
-	// ImagePNG is a basic 24bit PNG encoding preset.
+	// ImagePNG is a basic PNG encoding preset.
 	ImagePNG
 )
 
@@ -59,6 +59,10 @@ func (p Preset) Args(isFile bool) []string {
 			"-f", "mp4",
 			"-codec:v", "libx264",
 			"-preset:v", "fast",
+			"-colorspace:v", "bt709",
+			"-color_primaries:v", "bt709",
+			"-color_trc:v", "bt709",
+			"-color_range:v", "tv",
 			"-movflags", "+faststart",
 			"-codec:a", "aac",
 			"-q:a", "4", // 64-72 kbit/s/ch
@@ -93,7 +97,7 @@ func (p Preset) Filters() []string {
 	switch p {
 	case VideoMP4H264AACFast:
 		// h264 requires even height
-		return []string{`pad=ceil(iw/2)*2:ceil(ih/2)*2`, "format=yuv420p"}
+		return []string{`pad=ceil(iw/2)*2:ceil(ih/2)*2`, "format=yuv420p", "scale=in_color_matrix=auto:in_range=auto:out_color_matrix=bt709:out_range=tv"}
 	case ImageJPEG:
 		return []string{"format=yuvj444p"}
 	case ImagePNG:

@@ -86,6 +86,7 @@ func TestConvertVideo(t *testing.T) {
 							Height:      height,
 							FrameRate:   5,
 							PixelFormat: "yuv420p",
+							ColorSpace:  "bt709",
 						},
 					},
 				}, report)
@@ -105,6 +106,7 @@ func TestConvertVideo(t *testing.T) {
 							Height:      height,
 							FrameRate:   25,
 							PixelFormat: "yuv420p",
+							ColorSpace:  "bt709",
 						},
 						{
 							Type:       "audio",
@@ -159,6 +161,7 @@ func TestConvertImage(t *testing.T) {
 							Height:      533,
 							FrameRate:   25,
 							PixelFormat: "yuvj444p",
+							ColorSpace:  "bt470bg",
 						},
 					},
 				}, report)
@@ -294,6 +297,7 @@ func TestConvertOptions(t *testing.T) {
 						Height:      144,
 						FrameRate:   10,
 						PixelFormat: "yuv420p",
+						ColorSpace:  "bt709",
 					},
 					{
 						Type:       "audio",

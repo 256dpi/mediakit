@@ -83,6 +83,7 @@ type Stream struct {
 	Height      int       `json:"height"`
 	FrameRate   FrameRate `json:"r_frame_rate"`
 	PixelFormat string    `json:"pix_fmt"`
+	ColorSpace  string    `json:"color_space"`
 
 	// other
 	SideData []SideData `json:"side_data_list"`
