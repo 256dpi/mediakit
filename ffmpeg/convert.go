@@ -71,6 +71,7 @@ func (p Preset) Args(isFile bool) []string {
 	case ImageJPEG:
 		return []string{
 			"-f", "image2",
+			"-update", "1",
 			"-frames:v", "1",
 			"-codec:v", "mjpeg",
 			"-q:v", "3",
@@ -78,6 +79,7 @@ func (p Preset) Args(isFile bool) []string {
 	case ImagePNG:
 		return []string{
 			"-f", "image2",
+			"-update", "1",
 			"-frames:v", "1",
 			"-codec:v", "png",
 		}
