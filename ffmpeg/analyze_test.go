@@ -95,56 +95,62 @@ func TestAnalyzeVideo(t *testing.T) {
 		vCodec  string
 		aCodec  string
 		rotated bool
-		bgra    bool
+		pixFmt  string
 	}{
 		{
 			sample: samples.VideoAVI,
 			format: "avi",
 			vCodec: "h264",
 			aCodec: "aac",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoFLV,
 			format: "flv",
 			vCodec: "flv1",
 			aCodec: "mp3",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoGIF,
 			format: "gif",
 			vCodec: "gif",
-			aCodec: "",
-			bgra:   true,
+			pixFmt: "bgra",
 		},
 		{
 			sample: samples.VideoMKV,
 			format: "matroska,webm",
 			vCodec: "hevc",
 			aCodec: "ac3",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoMOV,
 			format: "mov,mp4,m4a,3gp,3g2,mj2",
 			vCodec: "h264",
 			aCodec: "aac",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoMPEG,
 			format: "mpeg",
 			vCodec: "mpeg1video",
 			aCodec: "mp2",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoMPEG2,
 			format: "mpeg",
 			vCodec: "mpeg2video",
 			aCodec: "mp2",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoMPEG4,
 			format: "mov,mp4,m4a,3gp,3g2,mj2",
 			vCodec: "h264",
 			aCodec: "aac",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample:  samples.VideoMPEG4R,
@@ -152,24 +158,28 @@ func TestAnalyzeVideo(t *testing.T) {
 			vCodec:  "h264",
 			aCodec:  "aac",
 			rotated: true,
+			pixFmt:  "yuv420p",
 		},
 		{
 			sample: samples.VideoOGG,
 			format: "ogg",
 			vCodec: "theora",
 			aCodec: "flac",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoWebM,
 			format: "matroska,webm",
 			vCodec: "vp9",
 			aCodec: "vorbis",
+			pixFmt: "yuv420p",
 		},
 		{
 			sample: samples.VideoWMV,
 			format: "asf",
 			vCodec: "wmv2",
 			aCodec: "wmav2",
+			pixFmt: "yuv420p",
 		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
@@ -202,11 +212,6 @@ func TestAnalyzeVideo(t *testing.T) {
 				width, height = 450, 800
 			}
 
-			pixFmt := "yuv420p"
-			if item.bgra {
-				pixFmt = "bgra"
-			}
-
 			assert.Equal(t, &Report{
 				Duration: report.Duration,
 				Format: Format{
@@ -221,7 +226,7 @@ func TestAnalyzeVideo(t *testing.T) {
 						Width:       width,
 						Height:      height,
 						FrameRate:   FrameRate(lo.Ternary(item.format == "gif", 5, 25)),
-						PixelFormat: pixFmt,
+						PixelFormat: item.pixFmt,
 					},
 					{
 						Type:       "audio",
