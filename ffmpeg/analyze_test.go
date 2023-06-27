@@ -95,6 +95,7 @@ func TestAnalyzeVideo(t *testing.T) {
 		vCodec  string
 		aCodec  string
 		rotated bool
+		bgra    bool
 	}{
 		{
 			sample: samples.VideoAVI,
@@ -113,6 +114,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			format: "gif",
 			vCodec: "gif",
 			aCodec: "",
+			bgra:   true,
 		},
 		{
 			sample: samples.VideoMKV,
@@ -200,6 +202,11 @@ func TestAnalyzeVideo(t *testing.T) {
 				width, height = 450, 800
 			}
 
+			pixFmt := "yuv420p"
+			if item.bgra {
+				pixFmt = "bgra"
+			}
+
 			assert.Equal(t, &Report{
 				Duration: report.Duration,
 				Format: Format{
@@ -208,12 +215,13 @@ func TestAnalyzeVideo(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
-						Type:      "video",
-						Codec:     item.vCodec,
-						Duration:  report.Streams[0].Duration,
-						Width:     width,
-						Height:    height,
-						FrameRate: FrameRate(lo.Ternary(item.format == "gif", 5, 25)),
+						Type:        "video",
+						Codec:       item.vCodec,
+						Duration:    report.Streams[0].Duration,
+						Width:       width,
+						Height:      height,
+						FrameRate:   FrameRate(lo.Ternary(item.format == "gif", 5, 25)),
+						PixelFormat: pixFmt,
 					},
 					{
 						Type:       "audio",
@@ -233,36 +241,43 @@ func TestAnalyzeImage(t *testing.T) {
 		sample string
 		format string
 		codec  string
+		pixFmt string
 	}{
 		{
 			sample: samples.ImageGIF,
 			format: "gif",
 			codec:  "gif",
+			pixFmt: "bgra",
 		},
 		{
 			sample: samples.ImageJPEG,
 			format: "jpeg_pipe",
 			codec:  "mjpeg",
+			pixFmt: "yuvj444p",
 		},
 		{
 			sample: samples.ImageJPEG2K,
 			format: "j2k_pipe",
 			codec:  "jpeg2000",
+			pixFmt: "rgb24",
 		},
 		{
 			sample: samples.ImagePNG,
 			format: "png_pipe",
 			codec:  "png",
+			pixFmt: "rgb24",
 		},
 		{
 			sample: samples.ImageTIFF,
 			format: "tiff_pipe",
 			codec:  "tiff",
+			pixFmt: "rgba",
 		},
 		{
 			sample: samples.ImageWebP,
 			format: "webp_pipe",
 			codec:  "webp",
+			pixFmt: "yuv420p",
 		},
 	} {
 		t.Run(item.sample, func(t *testing.T) {
@@ -279,12 +294,13 @@ func TestAnalyzeImage(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
-						Type:      "video",
-						Codec:     item.codec,
-						Duration:  report.Streams[0].Duration,
-						Width:     800,
-						Height:    533,
-						FrameRate: report.Streams[0].FrameRate,
+						Type:        "video",
+						Codec:       item.codec,
+						Duration:    report.Streams[0].Duration,
+						Width:       800,
+						Height:      533,
+						FrameRate:   report.Streams[0].FrameRate,
+						PixelFormat: item.pixFmt,
 					},
 				},
 			}, report)

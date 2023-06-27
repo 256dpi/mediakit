@@ -27,15 +27,15 @@ const (
 	// https://trac.ffmpeg.org/wiki/Encode/MP3
 	AudioMP3VBRStandard = iota + 1
 
-	// VideoMP4H264AACFast is a fast MP4 H.264/AAC encoding preset.
+	// VideoMP4H264AACFast is a fast yuv420p MP4 H.264/AAC encoding preset.
 	// https://trac.ffmpeg.org/wiki/Encode/H.264
 	// https://trac.ffmpeg.org/wiki/Encode/AAC
 	VideoMP4H264AACFast
 
-	// ImageJPEG is a basic JPEG encoding preset.
+	// ImageJPEG is a basic 24bit JPEG encoding preset.
 	ImageJPEG
 
-	// ImagePNG is a basic PNG encoding preset.
+	// ImagePNG is a basic 24bit PNG encoding preset.
 	ImagePNG
 )
 
@@ -63,6 +63,7 @@ func (p Preset) Args(isFile bool) []string {
 			"-codec:a", "aac",
 			"-q:a", "4", // 64-72 kbit/s/ch
 			"-ac", "2", // stereo
+			"-pix_fmt", "yuv420p",
 		}
 		if !isFile {
 			args = append(args, "-movflags", "frag_keyframe")
@@ -75,6 +76,7 @@ func (p Preset) Args(isFile bool) []string {
 			"-frames:v", "1",
 			"-codec:v", "mjpeg",
 			"-q:v", "3",
+			"-pix_fmt", "yuvj444p",
 		}
 	case ImagePNG:
 		return []string{
@@ -82,6 +84,7 @@ func (p Preset) Args(isFile bool) []string {
 			"-update", "1",
 			"-frames:v", "1",
 			"-codec:v", "png",
+			"-pix_fmt", "rgb24",
 		}
 	default:
 		return nil

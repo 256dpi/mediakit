@@ -79,12 +79,13 @@ func TestConvertVideo(t *testing.T) {
 						Duration: report.Format.Duration,
 					}, Streams: []Stream{
 						{
-							Type:      "video",
-							Codec:     "h264",
-							Duration:  report.Streams[0].Duration,
-							Width:     width,
-							Height:    height,
-							FrameRate: 5,
+							Type:        "video",
+							Codec:       "h264",
+							Duration:    report.Streams[0].Duration,
+							Width:       width,
+							Height:      height,
+							FrameRate:   5,
+							PixelFormat: "yuv420p",
 						},
 					},
 				}, report)
@@ -97,12 +98,13 @@ func TestConvertVideo(t *testing.T) {
 						Duration: report.Format.Duration,
 					}, Streams: []Stream{
 						{
-							Type:      "video",
-							Codec:     "h264",
-							Duration:  report.Streams[0].Duration,
-							Width:     width,
-							Height:    height,
-							FrameRate: 25,
+							Type:        "video",
+							Codec:       "h264",
+							Duration:    report.Streams[0].Duration,
+							Width:       width,
+							Height:      height,
+							FrameRate:   25,
+							PixelFormat: "yuv420p",
 						},
 						{
 							Type:       "audio",
@@ -150,12 +152,13 @@ func TestConvertImage(t *testing.T) {
 						Duration: 0,
 					}, Streams: []Stream{
 						{
-							Type:      "video",
-							Codec:     "mjpeg",
-							Duration:  0,
-							Width:     800,
-							Height:    533,
-							FrameRate: 25,
+							Type:        "video",
+							Codec:       "mjpeg",
+							Duration:    0,
+							Width:       800,
+							Height:      533,
+							FrameRate:   25,
+							PixelFormat: "yuvj444p",
 						},
 					},
 				}, report)
@@ -181,12 +184,13 @@ func TestConvertImage(t *testing.T) {
 						Duration: 0,
 					}, Streams: []Stream{
 						{
-							Type:      "video",
-							Codec:     "png",
-							Duration:  0,
-							Width:     800,
-							Height:    533,
-							FrameRate: 25,
+							Type:        "video",
+							Codec:       "png",
+							Duration:    0,
+							Width:       800,
+							Height:      533,
+							FrameRate:   25,
+							PixelFormat: "rgb24",
 						},
 					},
 				}, report)
@@ -223,12 +227,13 @@ func TestConvertExtract(t *testing.T) {
 					Duration: 0,
 				}, Streams: []Stream{
 					{
-						Type:      "video",
-						Codec:     "png",
-						Duration:  0,
-						Width:     width,
-						Height:    height,
-						FrameRate: 25,
+						Type:        "video",
+						Codec:       "png",
+						Duration:    0,
+						Width:       width,
+						Height:      height,
+						FrameRate:   25,
+						PixelFormat: "rgb24",
 					},
 				},
 			}, report)
@@ -283,11 +288,12 @@ func TestConvertOptions(t *testing.T) {
 				},
 				Streams: []Stream{
 					{
-						Type:      "video",
-						Codec:     "h264",
-						Width:     256,
-						Height:    144,
-						FrameRate: 10,
+						Type:        "video",
+						Codec:       "h264",
+						Width:       256,
+						Height:      144,
+						FrameRate:   10,
+						PixelFormat: "yuv420p",
 					},
 					{
 						Type:       "audio",

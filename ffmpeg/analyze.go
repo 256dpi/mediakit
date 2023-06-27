@@ -79,9 +79,10 @@ type Stream struct {
 	SampleRate int `json:"sample_rate,string"`
 
 	// video
-	Width     int       `json:"width"`
-	Height    int       `json:"height"`
-	FrameRate FrameRate `json:"r_frame_rate"`
+	Width       int       `json:"width"`
+	Height      int       `json:"height"`
+	FrameRate   FrameRate `json:"r_frame_rate"`
+	PixelFormat string    `json:"pix_fmt"`
 
 	// other
 	SideData []SideData `json:"side_data_list"`
