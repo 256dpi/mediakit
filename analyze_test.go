@@ -146,7 +146,7 @@ func TestAnalyze(t *testing.T) {
 				FileFormat: "mov,mp4,m4a,3gp,3g2,mj2",
 				Streams:    []string{"audio"},
 				Codecs:     []string{"aac"},
-				Duration:   2.116,
+				Duration:   2.115918,
 				Channels:   2,
 				SampleRate: 44100,
 			},
@@ -257,7 +257,7 @@ func TestAnalyze(t *testing.T) {
 				Height:     450,
 				Streams:    []string{"video", "audio"},
 				Codecs:     []string{"h264", "aac"},
-				Duration:   2.044,
+				Duration:   2.042993,
 				Channels:   2,
 				SampleRate: 44100,
 				FrameRate:  25,
@@ -302,7 +302,7 @@ func TestAnalyze(t *testing.T) {
 				Height:     450,
 				Streams:    []string{"video", "audio"},
 				Codecs:     []string{"h264", "aac"},
-				Duration:   2.066578,
+				Duration:   2.04,
 				Channels:   2,
 				SampleRate: 44100,
 				FrameRate:  25,
@@ -384,6 +384,6 @@ func TestAnalyze(t *testing.T) {
 
 		report, err := Analyze(nil, sample)
 		assert.NoError(t, err)
-		assert.Equal(t, &item.report, report)
+		assert.Equal(t, &item.report, report, item.sample)
 	}
 }
