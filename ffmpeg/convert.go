@@ -63,7 +63,6 @@ func (p Preset) Args(isFile bool) []string {
 			"-codec:a", "aac",
 			"-q:a", "4", // 64-72 kbit/s/ch
 			"-ac", "2", // stereo
-			"-pix_fmt", "yuv420p",
 		}
 		if !isFile {
 			args = append(args, "-movflags", "frag_keyframe")
@@ -76,7 +75,6 @@ func (p Preset) Args(isFile bool) []string {
 			"-frames:v", "1",
 			"-codec:v", "mjpeg",
 			"-q:v", "3",
-			"-pix_fmt", "yuvj444p",
 		}
 	case ImagePNG:
 		return []string{
@@ -84,7 +82,6 @@ func (p Preset) Args(isFile bool) []string {
 			"-update", "1",
 			"-frames:v", "1",
 			"-codec:v", "png",
-			"-pix_fmt", "rgb24",
 		}
 	default:
 		return nil
@@ -96,7 +93,11 @@ func (p Preset) Filters() []string {
 	switch p {
 	case VideoMP4H264AACFast:
 		// h264 requires even height
-		return []string{`pad=ceil(iw/2)*2:ceil(ih/2)*2`}
+		return []string{`pad=ceil(iw/2)*2:ceil(ih/2)*2`, "format=yuv420p"}
+	case ImageJPEG:
+		return []string{"format=yuvj444p"}
+	case ImagePNG:
+		return []string{"format=rgb24"}
 	default:
 		return nil
 	}
@@ -194,9 +195,16 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		filters = append(filters, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
 	}
 
-	// apply preset
-	args = append(args, opts.Preset.Args(wIsFile)...)
+	// apply preset filters
 	filters = append(filters, opts.Preset.Filters()...)
+
+	// append filter arg
+	if len(filters) > 0 {
+		args = append(args, "-filter:v", strings.Join(filters, ", "))
+	}
+
+	// append preset args (output)
+	args = append(args, opts.Preset.Args(wIsFile)...)
 
 	// handle options
 	if opts.Duration != 0 {
@@ -207,11 +215,6 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 	}
 	if opts.SampleRate != 0 {
 		args = append(args, "-ar", strconv.Itoa(opts.SampleRate))
-	}
-
-	// add filters
-	if len(filters) > 0 {
-		args = append(args, "-filter:v", strings.Join(filters, ", "))
 	}
 
 	// finish args
