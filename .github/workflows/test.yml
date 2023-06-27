@@ -4,10 +4,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg libvips-tools
+      - name: Install ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v2
+      - name: Install vips-tools
+        run: sudo apt-get update; sudo apt-get install -y libvips-tools
       - name: Info
         run: ffmpeg -version; vips --version; chromium --version
       - name: Install
