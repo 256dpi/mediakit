@@ -2,9 +2,11 @@ package chromium
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
+	"github.com/256dpi/xo"
 	"github.com/chromedp/cdproto/log"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/cdproto/runtime"
@@ -89,8 +91,8 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 	var buf []byte
 	err := chromedp.Run(ctx,
 		chromedp.EmulateViewport(opts.Width, opts.Height, chromedp.EmulateScale(opts.Scale)),
-		chromedp.Navigate(url),
-		chromedp.WaitReady("body"),
+		withTimeout(30*time.Second, "navigation failed", chromedp.Navigate(url)),
+		withTimeout(30*time.Second, "awaiting body failed", chromedp.WaitReady("body")),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// scroll through page once
 			if opts.Full {
@@ -140,4 +142,22 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 	}
 
 	return buf, nil
+}
+
+func withTimeout(timeout time.Duration, msg string, tasks ...chromedp.Action) chromedp.ActionFunc {
+	return func(ctx context.Context) error {
+		// prepare context
+		timeoutContext, cancel := context.WithTimeout(ctx, timeout)
+		defer cancel()
+
+		// tun tasks
+		err := chromedp.Tasks(tasks).Do(timeoutContext)
+
+		// handle timeout
+		if timeoutContext.Err() != nil && errors.Is(err, context.DeadlineExceeded) {
+			return xo.F(msg)
+		}
+
+		return err
+	}
 }
