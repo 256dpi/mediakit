@@ -96,8 +96,13 @@ func (p Preset) Args(isFile bool) []string {
 func (p Preset) Filters() []string {
 	switch p {
 	case VideoMP4H264AACFast:
-		// h264 requires even height
-		return []string{`pad=ceil(iw/2)*2:ceil(ih/2)*2`, "format=yuv420p", "scale=in_color_matrix=auto:in_range=auto:out_color_matrix=bt709:out_range=tv"}
+		return []string{
+			// h264 requires even height
+			`pad=ceil(iw/2)*2:ceil(ih/2)*2`,
+			// pixel format and color space conversion
+			"format=yuv420p",
+			"scale=in_color_matrix=auto:in_range=auto:out_color_matrix=bt709:out_range=tv",
+		}
 	case ImageJPEG:
 		return []string{"format=yuvj444p"}
 	case ImagePNG:
