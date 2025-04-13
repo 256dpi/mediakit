@@ -46,6 +46,10 @@ func TestConvert(t *testing.T) {
 	t.Run("PNG", func(t *testing.T) {
 		presetConvertTest(t, PNGWeb, "png")
 	})
+
+	t.Run("WebP", func(t *testing.T) {
+		presetConvertTest(t, WebP, "webp")
+	})
 }
 
 func TestConvertOptions(t *testing.T) {

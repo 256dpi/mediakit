@@ -24,6 +24,11 @@ const (
 	// color space and removed embedded color profiles.
 	// `vips pngsave`
 	PNGWeb
+
+	// WebP is a Web optimized preset for WebP with stripped metadata,
+	// optimized coding, SRGB color space and removed embedded color profiles.
+	// `vips webpsave`
+	WebP
 )
 
 // Valid returns whether the preset is valid.
@@ -38,6 +43,8 @@ func (p Preset) Arg() string {
 		return ".jpg[Q=90,strip,optimize_coding]"
 	case PNGWeb:
 		return ".png[Q=90,strip]"
+	case WebP:
+		return ".webp[Q=90,strip,smart_subsample]"
 	default:
 		return ""
 	}
