@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 
 func init() {
 	ffmpeg.WarningsLogger = log.Default()
+	chromium.NoSandbox = runtime.GOOS == "linux"
 }
 
 func TestConvertImage(t *testing.T) {
