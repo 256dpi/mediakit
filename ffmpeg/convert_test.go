@@ -199,6 +199,39 @@ func TestConvertImage(t *testing.T) {
 					},
 				}, report)
 			})
+
+			t.Run("WebP", func(t *testing.T) {
+				sample := samples.Buffer(sample)
+				defer sample.Close()
+
+				out := tempFile(t)
+				err := Convert(nil, sample, out, ConvertOptions{
+					Preset: ImageWebP,
+				})
+				assert.NoError(t, err)
+
+				rewind(out)
+				report, err := Analyze(nil, out)
+				assert.NoError(t, err)
+				assert.Equal(t, &Report{
+					Duration: 0,
+					Format: Format{
+						Name:     "webp_pipe",
+						Duration: 0,
+					}, Streams: []Stream{
+						{
+							Type:        "video",
+							Codec:       "webp",
+							Duration:    0,
+							Width:       800,
+							Height:      533,
+							FrameRate:   25,
+							PixelFormat: "yuv420p",
+							ColorSpace:  "bt470bg",
+						},
+					},
+				}, report)
+			})
 		})
 	}
 }

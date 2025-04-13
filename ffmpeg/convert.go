@@ -37,6 +37,9 @@ const (
 
 	// ImagePNG is a basic PNG encoding preset.
 	ImagePNG
+
+	// ImageWebP is a basic WebP encoding preset.
+	ImageWebP
 )
 
 // Valid returns whether the preset is valid.
@@ -86,6 +89,14 @@ func (p Preset) Args(isFile bool) []string {
 			"-update", "1",
 			"-frames:v", "1",
 			"-codec:v", "png",
+		}
+	case ImageWebP:
+		return []string{
+			"-f", "image2",
+			"-update", "1",
+			"-frames:v", "1",
+			"-codec:v", "libwebp",
+			"-q:v", "90",
 		}
 	default:
 		return nil
