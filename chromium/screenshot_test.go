@@ -2,6 +2,7 @@ package chromium
 
 import (
 	"bytes"
+	"flag"
 	"image"
 	"image/png"
 	"testing"
@@ -10,7 +11,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var noSandbox = flag.Bool("test.noSandbox", false, "disable sandbox mode for testing")
+
 func TestScreenshot(t *testing.T) {
+	// set flag
+	NoSandbox = *noSandbox
+
 	/* without allocate */
 
 	buf, err := Screenshot(nil, "https://www.chromium.org", ScreenshotOptions{})

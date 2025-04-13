@@ -39,20 +39,37 @@ new Promise((resolve) => {
 });
 `
 
+// NoSandbox is a flag to disable the sandbox mode for testing.
+var NoSandbox bool
+
 // Allocate will allocate a new browser instance and return an associated
 // context and cancel function.
 func Allocate() (context.Context, context.CancelFunc, error) {
 	// prepare context
-	ctx, cancel := chromedp.NewContext(context.Background())
+	ctx := context.Background()
+
+	// create allocator
+	execOpts := []chromedp.ExecAllocatorOption{chromedp.Headless}
+	if NoSandbox {
+		execOpts = append(execOpts, chromedp.NoSandbox)
+	}
+	ctx, cancel1 := chromedp.NewExecAllocator(ctx, execOpts...)
+
+	// wrap context context
+	ctx, cancel2 := chromedp.NewContext(ctx)
 
 	// allocate browser
 	err := chromedp.Run(ctx)
 	if err != nil {
-		cancel()
+		cancel2()
+		cancel1()
 		return nil, nil, err
 	}
 
-	return ctx, cancel, nil
+	return ctx, func() {
+		cancel2()
+		cancel1()
+	}, nil
 }
 
 // ScreenshotOptions are the options used for taking a screenshot.
