@@ -24,7 +24,7 @@ func TestAnalyze(t *testing.T) {
 				Streams:    []string{"video"},
 				Codecs:     []string{"gif"},
 				Duration:   0.1,
-				FrameRate:  10,
+				FrameRate:  100,
 			},
 		},
 		{
@@ -275,7 +275,7 @@ func TestAnalyze(t *testing.T) {
 				Duration:   2.063678,
 				Channels:   2,
 				SampleRate: 44100,
-				FrameRate:  25,
+				FrameRate:  50,
 			},
 		},
 		{

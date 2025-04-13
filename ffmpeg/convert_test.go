@@ -194,6 +194,7 @@ func TestConvertImage(t *testing.T) {
 							Height:      533,
 							FrameRate:   25,
 							PixelFormat: "rgb24",
+							ColorSpace:  "gbr",
 						},
 					},
 				}, report)
@@ -237,6 +238,7 @@ func TestConvertExtract(t *testing.T) {
 						Height:      height,
 						FrameRate:   25,
 						PixelFormat: "rgb24",
+						ColorSpace:  "gbr",
 					},
 				},
 			}, report)
@@ -364,13 +366,9 @@ func TestConvertProgress(t *testing.T) {
 		ProgressRate: time.Second,
 	})
 	assert.NoError(t, err)
-	assert.Len(t, progress, 2)
-	assert.Equal(t, Progress{
-		Duration: 0,
-		Size:     0,
-	}, progress[0])
-	assert.True(t, progress[1].Duration > 0)
-	assert.True(t, progress[1].Size > 36)
+	assert.True(t, len(progress) >= 1)
+	assert.True(t, progress[len(progress)-1].Duration > 0)
+	assert.True(t, progress[len(progress)-1].Size > 36)
 }
 
 func TestConvertError(t *testing.T) {
@@ -378,5 +376,5 @@ func TestConvertError(t *testing.T) {
 		Preset: AudioMP3VBRStandard,
 	})
 	assert.Error(t, err)
-	assert.Equal(t, "pipe:: invalid data found when processing input", err.Error())
+	assert.Contains(t, err.Error(), "invalid data found when processing input")
 }

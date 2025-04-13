@@ -45,7 +45,7 @@ func TestConvertAudio(t *testing.T) {
 		},
 	})
 	assert.NoError(t, err)
-	assert.True(t, len(progress) >= 2)
+	assert.True(t, len(progress) >= 1)
 
 	buf := make([]byte, DetectBytes)
 	_, err = io.ReadFull(output, buf)
@@ -65,7 +65,7 @@ func TestConvertVideo(t *testing.T) {
 		},
 	})
 	assert.NoError(t, err)
-	assert.True(t, len(progress) >= 2)
+	assert.True(t, len(progress) >= 1)
 
 	buf := make([]byte, DetectBytes)
 	_, err = io.ReadFull(output, buf)

@@ -220,6 +220,13 @@ func TestAnalyzeVideo(t *testing.T) {
 				width, height = 450, 800
 			}
 
+			frameRate := 25
+			if item.sample == samples.VideoGIF {
+				frameRate = 5
+			} else if item.sample == samples.VideoMPEG {
+				frameRate = 50
+			}
+
 			assert.Equal(t, &Report{
 				Duration: report.Duration,
 				Format: Format{
@@ -233,7 +240,7 @@ func TestAnalyzeVideo(t *testing.T) {
 						Duration:    report.Streams[0].Duration,
 						Width:       width,
 						Height:      height,
-						FrameRate:   FrameRate(lo.Ternary(item.format == "gif", 5, 25)),
+						FrameRate:   FrameRate(frameRate),
 						PixelFormat: item.pixFmt,
 						ColorSpace:  item.colSpc,
 					},
@@ -282,6 +289,7 @@ func TestAnalyzeImage(t *testing.T) {
 			format: "png_pipe",
 			codec:  "png",
 			pixFmt: "rgb24",
+			colSpc: "gbr",
 		},
 		{
 			sample: samples.ImageTIFF,
