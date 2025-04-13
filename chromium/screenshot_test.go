@@ -2,20 +2,18 @@ package chromium
 
 import (
 	"bytes"
-	"flag"
 	"image"
 	"image/png"
+	"runtime"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var noSandbox = flag.Bool("test.noSandbox", false, "disable sandbox mode for testing")
-
 func TestScreenshot(t *testing.T) {
 	// set flag
-	NoSandbox = *noSandbox
+	NoSandbox = runtime.GOOS == "linux"
 
 	/* without allocate */
 
