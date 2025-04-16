@@ -118,7 +118,7 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 	// capture screenshot
 	var buf []byte
 	err := chromedp.Run(ctx,
-		chromedp.EmulateViewport(opts.Width, opts.Height, chromedp.EmulateScale(opts.Scale)),
+		withTimeout(10*time.Second, "emulation failed", chromedp.EmulateViewport(opts.Width, opts.Height, chromedp.EmulateScale(opts.Scale))),
 		withTimeout(30*time.Second, "navigation failed", chromedp.Navigate(url)),
 		withTimeout(30*time.Second, "awaiting body failed", chromedp.WaitReady("body")),
 		chromedp.ActionFunc(func(ctx context.Context) error {
