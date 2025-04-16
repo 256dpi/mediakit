@@ -91,7 +91,7 @@ func TestExtractImage(t *testing.T) {
 func TestCaptureScreenshot(t *testing.T) {
 	output := makeBuffers(t.TempDir(), "output")[0]
 
-	err := CaptureScreenshot(nil, "https://www.chromium.org", output, chromium.ScreenshotOptions{})
+	err := CaptureScreenshot(nil, "https://example.org", output, chromium.ScreenshotOptions{})
 	assert.NoError(t, err)
 
 	buf := make([]byte, DetectBytes)

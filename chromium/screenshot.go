@@ -90,6 +90,17 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 		ctx = context.Background()
 	}
 
+	// ensure allocation context
+	if chromedp.FromContext(ctx) == nil {
+		var cancel context.CancelFunc
+		var err error
+		ctx, cancel, err = Allocate()
+		if err != nil {
+			return nil, err
+		}
+		defer cancel()
+	}
+
 	// wrap context
 	ctx, cancel := chromedp.NewContext(ctx)
 	defer cancel()
