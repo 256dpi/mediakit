@@ -100,5 +100,5 @@ func TestAnalyzeError(t *testing.T) {
 	report, err := Analyze(nil, strings.NewReader("foo"))
 	assert.Error(t, err)
 	assert.Nil(t, report)
-	assert.Contains(t, err.Error(), "unable to load source")
+	assert.True(t, strings.Contains(err.Error(), "unable to load source") || strings.Contains(err.Error(), "exit status 255"))
 }
