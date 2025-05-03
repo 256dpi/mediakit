@@ -4,9 +4,10 @@ import (
 	"flag"
 	"os"
 
-	"github.com/256dpi/mediakit"
 	"github.com/256dpi/xo"
 	"github.com/kr/pretty"
+
+	"github.com/256dpi/mediakit"
 )
 
 func main() {

@@ -140,7 +140,7 @@ type ConvertOptions struct {
 	// Limit duration of the output.
 	Duration float64
 
-	// Apply scaling, set one component to -1 to keep aspect ratio.
+	// Apply scaling, set one part to -1 to keep the aspect ratio.
 	// https://trac.ffmpeg.org/wiki/Scaling
 	Width, Height int
 
@@ -156,7 +156,7 @@ type ConvertOptions struct {
 }
 
 // Convert will run the ffmpeg utility to convert the specified input to the
-// configured output. If the input or output is an *os.File and has a name it
+// configured output. If the input or output is an *os.File and has a name, it
 // will be mapped via the filesystem. Otherwise, pipes are created to connect
 // the input or output. Using files is recommended to allow ffmpeg to seek
 // within the files.
