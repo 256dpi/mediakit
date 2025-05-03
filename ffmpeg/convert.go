@@ -40,6 +40,9 @@ const (
 
 	// ImageWebP is a basic WebP encoding preset.
 	ImageWebP
+
+	// AnimGIF is a basic GIF encoding preset.
+	AnimGIF
 )
 
 // Valid returns whether the preset is valid.
@@ -98,6 +101,12 @@ func (p Preset) Args(isFile bool) []string {
 			"-codec:v", "libwebp",
 			"-q:v", "90",
 		}
+	case AnimGIF:
+		return []string{
+			"-f", "gif",
+			"-codec:v", "gif",
+			"-q:v", "3",
+		}
 	default:
 		return nil
 	}
@@ -120,6 +129,16 @@ func (p Preset) Filters() []string {
 		return []string{"format=rgb24"}
 	default:
 		return nil
+	}
+}
+
+// ScaleFlags returns additional ffmpeg scale flags for the preset.
+func (p Preset) ScaleFlags() string {
+	switch p {
+	case AnimGIF:
+		return ":flags=lanczos"
+	default:
+		return ""
 	}
 }
 
@@ -177,6 +196,38 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		return fmt.Errorf("invalid preset")
 	}
 
+	// generate palette for GIF images$
+	var palette *os.File
+	if opts.Preset == AnimGIF {
+		// check input
+		if !rIsFile {
+			return fmt.Errorf("GIF requires file input")
+		}
+
+		// prepare command
+		cmd := exec.CommandContext(ctx, "ffmpeg", []string{
+			"-nostats", "-hide_banner", "-loglevel", "repeat+warning", "-y", "-i", rFile.Name(),
+			"-vf", "palettegen", "-f", "image2pipe", "-vcodec", "png", "pipe:",
+		}...)
+
+		// run command
+		out, err := cmd.Output()
+		if err != nil {
+			return fmt.Errorf("ffmpeg: %s", err.Error())
+		}
+
+		// setup palette pipe
+		var pw *os.File
+		palette, pw, err = os.Pipe()
+		if err != nil {
+			return err
+		}
+		go func() {
+			defer pw.Close()
+			_, _ = pw.Write(out)
+		}()
+	}
+
 	// prepare args
 	args := []string{
 		"-nostats",
@@ -190,11 +241,14 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		args = append(args, "-ss", strconv.FormatFloat(opts.Start, 'f', -1, 64))
 	}
 
-	// add input
+	// add input(s)
 	if rIsFile {
 		args = append(args, "-i", rFile.Name())
 	} else {
 		args = append(args, "-i", "pipe:")
+	}
+	if palette != nil {
+		args = append(args, "-i", "pipe:3")
 	}
 
 	// enable progress
@@ -212,15 +266,20 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 
 	// add scale filter
 	if opts.Width != 0 || opts.Height != 0 {
-		filters = append(filters, fmt.Sprintf("scale=%d:%d", opts.Width, opts.Height))
+		filters = append(filters, fmt.Sprintf("scale=%d:%d%s", opts.Width, opts.Height, opts.Preset.ScaleFlags()))
 	}
 
 	// apply preset filters
 	filters = append(filters, opts.Preset.Filters()...)
 
 	// append filter arg
-	if len(filters) > 0 {
+	if len(filters) > 0 && palette == nil {
 		args = append(args, "-filter:v", strings.Join(filters, ", "))
+	} else if len(filters) > 0 && palette != nil {
+		scale := strings.Join(filters, ",")
+		args = append(args, "-filter_complex", fmt.Sprintf("[0:v]%s[x];[x][1:v]paletteuse", scale))
+	} else if palette != nil {
+		args = append(args, "-filter_complex", "[0:v][1:v]paletteuse")
 	}
 
 	// append preset args (output)
@@ -250,6 +309,11 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 	// set input
 	if !rIsFile {
 		cmd.Stdin = r
+	}
+
+	// set palette input pipe if needed
+	if palette != nil {
+		cmd.ExtraFiles = append(cmd.ExtraFiles, palette)
 	}
 
 	// set outputs
