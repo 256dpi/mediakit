@@ -17,6 +17,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  4,
 			Color:  "srgb",
 			Format: "gif",
+			Pages:  1,
 		},
 		samples.ImageHEIF: {
 			Width:  800,
@@ -24,6 +25,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  3,
 			Color:  "srgb",
 			Format: "heif",
+			Pages:  1,
 		},
 		samples.ImageJPEG: {
 			Width:  800,
@@ -31,6 +33,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  3,
 			Color:  "srgb",
 			Format: "jpeg",
+			Pages:  1,
 		},
 		samples.ImageJPEG2K: {
 			Width:  800,
@@ -38,6 +41,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  3,
 			Color:  "srgb",
 			Format: "jp2k",
+			Pages:  6, // TODO: Why?
 		},
 		samples.ImagePDF: {
 			Width:  800,
@@ -45,6 +49,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  4,
 			Color:  "srgb",
 			Format: "pdf",
+			Pages:  1,
 		},
 		samples.ImagePNG: {
 			Width:  800,
@@ -52,6 +57,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  3,
 			Color:  "srgb",
 			Format: "png",
+			Pages:  1,
 		},
 		samples.ImageTIFF: {
 			Width:  800,
@@ -59,6 +65,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  4,
 			Color:  "srgb",
 			Format: "tiff",
+			Pages:  1,
 		},
 		samples.ImageWebP: {
 			Width:  800,
@@ -66,6 +73,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Bands:  3,
 			Color:  "srgb",
 			Format: "webp",
+			Pages:  1,
 		},
 	}
 
@@ -93,6 +101,7 @@ func TestAnalyzePDF(t *testing.T) {
 		Bands:  4,
 		Color:  "srgb",
 		Format: "pdf",
+		Pages:  20,
 	}, report)
 }
 

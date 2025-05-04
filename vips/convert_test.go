@@ -34,6 +34,7 @@ func TestConvert(t *testing.T) {
 					Bands:  report.Bands, // may be 3 or 4
 					Color:  "srgb",
 					Format: format,
+					Pages:  1,
 				}, report)
 			})
 		}
@@ -72,6 +73,7 @@ func TestConvertOptions(t *testing.T) {
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
+				Pages:  1,
 			},
 		},
 		{
@@ -88,6 +90,7 @@ func TestConvertOptions(t *testing.T) {
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
+				Pages:  1,
 			},
 		},
 		{
@@ -105,6 +108,7 @@ func TestConvertOptions(t *testing.T) {
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
+				Pages:  1,
 			},
 		},
 		{
@@ -122,6 +126,7 @@ func TestConvertOptions(t *testing.T) {
 				Bands:  3,
 				Color:  "srgb",
 				Format: "jpeg",
+				Pages:  1,
 			},
 		},
 	} {

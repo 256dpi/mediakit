@@ -17,6 +17,7 @@ type Report struct {
 	Bands  int
 	Color  string
 	Format string
+	Pages  int
 }
 
 // Analyze will run the vipsheader utility on the specified input and
@@ -28,7 +29,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 	}
 
 	// prepare command
-	cmd := exec.CommandContext(ctx, "vipsheader", "stdin")
+	cmd := exec.CommandContext(ctx, "vipsheader", "-a", "stdin")
 
 	// set input
 	cmd.Stdin = r
@@ -48,7 +49,8 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 	}
 
 	// get output
-	line := stdout.String()
+	lines := strings.Split(stdout.String(), "\n")
+	line := lines[0]
 
 	// strip filename if present
 	if i := strings.Index(line, ":"); i >= 0 {
@@ -72,6 +74,15 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 	// parse format
 	format := strings.TrimSuffix(parts[3], "load_source")
 
+	// parse pages
+	pages := 1
+	for _, line := range lines {
+		if strings.HasPrefix(line, "n-pages:") {
+			pages, _ = strconv.Atoi(strings.TrimSpace(strings.Split(line, ":")[1]))
+			break
+		}
+	}
+
 	// prepare report
 	report := Report{
 		Width:  width,
@@ -79,6 +90,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 		Bands:  bands,
 		Color:  parts[2],
 		Format: format,
+		Pages:  pages,
 	}
 
 	return &report, nil
