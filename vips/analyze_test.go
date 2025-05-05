@@ -18,6 +18,7 @@ func TestAnalyzeImages(t *testing.T) {
 			Color:  "srgb",
 			Format: "gif",
 			Pages:  1,
+			Delay:  []int{0},
 		},
 		samples.ImageHEIF: {
 			Width:  800,
@@ -98,6 +99,7 @@ func TestAnalyzeAnimations(t *testing.T) {
 			Color:  "srgb",
 			Format: "gif",
 			Pages:  10,
+			Delay:  []int{200, 200, 200, 200, 200, 200, 200, 200, 200, 200},
 		},
 		samples.AnimationWebP: {
 			Width:  800,
@@ -106,6 +108,7 @@ func TestAnalyzeAnimations(t *testing.T) {
 			Color:  "srgb",
 			Format: "webp",
 			Pages:  10,
+			Delay:  []int{200, 200, 200, 200, 200, 200, 200, 200, 200, 200},
 		},
 	}
 

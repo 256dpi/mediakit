@@ -18,6 +18,7 @@ type Report struct {
 	Color  string
 	Format string
 	Pages  int
+	Delay  []int
 }
 
 // Analyze will run the vipsheader utility on the specified input and
@@ -74,12 +75,18 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 	// parse format
 	format := strings.TrimSuffix(parts[3], "load_source")
 
-	// parse pages
+	// parse pages and delay
 	pages := 1
+	var delay []int
 	for _, line := range lines {
 		if strings.HasPrefix(line, "n-pages:") {
 			pages, _ = strconv.Atoi(strings.TrimSpace(strings.Split(line, ":")[1]))
-			break
+		} else if strings.HasPrefix(line, "delay:") {
+			delayParts := strings.Split(strings.TrimSpace(strings.Split(line, ":")[1]), " ")
+			for _, d := range delayParts {
+				dInt, _ := strconv.Atoi(d)
+				delay = append(delay, dInt)
+			}
 		}
 	}
 
@@ -91,6 +98,7 @@ func Analyze(ctx context.Context, r io.Reader) (*Report, error) {
 		Color:  parts[2],
 		Format: format,
 		Pages:  pages,
+		Delay:  delay,
 	}
 
 	return &report, nil
