@@ -41,11 +41,11 @@ const (
 	// ImageWebP is a basic WebP encoding preset.
 	ImageWebP
 
-	// AnimGIF is a basic GIF encoding preset.
-	AnimGIF
+	// AnimationGIF is a basic GIF encoding preset.
+	AnimationGIF
 
-	// AnimWebP is a basic WebP animation encoding preset.
-	AnimWebP
+	// AnimationWebP is a basic WebP animation encoding preset.
+	AnimationWebP
 )
 
 // Valid returns whether the preset is valid.
@@ -104,14 +104,14 @@ func (p Preset) Args(isFile bool) []string {
 			"-codec:v", "libwebp",
 			"-q:v", "90",
 		}
-	case AnimGIF:
+	case AnimationGIF:
 		return []string{
 			"-f", "gif",
 			"-codec:v", "gif",
 			"-q:v", "3",
 			"-loop", "0",
 		}
-	case AnimWebP:
+	case AnimationWebP:
 		return []string{
 			"-f", "webp",
 			"-codec:v", "libwebp",
@@ -148,7 +148,7 @@ func (p Preset) Filters() []string {
 // ScaleFlags returns additional ffmpeg scale flags for the preset.
 func (p Preset) ScaleFlags() string {
 	switch p {
-	case AnimGIF:
+	case AnimationGIF:
 		return ":flags=lanczos"
 	default:
 		return ""
@@ -209,9 +209,9 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		return fmt.Errorf("invalid preset")
 	}
 
-	// generate palette for GIF images$
+	// generate palette for GIF images
 	var palette *os.File
-	if opts.Preset == AnimGIF {
+	if opts.Preset == AnimationGIF {
 		// check input
 		if !rIsFile {
 			return fmt.Errorf("GIF requires file input")

@@ -227,7 +227,7 @@ func TestConvertAnimation(t *testing.T) {
 
 				out := tempFile(t)
 				err := Convert(nil, buf, out, ConvertOptions{
-					Preset: AnimGIF,
+					Preset: AnimationGIF,
 				})
 				assert.NoError(t, err)
 
@@ -268,7 +268,7 @@ func TestConvertAnimation(t *testing.T) {
 
 				out := tempFile(t)
 				err := Convert(nil, buf, out, ConvertOptions{
-					Preset: AnimWebP,
+					Preset: AnimationWebP,
 				})
 				assert.NoError(t, err)
 
