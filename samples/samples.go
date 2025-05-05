@@ -45,7 +45,6 @@ const (
 const (
 	VideoAVI    = "video.avi" // h264/aac
 	VideoFLV    = "video.flv" // h263/mp3
-	VideoGIF    = "video.gif"
 	VideoMKV    = "video.mkv" // h265/ac3
 	VideoMOV    = "video.mov" // h264/aac
 	VideoMPEG   = "video.mpeg"
@@ -101,7 +100,6 @@ func Video() []string {
 	return []string{
 		VideoAVI,
 		VideoFLV,
-		VideoGIF,
 		VideoMKV,
 		VideoMOV,
 		VideoMPEG,

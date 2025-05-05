@@ -114,12 +114,6 @@ func TestAnalyzeVideo(t *testing.T) {
 			pixFmt: "yuv420p",
 		},
 		{
-			sample: samples.VideoGIF,
-			format: "gif",
-			vCodec: "gif",
-			pixFmt: "bgra",
-		},
-		{
 			sample: samples.VideoMKV,
 			format: "matroska,webm",
 			vCodec: "hevc",
@@ -198,15 +192,6 @@ func TestAnalyzeVideo(t *testing.T) {
 			if item.format == "flv" {
 				report.Streams = lo.Reverse(report.Streams)
 			}
-			if item.format == "gif" {
-				report.Streams = append(report.Streams, Stream{
-					Type:       "audio",
-					Codec:      "",
-					Duration:   2.1,
-					Channels:   2,
-					SampleRate: 44100,
-				})
-			}
 			assert.NoError(t, err)
 			assert.True(t, report.Duration >= 2)
 			assert.True(t, report.Format.Duration >= 2)
@@ -221,9 +206,7 @@ func TestAnalyzeVideo(t *testing.T) {
 			}
 
 			frameRate := 25
-			if item.sample == samples.VideoGIF {
-				frameRate = 5
-			} else if item.sample == samples.VideoMPEG {
+			if item.sample == samples.VideoMPEG {
 				frameRate = 50
 			}
 

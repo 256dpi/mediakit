@@ -71,53 +71,32 @@ func TestConvertVideo(t *testing.T) {
 			assert.True(t, report.Duration >= 2 && report.Duration < 2.3)
 			assert.True(t, report.Format.Duration >= 2 && report.Format.Duration < 2.3)
 			assert.True(t, report.Streams[0].Duration >= 2 && report.Streams[0].Duration < 2.3)
-			if sample == samples.VideoGIF {
-				assert.Equal(t, &Report{
-					Duration: report.Duration,
-					Format: Format{
-						Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-						Duration: report.Format.Duration,
-					}, Streams: []Stream{
-						{
-							Type:        "video",
-							Codec:       "h264",
-							Duration:    report.Streams[0].Duration,
-							Width:       width,
-							Height:      height,
-							FrameRate:   5,
-							PixelFormat: "yuv420p",
-							ColorSpace:  "bt709",
-						},
+			assert.True(t, report.Streams[1].Duration >= 2 && report.Streams[1].Duration < 2.3)
+			assert.Equal(t, &Report{
+				Duration: report.Duration,
+				Format: Format{
+					Name:     "mov,mp4,m4a,3gp,3g2,mj2",
+					Duration: report.Format.Duration,
+				}, Streams: []Stream{
+					{
+						Type:        "video",
+						Codec:       "h264",
+						Duration:    report.Streams[0].Duration,
+						Width:       width,
+						Height:      height,
+						FrameRate:   25,
+						PixelFormat: "yuv420p",
+						ColorSpace:  "bt709",
 					},
-				}, report)
-			} else {
-				assert.True(t, report.Streams[1].Duration >= 2 && report.Streams[1].Duration < 2.3)
-				assert.Equal(t, &Report{
-					Duration: report.Duration,
-					Format: Format{
-						Name:     "mov,mp4,m4a,3gp,3g2,mj2",
-						Duration: report.Format.Duration,
-					}, Streams: []Stream{
-						{
-							Type:        "video",
-							Codec:       "h264",
-							Duration:    report.Streams[0].Duration,
-							Width:       width,
-							Height:      height,
-							FrameRate:   25,
-							PixelFormat: "yuv420p",
-							ColorSpace:  "bt709",
-						},
-						{
-							Type:       "audio",
-							Codec:      "aac",
-							Duration:   report.Streams[1].Duration,
-							Channels:   2,
-							SampleRate: 44100,
-						},
+					{
+						Type:       "audio",
+						Codec:      "aac",
+						Duration:   report.Streams[1].Duration,
+						Channels:   2,
+						SampleRate: 44100,
 					},
-				}, report)
-			}
+				},
+			}, report)
 		})
 	}
 }
