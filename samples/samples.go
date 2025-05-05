@@ -23,6 +23,12 @@ const (
 	ImageWebP   = "image.webp"
 )
 
+// The available animation samples.
+const (
+	AnimationGIF  = "animation.gif"
+	AnimationWebP = "animation.webp"
+)
+
 // The available audio samples.
 const (
 	AudioAAC   = "audio.aac"
@@ -65,6 +71,14 @@ func Images() []string {
 		ImagePNG,
 		ImageTIFF,
 		ImageWebP,
+	}
+}
+
+// Animations return all animation samples.
+func Animations() []string {
+	return []string{
+		AnimationGIF,
+		AnimationWebP,
 	}
 }
 
