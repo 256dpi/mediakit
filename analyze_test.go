@@ -21,10 +21,6 @@ func TestAnalyze(t *testing.T) {
 				FileFormat: "gif",
 				Width:      800,
 				Height:     533,
-				Streams:    []string{"video"},
-				Codecs:     []string{"gif"},
-				Duration:   0.1,
-				FrameRate:  100,
 			},
 		},
 		{
@@ -88,6 +84,29 @@ func TestAnalyze(t *testing.T) {
 				FileFormat: "webp",
 				Width:      800,
 				Height:     533,
+			},
+		},
+		// animations
+		{
+			sample: samples.AnimationGIF,
+			report: Report{
+				MediaType:  "image/gif",
+				FileFormat: "gif",
+				Width:      800,
+				Height:     450,
+				Duration:   2,
+				FrameRate:  5,
+			},
+		},
+		{
+			sample: samples.AnimationWebP,
+			report: Report{
+				MediaType:  "image/webp",
+				FileFormat: "webp",
+				Width:      800,
+				Height:     450,
+				Duration:   2,
+				FrameRate:  5,
 			},
 		},
 		// audio
@@ -216,21 +235,6 @@ func TestAnalyze(t *testing.T) {
 				Channels:   2,
 				SampleRate: 44100,
 				FrameRate:  25,
-			},
-		},
-		{
-			sample: samples.VideoGIF,
-			report: Report{
-				MediaType:  "image/gif",
-				FileFormat: "gif",
-				Width:      800,
-				Height:     450,
-				Streams:    []string{"video"},
-				Codecs:     []string{"gif"},
-				Duration:   2,
-				Channels:   0,
-				SampleRate: 0,
-				FrameRate:  5,
 			},
 		},
 		{

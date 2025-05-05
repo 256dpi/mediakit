@@ -23,15 +23,17 @@ type Report struct {
 	Height int `json:"height"`
 
 	// audio/video
-	Streams  []string `json:"streams"`
-	Codecs   []string `json:"codecs"`
-	Duration float64  `json:"duration"`
+	Streams []string `json:"streams"`
+	Codecs  []string `json:"codecs"`
+
+	// audio/video/animation
+	Duration float64 `json:"duration"`
 
 	// audio
 	Channels   int `json:"channels"`
 	SampleRate int `json:"sampleRate"`
 
-	// video
+	// video/animation
 	FrameRate float64 `json:"frameRate"`
 }
 
@@ -91,11 +93,23 @@ func Analyze(ctx context.Context, input *os.File) (*Report, error) {
 			return nil, xo.W(err)
 		}
 
+		// calculate duration
+		var duration int
+		var frameRate float64
+		for _, delay := range rep.Delay {
+			duration += delay
+		}
+		if duration > 0 {
+			frameRate = 1000 / (float64(duration) / float64(rep.Pages))
+		}
+
 		return &Report{
 			MediaType:  mediaType,
 			FileFormat: rep.Format,
 			Width:      rep.Width,
 			Height:     rep.Height,
+			Duration:   float64(duration) / 1000,
+			FrameRate:  frameRate,
 		}, nil
 	}
 

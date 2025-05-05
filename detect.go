@@ -45,7 +45,6 @@ func VideoTypes() []string {
 	return []string{
 		"video/x-msvideo", // avi
 		"video/x-flv",
-		"image/gif",
 		"video/x-matroska",
 		"video/quicktime", // mov
 		"video/mpeg",
