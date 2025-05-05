@@ -43,6 +43,9 @@ const (
 
 	// AnimGIF is a basic GIF encoding preset.
 	AnimGIF
+
+	// AnimWebP is a basic WebP animation encoding preset.
+	AnimWebP
 )
 
 // Valid returns whether the preset is valid.
@@ -106,6 +109,16 @@ func (p Preset) Args(isFile bool) []string {
 			"-f", "gif",
 			"-codec:v", "gif",
 			"-q:v", "3",
+			"-loop", "0",
+		}
+	case AnimWebP:
+		return []string{
+			"-f", "webp",
+			"-codec:v", "libwebp",
+			"-preset:v", "default",
+			"-q:v", "90",
+			"-compression_level", "6",
+			"-loop", "0",
 		}
 	default:
 		return nil

@@ -215,50 +215,80 @@ func TestConvertImage(t *testing.T) {
 	}
 }
 
-func TestConvertAnim(t *testing.T) {
+func TestConvertAnimation(t *testing.T) {
 	for _, sample := range []string{
-		samples.ImageGIF,
+		samples.AnimationGIF,
 		samples.VideoMPEG4,
 	} {
 		t.Run(sample, func(t *testing.T) {
-			buf := samples.Buffer(sample)
-			defer buf.Close()
+			t.Run("GIF", func(t *testing.T) {
+				buf := samples.Buffer(sample)
+				defer buf.Close()
 
-			out := tempFile(t)
-			err := Convert(nil, buf, out, ConvertOptions{
-				Preset: AnimGIF,
-			})
-			assert.NoError(t, err)
+				out := tempFile(t)
+				err := Convert(nil, buf, out, ConvertOptions{
+					Preset: AnimGIF,
+				})
+				assert.NoError(t, err)
 
-			duration := 0.1
-			height := 533
-			frameRate := 100
-			if sample == samples.VideoMPEG4 {
-				duration = 2.04
-				height = 450
-				frameRate = 25
-			}
+				duration := 2.0
+				height := 450
+				frameRate := 5
+				if sample == samples.VideoMPEG4 {
+					duration = 2.04
+					height = 450
+					frameRate = 25
+				}
 
-			rewind(out)
-			report, err := Analyze(nil, out)
-			assert.NoError(t, err)
-			assert.Equal(t, &Report{
-				Duration: duration,
-				Format: Format{
-					Name:     "gif",
+				rewind(out)
+				report, err := Analyze(nil, out)
+				assert.NoError(t, err)
+				assert.Equal(t, &Report{
 					Duration: duration,
-				}, Streams: []Stream{
-					{
-						Type:        "video",
-						Codec:       "gif",
-						Duration:    duration,
-						Width:       800,
-						Height:      height,
-						FrameRate:   FrameRate(frameRate),
-						PixelFormat: "bgra",
+					Format: Format{
+						Name:     "gif",
+						Duration: duration,
+					}, Streams: []Stream{
+						{
+							Type:        "video",
+							Codec:       "gif",
+							Duration:    duration,
+							Width:       800,
+							Height:      height,
+							FrameRate:   FrameRate(frameRate),
+							PixelFormat: "bgra",
+						},
 					},
-				},
-			}, report)
+				}, report)
+			})
+
+			t.Run("WebP", func(t *testing.T) {
+				buf := samples.Buffer(sample)
+				defer buf.Close()
+
+				out := tempFile(t)
+				err := Convert(nil, buf, out, ConvertOptions{
+					Preset: AnimWebP,
+				})
+				assert.NoError(t, err)
+
+				rewind(out)
+				report, err := Analyze(nil, out)
+				assert.NoError(t, err)
+				assert.Equal(t, &Report{
+					Duration: 0,
+					Format: Format{
+						Name:     "webp_pipe",
+						Duration: 0,
+					}, Streams: []Stream{
+						{
+							Type:      "video",
+							Codec:     "webp",
+							FrameRate: 25,
+						},
+					},
+				}, report)
+			})
 		})
 	}
 }
