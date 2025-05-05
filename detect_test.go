@@ -10,6 +10,12 @@ import (
 	"github.com/256dpi/mediakit/samples"
 )
 
+func TestTypes(t *testing.T) {
+	for _, typ := range AnimationTypes() {
+		assert.Contains(t, ImageTypes(), typ)
+	}
+}
+
 func TestDetect(t *testing.T) {
 	assert.Equal(t, "text/plain", Detect([]byte{}, true))
 	assert.Equal(t, "application/octet-stream", Detect([]byte("\x00\x01"), true))

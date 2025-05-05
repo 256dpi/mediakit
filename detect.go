@@ -25,6 +25,15 @@ func ImageTypes() []string {
 	}
 }
 
+// AnimationTypes is a canonical list of well-known and modern animation formats
+// supported by mediakit.
+func AnimationTypes() []string {
+	return []string{
+		"image/gif",
+		"image/webp",
+	}
+}
+
 // AudioTypes is a canonical list of well-known and modern audio formats
 // supported by mediakit.
 func AudioTypes() []string {
