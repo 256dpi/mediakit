@@ -257,6 +257,70 @@ func TestAnalyzeVideo(t *testing.T) {
 	}
 }
 
+func TestAnalyzeAnimation(t *testing.T) {
+	for _, item := range []struct {
+		sample string
+		format string
+		vCodec string
+		pixFmt string
+		colSpc string
+	}{
+		{
+			sample: samples.AnimationGIF,
+			format: "gif",
+			vCodec: "gif",
+			pixFmt: "bgra",
+		},
+		{
+			sample: samples.AnimationWebP,
+			format: "webp_pipe",
+			vCodec: "webp",
+		},
+	} {
+		t.Run(item.sample, func(t *testing.T) {
+			sample := samples.Buffer(item.sample)
+			defer sample.Close()
+
+			// Note: ffmpeg does not properly detect WebP animations
+
+			report, err := Analyze(nil, sample)
+			assert.NoError(t, err)
+			assert.Equal(t, report.Duration >= 2, item.sample != samples.AnimationWebP)
+			assert.Equal(t, report.Format.Duration >= 2, item.sample != samples.AnimationWebP)
+
+			width, height := 800, 450
+			if item.sample == samples.AnimationWebP {
+				width, height = 0, 0
+			}
+
+			frameRate := 25
+			if item.sample == samples.AnimationGIF {
+				frameRate = 5
+			}
+
+			assert.Equal(t, &Report{
+				Duration: report.Duration,
+				Format: Format{
+					Name:     item.format,
+					Duration: report.Format.Duration,
+				},
+				Streams: []Stream{
+					{
+						Type:        "video",
+						Codec:       item.vCodec,
+						Duration:    report.Streams[0].Duration,
+						Width:       width,
+						Height:      height,
+						FrameRate:   FrameRate(frameRate),
+						PixelFormat: item.pixFmt,
+						ColorSpace:  item.colSpc,
+					},
+				},
+			}, report)
+		})
+	}
+}
+
 func TestAnalyzeImage(t *testing.T) {
 	for _, item := range []struct {
 		sample string
