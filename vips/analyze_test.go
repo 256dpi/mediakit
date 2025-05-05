@@ -89,6 +89,38 @@ func TestAnalyzeImages(t *testing.T) {
 	}
 }
 
+func TestAnalyzeAnimations(t *testing.T) {
+	reports := map[string]*Report{
+		samples.AnimationGIF: {
+			Width:  800,
+			Height: 450,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "gif",
+			Pages:  10,
+		},
+		samples.AnimationWebP: {
+			Width:  800,
+			Height: 450,
+			Bands:  4,
+			Color:  "srgb",
+			Format: "webp",
+			Pages:  10,
+		},
+	}
+
+	for _, sample := range samples.Animations() {
+		t.Run(sample, func(t *testing.T) {
+			file := samples.Load(sample)
+			defer file.Close()
+
+			report, err := Analyze(nil, file)
+			assert.NoError(t, err)
+			assert.Equal(t, reports[sample], report)
+		})
+	}
+}
+
 func TestAnalyzePDF(t *testing.T) {
 	file := samples.Load(samples.DocumentPDF)
 	defer file.Close()
