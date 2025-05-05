@@ -66,8 +66,8 @@ func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Prese
 	return nil
 }
 
-// ConvertAudio will convert audio using a preset. The input must be processable
-// by ffmpeg and contain an audio stream.
+// ConvertAudio will convert or extract audio using a preset. The input
+// must be processable by ffmpeg and contain an audio stream.
 func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)

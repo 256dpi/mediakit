@@ -55,6 +55,26 @@ func TestConvertAudio(t *testing.T) {
 	assert.Equal(t, "audio/mpeg", Detect(buf, false))
 }
 
+func TestExtractAudio(t *testing.T) {
+	input := samples.Buffer(samples.VideoMOV)
+	output := makeBuffers(t.TempDir(), "output")[0]
+
+	var progress []float64
+	err := ConvertAudio(nil, input, output, ffmpeg.AudioMP3VBRStandard, 48000, &Progress{
+		Rate: time.Second,
+		Func: func(f float64) {
+			progress = append(progress, f)
+		},
+	})
+	assert.NoError(t, err)
+	assert.True(t, len(progress) >= 1)
+
+	buf := make([]byte, DetectBytes)
+	_, err = io.ReadFull(output, buf)
+	assert.NoError(t, err)
+	assert.Equal(t, "audio/mpeg", Detect(buf, false))
+}
+
 func TestConvertVideo(t *testing.T) {
 	input := samples.Buffer(samples.VideoAVI)
 	output := makeBuffers(t.TempDir(), "output")[0]
