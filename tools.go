@@ -66,7 +66,7 @@ func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Prese
 	return nil
 }
 
-// ConvertAudio will convert or extract audio using a preset. The input
+// ConvertAudio will convert/extract audio using a preset. The input
 // must be processable by ffmpeg and contain an audio stream.
 func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress *Progress) error {
 	// analyze input
@@ -121,8 +121,8 @@ func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 	return nil
 }
 
-// ConvertVideo will convert video using a preset, sizer and max frame rate.
-// The input must be processable by ffmpeg and contain a video stream.
+// ConvertVideo will convert/extract video/animations using a preset, sizer and max
+// frame rate. The input must be processable by ffmpeg and contain a video stream.
 func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, maxSampleRate int, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
