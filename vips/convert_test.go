@@ -154,3 +154,15 @@ func TestConvertError(t *testing.T) {
 	assert.Error(t, err)
 	assert.Equal(t, "vipsforeignload: source is not in a known format", err.Error())
 }
+
+func TestPipeline(t *testing.T) {
+	file := samples.Load(samples.ImagePNG)
+	defer file.Close()
+
+	var buf bytes.Buffer
+	err := Pipeline([][]string{
+		{"resize", ".png", "0.2"},
+		{"rotate", ".png", "90"},
+	}, file, &buf)
+	assert.NoError(t, err)
+}

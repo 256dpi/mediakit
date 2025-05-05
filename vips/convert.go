@@ -134,3 +134,66 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 
 	return nil
 }
+
+// Pipeline will run the vips utility multiple times to convert the specified
+// input to the configured output using a pipeline of operations. Operations
+// are standard vips CLI operations with the command name and "stdin" input
+// argument omitted.
+func Pipeline(ops [][]string, r io.Reader, w io.Writer) error {
+	// prepare stderr
+	var stderr bytes.Buffer
+
+	// prepare commands
+	var list []*exec.Cmd
+	for i, args := range ops {
+		// check args
+		if len(args) == 0 {
+			return fmt.Errorf("empty args")
+		}
+
+		// create command
+		cmd := exec.Command("vips", append([]string{args[0], "stdin"}, args[1:]...)...)
+		cmd.Stdin = r
+
+		// set up stdout pipe unless it's the last command
+		if i == len(ops)-1 {
+			cmd.Stdout = w
+		} else {
+			pipeR, pipeW, err := os.Pipe()
+			if err != nil {
+				return fmt.Errorf("pipe error: %w", err)
+			}
+			cmd.Stdout = pipeW
+			r = pipeR
+			defer pipeW.Close()
+		}
+
+		// set up stderr
+		cmd.Stderr = &stderr
+
+		// add process
+		list = append(list, cmd)
+	}
+
+	// start all commands
+	for i, cmd := range list {
+		if err := cmd.Start(); err != nil {
+			if stderr.Len() > 0 {
+				err = fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
+			}
+			return fmt.Errorf("vips: %s: %s", ops[i][0], err.Error())
+		}
+	}
+
+	// wait for all commands
+	for i, cmd := range list {
+		if err := cmd.Wait(); err != nil {
+			if stderr.Len() > 0 {
+				err = fmt.Errorf(strings.ToLower(strings.TrimSpace(stderr.String())))
+			}
+			return fmt.Errorf("vips: %s: %s", ops[i][0], err.Error())
+		}
+	}
+
+	return nil
+}
