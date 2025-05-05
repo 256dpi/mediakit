@@ -23,7 +23,8 @@ type Progress struct {
 	Func func(float64)
 }
 
-// ConvertImage will convert an image using a preset and sizer.
+// ConvertImage will convert an image using a preset and sizer. The input must
+// be processable by vips.
 func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Preset, sizer Sizer) error {
 	// analyze input
 	report, err := vips.Analyze(ctx, input)
@@ -65,7 +66,8 @@ func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Prese
 	return nil
 }
 
-// ConvertAudio will convert audio using a preset.
+// ConvertAudio will convert audio using a preset. The input must be processable
+// by ffmpeg and contain an audio stream.
 func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, maxSampleRate int, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
@@ -120,6 +122,7 @@ func ConvertAudio(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 }
 
 // ConvertVideo will convert video using a preset, sizer and max frame rate.
+// The input must be processable by ffmpeg and contain a video stream.
 func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Preset, sizer Sizer, maxFrameRate float64, maxSampleRate int, progress *Progress) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
@@ -191,7 +194,8 @@ func ConvertVideo(ctx context.Context, input, output *os.File, preset ffmpeg.Pre
 	return nil
 }
 
-// ExtractImage will extract an image using a position, preset and sizer.
+// ExtractImage will extract an image using a position, preset and sizer. The
+// input must be processable by ffmpeg and contain a video stream.
 func ExtractImage(ctx context.Context, input, temp, output *os.File, position float64, preset vips.Preset, sizer Sizer) error {
 	// analyze input
 	report, err := ffmpeg.Analyze(ctx, input)
