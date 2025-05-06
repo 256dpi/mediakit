@@ -46,9 +46,10 @@ func ConvertImage(ctx context.Context, input, output *os.File, preset vips.Prese
 
 	// prepare options
 	opts := vips.ConvertOptions{
-		Preset: preset,
-		Width:  size.Width,
-		Height: size.Height,
+		Preset:    preset,
+		Width:     size.Width,
+		Height:    size.Height,
+		MultiPage: report.Format == "gif" || report.Format == "webp",
 	}
 
 	// convert image
