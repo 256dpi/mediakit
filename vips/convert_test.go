@@ -53,6 +53,64 @@ func TestConvert(t *testing.T) {
 	})
 }
 
+func TestConvertAnimations(t *testing.T) {
+	for _, item := range []struct {
+		name   string
+		sample string
+		opts   ConvertOptions
+		report Report
+	}{
+		{
+			sample: samples.AnimationGIF,
+			opts: ConvertOptions{
+				Preset:    WebP,
+				Width:     256,
+				MultiPage: true,
+			},
+			report: Report{
+				Width:  256,
+				Height: 144,
+				Bands:  4,
+				Color:  "srgb",
+				Format: "webp",
+				Pages:  10,
+				Delay:  []int{200, 200, 200, 200, 200, 200, 200, 200, 200, 200},
+			},
+		},
+		{
+			sample: samples.AnimationWebP,
+			opts: ConvertOptions{
+				Preset:    GIFWeb,
+				Width:     256,
+				Height:    100,
+				MultiPage: true,
+			},
+			report: Report{
+				Width:  178,
+				Height: 100,
+				Bands:  4,
+				Color:  "srgb",
+				Format: "gif",
+				Pages:  10,
+				Delay:  []int{200, 200, 200, 200, 200, 200, 200, 200, 200, 200},
+			},
+		},
+	} {
+		t.Run(item.name, func(t *testing.T) {
+			file := samples.Buffer(item.sample)
+			defer file.Close()
+
+			var buf bytes.Buffer
+			err := Convert(nil, file, &buf, item.opts)
+			assert.NoError(t, err)
+
+			report, err := Analyze(nil, &buf)
+			assert.NoError(t, err)
+			assert.Equal(t, &item.report, report)
+		})
+	}
+}
+
 func TestConvertOptions(t *testing.T) {
 	for _, item := range []struct {
 		name   string

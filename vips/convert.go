@@ -76,10 +76,14 @@ type ConvertOptions struct {
 
 	// Whether to skip metadata rotation.
 	NoRotate bool
+
+	// Whether to attempt multi-page conversion.
+	MultiPage bool
 }
 
 // Convert will run the vips utility to convert the specified input to the
-// configured output.
+// configured output. Animations are supported if input is a file and no
+// cropping is applied.
 func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions) error {
 	// ensure context
 	if ctx == nil {
@@ -97,6 +101,15 @@ func Convert(ctx context.Context, r io.Reader, w io.Writer, opts ConvertOptions)
 		"[descriptor=0]",
 		opts.Preset.Arg(),
 		strconv.Itoa(opts.Width),
+	}
+
+	// use file as input if possible
+	rFile, _ := r.(*os.File)
+	if opts.MultiPage && !opts.Crop && rFile != nil && rFile.Name() != "" {
+		args[0] = "thumbnail"
+		args[1] = rFile.Name() + "[n=-1]"
+	} else if opts.MultiPage {
+		return fmt.Errorf("multi-page input requires file input and no cropping")
 	}
 
 	// handle height
