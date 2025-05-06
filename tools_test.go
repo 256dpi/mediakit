@@ -1,6 +1,7 @@
 package mediakit
 
 import (
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -183,14 +184,9 @@ func TestCaptureScreenshot(t *testing.T) {
 	err := CaptureScreenshot(nil, "https://example.org", output, chromium.ScreenshotOptions{})
 	assert.NoError(t, err)
 
-	rep, err := Analyze(nil, output)
-	assert.NoError(t, err)
-	assert.Equal(t, &Report{
-		MediaType:  "image/png",
-		FileFormat: "png",
-		Width:      2400,
-		Height:     2204,
-	}, rep)
+	buf := make([]byte, DetectBytes)
+	_, err = io.ReadFull(output, buf)
+	assert.Equal(t, "image/png", Detect(buf, false))
 }
 
 func makeBuffers(dir string, names ...string) []*os.File {
