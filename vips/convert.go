@@ -30,6 +30,10 @@ const (
 	// optimized coding, SRGB color space and removed embedded color profiles.
 	// `vips webpsave`
 	WebP
+
+	// GIFWeb is a Web optimized preset for GIFs with stripped metadata.
+	// `vips gifsave`
+	GIFWeb
 )
 
 // Valid returns whether the preset is valid.
@@ -46,6 +50,8 @@ func (p Preset) Arg() string {
 		return ".png[Q=90,strip]"
 	case WebP:
 		return ".webp[Q=90,strip,smart_subsample]"
+	case GIFWeb:
+		return ".gif[strip]"
 	default:
 		return ""
 	}
