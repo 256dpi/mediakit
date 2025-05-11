@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/256dpi/xo"
@@ -39,8 +40,9 @@ new Promise((resolve) => {
 });
 `
 
-// NoSandbox is a flag to disable the sandbox mode for testing.
-var NoSandbox bool
+// NoSandbox is a flag to disable the sandbox mode for testing. It can be set
+// before running tests or by setting the environment variable MK_NOSBX to 1.
+var NoSandbox = os.Getenv("MK_NOSBX") == "1"
 
 // Allocate will allocate a new browser instance and return an associated
 // context and cancel function.

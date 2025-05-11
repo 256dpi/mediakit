@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"image"
 	"image/png"
-	"runtime"
 	"testing"
 	"time"
 
@@ -12,9 +11,6 @@ import (
 )
 
 func TestScreenshot(t *testing.T) {
-	// set flag
-	NoSandbox = runtime.GOOS == "linux"
-
 	/* without allocate */
 
 	buf, err := Screenshot(nil, "https://example.org", ScreenshotOptions{})
