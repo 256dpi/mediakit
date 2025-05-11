@@ -51,7 +51,7 @@ func Allocate() (context.Context, context.CancelFunc, error) {
 	ctx := context.Background()
 
 	// create allocator
-	execOpts := []chromedp.ExecAllocatorOption{chromedp.Headless}
+	execOpts := chromedp.DefaultExecAllocatorOptions[:]
 	if NoSandbox {
 		execOpts = append(execOpts, chromedp.NoSandbox)
 	}
