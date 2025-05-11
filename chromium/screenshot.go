@@ -121,9 +121,9 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 	var buf []byte
 	err := chromedp.Run(ctx,
 		withTimeout(10*time.Second, "emulation failed", chromedp.EmulateViewport(opts.Width, opts.Height, chromedp.EmulateScale(opts.Scale))),
-		withTimeout(30*time.Second, "navigation failed", chromedp.Navigate(url)),
-		withTimeout(30*time.Second, "awaiting body failed", chromedp.WaitReady("body")),
-		chromedp.ActionFunc(func(ctx context.Context) error {
+		withTimeout(20*time.Second, "navigation failed", chromedp.Navigate(url)),
+		withTimeout(20*time.Second, "awaiting body failed", chromedp.WaitReady("body")),
+		withTimeout(opts.Wait+20*time.Second, "screenshot failed", chromedp.ActionFunc(func(ctx context.Context) error {
 			// scroll through page once
 			if opts.Full {
 				err := chromedp.Evaluate(scrollThrough, nil, func(params *runtime.EvaluateParams) *runtime.EvaluateParams {
@@ -160,7 +160,7 @@ func Screenshot(ctx context.Context, url string, opts ScreenshotOptions) ([]byte
 			}
 
 			return nil
-		}),
+		})),
 	)
 	if err != nil {
 		return nil, err
