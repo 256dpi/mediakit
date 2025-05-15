@@ -33,6 +33,15 @@ func TestAnalyze(t *testing.T) {
 			},
 		},
 		{
+			sample: samples.ImageHEIC,
+			report: Report{
+				MediaType:  "image/heic",
+				FileFormat: "heif",
+				Width:      800,
+				Height:     533,
+			},
+		},
+		{
 			sample: samples.ImageJPEG,
 			report: Report{
 				MediaType:  "image/jpeg",

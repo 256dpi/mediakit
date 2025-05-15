@@ -15,6 +15,7 @@ var files embed.FS
 const (
 	ImageGIF    = "image.gif"
 	ImageHEIF   = "image.heif"
+	ImageHEIC   = "image.heic"
 	ImageJPEG   = "image.jpg"
 	ImageJPEG2K = "image.jpf"
 	ImagePDF    = "image.pdf"
@@ -64,6 +65,7 @@ func Images() []string {
 	return []string{
 		ImageGIF,
 		ImageHEIF,
+		ImageHEIC,
 		ImageJPEG,
 		ImageJPEG2K,
 		ImagePDF,

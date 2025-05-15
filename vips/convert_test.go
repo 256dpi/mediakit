@@ -14,7 +14,7 @@ func TestConvert(t *testing.T) {
 	presetConvertTest := func(t *testing.T, preset Preset, format string) {
 		for _, sample := range samples.Images() {
 			t.Run(sample, func(t *testing.T) {
-				file := samples.Load(sample)
+				file := samples.Buffer(sample)
 				defer file.Close()
 
 				var buf bytes.Buffer

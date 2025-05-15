@@ -28,6 +28,14 @@ func TestAnalyzeImages(t *testing.T) {
 			Format: "heif",
 			Pages:  1,
 		},
+		samples.ImageHEIC: {
+			Width:  800,
+			Height: 533,
+			Bands:  3,
+			Color:  "srgb",
+			Format: "heif",
+			Pages:  1,
+		},
 		samples.ImageJPEG: {
 			Width:  800,
 			Height: 533,
